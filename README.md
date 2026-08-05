@@ -1,2 +1,1 @@
-# Aservad.ai
-"An AI-powered application for astrology services and predictions."
+"ఆశీర్వాద్ AI - స్టోరీస్, ఇమేజెస్, వీడియోలు, వాయిస్ ఓవర్ మరియు వెబ్‌సైట్లను ఏఐ సహాయంతో క్రియేట్ చేసే ఆల్-ఇన్-వన్ ప్లాట్‌ఫారమ్."
