@@ -63,21 +63,7 @@ elif choice == "3. Image Generator":
     st.subheader("🖼️ AI ఇమేజ్ జనరేటర్ & డిజైనర్")
     st.info("మీకు కావలసిన చిత్రాలను సృష్టించడానికి క్రింది ఉచిత ప్లాట్‌ఫాంలను ఉపయోగించండి.")
     
-    img_prompt = st.text_input("మీకు ఎలాంటి ఇమేజ్ కావాలి? (Prompt రాయండి)")
-    elif choice == "3. Image Generator":
-    st.subheader("🖼️ AI ఇమేజ్ జనరేటర్ & డిజైనర్")
-    st.info("మీకు కావలసిన చిత్రాలను సృష్టించడానికి క్రింది ఉచిత ప్లాట్‌ఫాంలను ఉపయోగించండి.")
     
-    img_prompt = st.text_input("మీకు ఎలాంటి ఇమేజ్ కావాలి? (చిత్రం గురించి వివరంగా రాయండి)")
-    st.caption("ఉదాహరణ: A cute baby elephant in a jungle, realistic style, golden hour light")
-
-    if st.button("🖼️ ఇమేజ్ లింక్స్ చూపించు"):
-        if img_prompt:
-            st.success("✨ మీ ప్రాంప్ట్ సిద్ధంగా ఉంది!")
-            st.markdown(f"**మీ డిజైన్ ఐడియా:** `{img_prompt}`")
-            st.markdown("---")
-            st.markdown("🌐 **ఉచితంగా ఇమేజ్‌లు తయారు చేసుకోవడానికి క్రింది బటన్స్ క్లిక్ చేయండి:**")
-            st.markdown("- [👉 Hugging Face AI Image Space (Click Here)](https://huggingface.co)")
             st.markdown("- [👉 Civitai AI Art Generator (Click Here)](https://civitai.com)")
         else:
             st.warning("దయచేసి ప్రాంప్ట్ రాయండి.")
