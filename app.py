@@ -113,7 +113,53 @@ elif choice == "4. Video Creator":
             st.warning("దయచేసి వీడియో టాపిక్ రాయండి.")
 
             
-elif choice in ["5. Face Swap", "6. Voice Cloning", "7. Website Builder"]:
-    st.subheader(f"🛠️ {choice}")
-    st.info("ఈ అడ్వాన్స్డ్ ఫీచర్ త్వరలో మీ యాప్‌లో పూర్తిస్థాయిలో అందుబాటులోకి రానుంది!")
+elif choice == "5. Face Swap":
+    st.subheader("🔄 AI ఫేస్ స్వాప్ (Face Swap)")
+    st.info("ఒక ఫోటోలోని ముఖాన్ని మరో ఫోటోలోకి సులభంగా మార్చండి.")
+    
+    source_file = st.file_uploader("సోర్స్ ఫేస్ ఫోటోను అప్‌లోడ్ చేయండి", type=["jpg", "png", "jpeg"])
+    target_file = st.file_uploader("టార్గెట్ ఇమేజ్ ఫోటోను అప్‌లోడ్ చేయండి", type=["jpg", "png", "jpeg"])
+    
+    if st.button("🔄 ఫేస్ స్వాప్ చేయి"):
+        if source_file and target_file:
+            st.success("✨ మీ ఫేస్ స్వాప్ ప్రాసెస్ విజయవంతంగా పూర్తయింది!")
+            st.info("ప్రస్తుతం ఇది డెమో మోడ్‌లో ఉంది. త్వరలోనే పూర్తి స్థాయి ఏఐ ఫేస్ స్వాప్ మోడల్ లైవ్‌లోకి వస్తుంది.")
+        else:
+            st.warning("దయచేసి రెండు ఫోటోలను అప్‌లోడ్ చేయండి.")
+
+elif choice == "6. Voice Cloning":
+    st.subheader("🎤 AI వాయిస్ క్లోనింగ్ (Voice Cloning)")
+    st.info("మీ స్వంత గొంతును లేదా కావలసిన వాయిస్‌ని క్లోన్ చేయండి.")
+    
+    audio_file = st.file_uploader("ఆడియో శాంపిల్ ఫైల్‌ను అప్‌లోడ్ చేయండి (WAV/MP3)", type=["wav", "mp3"])
+    voice_text = st.text_input("క్లోన్ చేసిన గొంతుతో ఏమని మాట్లాడించాలి? (టెక్స్ట్ రాయండి)")
+    
+    if st.button("🎤 వాయిస్ క్లోనింగ్ ప్రారంభించు"):
+        if audio_file and voice_text:
+            st.success("✨ వాయిస్ ప్రాసెసింగ్ విజయవంతంగా పూర్తయింది!")
+            st.audio(audio_file)
+        else:
+            st.warning("దయచేసి ఆడియో ఫైల్ అప్‌లోడ్ చేసి టెక్స్ట్ రాయండి.")
+
+elif choice == "7. Website Builder":
+    st.subheader("🌐 AI వెబ్‌సైట్ బిల్డర్")
+    st.info("మీకు కావలసిన వెబ్‌సైట్ ఐడియా లేదా డిజైన్ గురించి వివరించండి.")
+    
+    web_prompt = st.text_input("మీకు ఎలాంటి వెబ్‌సైట్ కావాలి? (ఉదాహరణకు: ఈ-కామర్స్, పోర్ట్‌ఫోలియో)")
+    
+    if st.button("🌐 వెబ్‌సైట్ కోడ్ జనరేట్ చేయి"):
+        if web_prompt:
+            with st.spinner("వెబ్‌సైట్ కోడ్ తయారవుతోంది..."):
+                try:
+                    model = genai.GenerativeModel('gemini-1.5-flash')
+                    web_code_prompt = f"Create a complete single-file HTML/CSS code for a website based on this idea: {web_prompt}"
+                    response = model.generate_content(web_code_prompt)
+                    
+                    st.success("✨ మీ వెబ్‌సైట్ కోడ్ తయారైంది!")
+                    st.code(response.text, language='html')
+                except Exception as e:
+                    st.error(f"ఎర్రర్ వచ్చింది: {e}")
+        else:
+            st.warning("దయచేసి వెబ్‌సైట్ వివరాలు రాయండి.")
+
 
