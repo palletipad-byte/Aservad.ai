@@ -37,7 +37,7 @@ if choice == "1. Home / Dashboard":
     with col3:
         st.metric(label="వీడియోలు / రీల్స్", value="3,120+")
             st.warning("దయచేసి టాపిక్ రాయండి.")
-
+        
 # ---------------- 2. SCRIPT MAKER (Gemini AI Connected) ----------------
 elif choice == "2. Script Maker (Story)":
     st.subheader("🎬 AI స్క్రిప్ట్ & స్టोरी మేకర్")
