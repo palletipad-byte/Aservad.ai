@@ -36,6 +36,7 @@ if choice == "1. Home / Dashboard":
         st.metric(label="జనరేట్ అయిన స్క్రిప్ట్స్", value="5,800+")
     with col3:
         st.metric(label="వీడియోలు / రీల్స్", value="3,120+")
+            st.warning("దయచేసి టాపిక్ రాయండి.")
 
 # ---------------- 2. SCRIPT MAKER (Gemini AI Connected) ----------------
 elif choice == "2. Script Maker (Story)":
@@ -83,6 +84,5 @@ elif choice == "4. Video Creator":
         if vid_prompt:
             st.success("🎉 వీడియో క్రియేషన్ ప్రాసెస్ ప్రారంభమైంది!")
         else:
-            st.warning("దయచేసి టాపిక్ రాయండి.")
-
+            
     
