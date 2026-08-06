@@ -74,7 +74,7 @@ elif choice == "3. Image Generator":
             st.info(f"మీరు కోరిన ప్రాంప్ట్: {img_prompt}")
         else:
             st.warning("దయచేసి ప్రాంప్ట్ రాయండి.")
-
+            
 # ---------------- 4. VIDEO CREATOR ----------------
 elif choice == "4. Video Creator":
     st.subheader("🎥 AI వీడియో క్రియేటర్")
