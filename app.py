@@ -48,18 +48,12 @@ elif choice == "2. Script Maker (Story)":
         elif topic:
             with st.spinner("AI స్క్రిప్ట్ తయారవుతోంది... దయచేసి వేచి ఉండండి."):
                 try:
-                            elif topic:
-            with st.spinner("AI స్క్రిప్ట్ తయారవుతోంది... దయచేసి వేచి ఉండండి."):
-                try:
                     model = genai.GenerativeModel('gemini-2.0-flash')
                     prompt = f"Write a {duration} viral social media video script about: {topic} in Telugu or English as requested."
                     response = model.generate_content(prompt)
 
                     st.success(f"✨ మీ {duration} స్క్రిప్ట్ విజయవంతంగా తయారైంది!")
                     st.write(response.text)
-                except Exception as e:
-                    st.error(f"ఎర్రర్ వచ్చింది: {e}")
-
                 except Exception as e:
                     st.error(f"ఎర్రర్ వచ్చింది: {e}")
         else:
@@ -83,4 +77,3 @@ elif choice == "4. Video Creator":
             st.success("🎥 వీడియో క్రియేషన్ ప్రాసెస్ ప్రారంభమైంది!")
         else:
             st.warning("దయచేసి టాపిక్ రాయండి.")
-            
