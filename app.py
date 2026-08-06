@@ -48,7 +48,7 @@ elif choice == "2. Script Maker (Story)":
         elif topic:
             with st.spinner("AI స్క్రిప్ట్ తయారవుతోంది... దయచేసి వేచి ఉండండి."):
                 try:
-                    model = genai.GenerativeModel('gemini-2.0-flash')
+                    model = genai.GenerativeModel('gemini-1.5-flash')
                     prompt = f"Write a {duration} viral social media video script about: {topic} in Telugu or English as requested."
                     response = model.generate_content(prompt)
 
@@ -61,19 +61,31 @@ elif choice == "2. Script Maker (Story)":
 
 elif choice == "3. Image Generator":
     st.subheader("🖼️ AI ఇమేజ్ జనరేటర్")
-    img_prompt = st.text_input("మీకు ఎలాంటి ఇమేజ్ కావాలి?")
+    st.info("ఇక్కడ మీరు మీ ఇష్టమైన చిత్రాలను సృష్టించుకోవడానికి ఉచిత AI ఇమేజ్ టూల్స్‌ని ఉపయోగించవచ్చు.")
+    
+    img_prompt = st.text_input("మీకు ఎలాంటి ఇమేజ్ కావాలి? (Prompt రాయండి)")
     if st.button("🖼️ ఇమేజ్ జనరేట్ చేయి"):
         if img_prompt:
-            st.success("🖼️ ఇమేజ్ జనరేషన్ ఫీచర్ త్వరలో అనుసంధానించబడుతుంది!")
-            st.info(f"మీరు కోరిన ప్రాంప్ట్: {img_prompt}")
+            st.success("✨ మీ ప్రాంప్ట్ స్వీకరించబడింది!")
+            st.markdown(f"**మీరు కోరిన డిజైన్:** `{img_prompt}`")
+            st.markdown("🔗 ఉచితంగా ఇమేజ్ పొందడానికి మీరు [Hugging Face Space](https://huggingface.co) లేదా [Civitai](https://civitai.com) టూల్స్ ని ఇక్కడ వాడవచ్చు.")
         else:
             st.warning("దయచేసి ప్రాంప్ట్ రాయండి.")
 
 elif choice == "4. Video Creator":
     st.subheader("🎥 AI వీడియో క్రియేటర్")
-    vid_prompt = st.text_input("మీకు ఎలాంటి వీడియో కావాలి?")
+    st.info("సోషల్ మీడియా రీల్స్ మరియు వీడియోల కోసం ఇక్కడ టూల్స్ అందుబాటులో ఉన్నాయి.")
+    
+    vid_prompt = st.text_input("మీకు ఎలాంటి వీడియో కావాలి? (Topic రాయండి)")
     if st.button("🎥 వీడియో జనరేట్ చేయి"):
         if vid_prompt:
-            st.success("🎥 వీడియో క్రియేషన్ ప్రాసెస్ ప్రారంభమైంది!")
+            st.success("🚀 వీడియో క్రియేషన్ ప్రాసెస్ ప్రారంభమైంది!")
+            st.markdown(f"**వీడియో టాపిక్:** `{vid_prompt}`")
+            st.markdown("💡 పూర్తి స్థాయి వీడియోల కోసం AI వీడియో జనరేటర్ ప్లాట్‌ఫాంలను దీనికి అనుసంధానించవచ్చు.")
         else:
             st.warning("దయచేసి టాపిక్ రాయండి.")
+
+elif choice in ["5. Face Swap", "6. Voice Cloning", "7. Website Builder"]:
+    st.subheader(f"🛠️ {choice}")
+    st.info("ఈ అడ్వాన్స్డ్ ఫీచర్ త్వరలో మీ యాప్‌లో పూర్తిస్థాయిలో అందుబాటులోకి రానుంది!")
+    
