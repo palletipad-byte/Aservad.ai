@@ -1,5 +1,5 @@
 import streamlit as st
-from google import genai
+import google.generativeai as genai
 
 # యాప్ పేజ్ సెటప్
 st.set_page_config(page_title="ఆశీర్వాద్ AI ప్రాజెక్ట్", layout="wide")
@@ -7,6 +7,9 @@ st.set_page_config(page_title="ఆశీర్వాద్ AI ప్రాజె
 # సైడ్‌బార్‌లో API Key ఇన్‌పుట్
 st.sidebar.title("🛠️ AI టూల్స్ మెను")
 api_key = st.sidebar.text_input("Gemini API Key నమోదు చేయండి:", type="password")
+
+if api_key:
+    genai.configure(api_key=api_key)
 
 choice = st.sidebar.selectbox(
     "ఒక ఫీచర్‌ను ఎంచుకోండి:",
@@ -49,11 +52,10 @@ elif choice == "2. Script Maker (Story)":
         elif topic:
             with st.spinner("AI స్క్రిప్ట్ తయారవుతోంది... దయచేసి వేచి ఉండండి."):
                 try:
-                    client = genai.Client(api_key=api_key)
-                    response = client.models.generate_content(
-                        model='gemini-2.5-flash',
-                        contents=f"Write a {duration} viral social media video script about: {topic} in Telugu or English as requested."
-                    )
+                    model = genai.GenerativeModel('gemini-1.5-flash')
+                    prompt = f"Write a {duration} viral social media video script about: {topic} in Telugu or English as requested."
+                    response = model.generate_content(prompt)
+                    
                     st.success(f"✨ మీ {duration} స్క్రిప్ట్ విజయవంతంగా తయారైంది!")
                     st.write(response.text)
                 except Exception as e:
@@ -81,4 +83,4 @@ elif choice == "4. Video Creator":
             st.success("🎉 వీడియో క్రియేషన్ ప్రాసెస్ ప్రారంభమైంది!")
         else:
             st.warning("దయచేసి టాపిక్ రాయండి.")
-                
+            
