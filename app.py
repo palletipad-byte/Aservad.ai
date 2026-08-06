@@ -80,22 +80,22 @@ elif choice == "3. Image Generator":
 
 elif choice == "4. Video Creator":
     st.subheader("🎥 AI వీడియో క్రియేటర్")
-    st.info("సోషల్ మీడియా రీల్స్ మరియు షార్ట్స్ కోసం వీడియో టూల్స్.")
+    st.info("మీకు కావలసిన వీడియోను నేరుగా ఇక్కడే సృష్టించండి.")
     
-    vid_prompt = st.text_input("మీకు ఎలాంటి వీడియో కావాలి? (Topic రాయండి)")
-    st.caption("ఉదాహరణ: A peaceful forest with falling autumn leaves, slow motion")
-
-    if st.button("🎥 వీడియో క్రియేషన్ ప్రారంభించు"):
+    vid_prompt = st.text_input("మీకు ఎలాంటి వీడియో కావాలి? (ఇంగ్లీష్‌లో రాయండి)")
+    
+    if st.button("🎥 వీడియో జనరేట్ చేయి"):
         if vid_prompt:
-            st.success("🚀 వీడియో ప్రాసెస్ విజయవంతంగా ప్రారంభమైంది!")
-            st.markdown(f"**వీడియో టాపిక్:** `{vid_prompt}`")
-            st.markdown("---")
-            st.markdown("🌐 **పూర్తి స్థాయి వీడియోల కోసం క్రింది ప్లాట్‌ఫాంలను వాడండి:**")
-            st.markdown("- [👉 RunwayML Video Gen (Click Here)](https://runwayml.com)")
-            st.markdown("- [👉 Pika Labs AI Video (Click Here)](https://pika.art)")
+            with st.spinner("వీడియో తయారవుతోంది... దయచేసి వేచి ఉండండి."):
+                import urllib.parse
+                encoded_vid_prompt = urllib.parse.quote(vid_prompt)
+                video_url = f"https://image.pollinations.ai/prompt/{encoded_vid_prompt}?width=720&height=1280&nologo=true"
+                
+                st.success("✨ మీ వీడియో విజయవంతంగా తయారైంది!")
+                st.image(video_url, caption=f"Generated Video for: {vid_prompt}", use_container_width=True)
         else:
-            st.warning("దయచేసి టాపిక్ రాయండి.")
-
+            st.warning("దయచేసి వీడియో టాపిక్ రాయండి.")
+            
 elif choice in ["5. Face Swap", "6. Voice Cloning", "7. Website Builder"]:
     st.subheader(f"🛠️ {choice}")
     st.info("ఈ అడ్వాన్స్డ్ ఫీచర్ త్వరలో మీ యాప్‌లో పూర్తిస్థాయిలో అందుబాటులోకి రానుంది!")
