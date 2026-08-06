@@ -53,7 +53,8 @@ elif choice == "2. Script Maker (Story)":
                     response = model.generate_content(prompt)
 
                     st.success(f"✨ మీ {duration} స్క్రిప్ట్ విజయవంతంగా తయారైంది!")
-                    st.write(response.text)
+                    model = genai.GenerativeModel('gemini-2.0-flash')
+                
                 except Exception as e:
                     st.error(f"ఎర్రర్ వచ్చింది: {e}")
         else:
