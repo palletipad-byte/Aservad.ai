@@ -83,6 +83,10 @@ elif choice == "4. Video Creator":
         if vid_prompt:
             st.success("🎉 వీడియో క్రియేషన్ ప్రాసెస్ ప్రారంభమైంది!")
         else:
-
+        if vid_prompt:
+            st.success("🎥 వీడియో క్రియేషన్ ప్రాసెస్ ప్రారంభమైంది!")
+        else:
+            st.warning("దయచేసి టాపిక్ రాయండి.")
+            
             
 
