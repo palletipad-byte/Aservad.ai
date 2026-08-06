@@ -9,6 +9,12 @@ api_key = st.sidebar.text_input("Gemini API Key నమోదు చేయండ�
 
 if api_key:
     genai.configure(api_key=api_key)
+    if 'credits' not in st.session_state:
+        st.session_state.credits = 5  
+
+    st.sidebar.markdown("---")
+    st.sidebar.subheader("💎 మీ ఖాతా వివరాలు")
+    st.sidebar.write(f"మిగిలిన క్రెడిట్స్: **{st.session_state.credits} / 5**")
 
 choice = st.sidebar.selectbox(
     "ఒక ఫీచర్‌ని ఎన్నుకోండి:",
