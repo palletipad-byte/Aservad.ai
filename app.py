@@ -1,6 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 
+
 # యాప్ పేజీ సెటప్
 st.set_page_config(page_title="ఆశీర్వాద్ AI ప్రాజెక్ట్", layout="wide")
 
@@ -52,7 +53,12 @@ elif choice == "2. Script Maker (Story)":
         elif topic:
             with st.spinner("AI స్క్రిప్ట్ తయారు చేస్తోంది... దయచేసి వేచి ఉండండి."):
                 try:
-                    # Gemini AI మోడల్ కాల్ చేయడం
+                    client = genai.Client(api_key=api_key)
+response = client.models.generate_content(
+    model='gemini-2.5-flash',
+    contents=prompt,
+)
+
                     model = genai.GenerativeModel('gemini-1.5-flash')
                     prompt = f"Write a {duration} viral social media video script about: {topic} in Telugu or English as requested."
                     response = model.generate_content(prompt)
