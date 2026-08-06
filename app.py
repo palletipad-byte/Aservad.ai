@@ -1,16 +1,16 @@
 import streamlit as st
+import google.generativeai as genai
 
 # యాప్ పేజీ సెటప్
 st.set_page_config(page_title="ఆశీర్వాద్ AI ప్రాజెక్ట్", layout="wide")
 
-# మెయిన్ టైటిల్
-st.title("🚀 ఆశీర్వాద్ AI - ఆల్-ఇన్-వన్ క్రియేటర్ స్టూడియో")
-st.write(
-    "మీ సోషల్ మీడియా రీల్స్, షార్ట్స్ మరియు వీడియో కోసం AI టూల్స్ ఒకే చోట!"
-)
-
-# సైడ్‌బార్ నావిగేషన్ మెను
+# సైడ్‌బార్‌లో API Key ఇన్‌పుట్ (యూజర్లు వారి নিজস্ব కీ ఇచ్చుకోవడానికి లేదా మీ కీ వాడటానికి)
 st.sidebar.title("🛠️ AI టూల్స్ మెను")
+api_key = st.sidebar.text_input("Gemini API Key నమోదు చేయండి:", type="password")
+
+if api_key:
+    genai.configure(api_key=api_key)
+
 choice = st.sidebar.selectbox(
     "ఒక ఫీచర్‌ను ఎంచుకోండి:",
     [
@@ -37,28 +37,30 @@ if choice == "1. Home / Dashboard":
     with col3:
         st.metric(label="వీడియోలు / రీల్స్", value="3,120+")
 
-# ---------------- 2. SCRIPT MAKER ----------------
+# ---------------- 2. SCRIPT MAKER (Gemini AI Connected) ----------------
 elif choice == "2. Script Maker (Story)":
     st.subheader("✍️ AI స్క్రిప్ట్ & స్టోరీ మేకర్")
-    topic = st.text_input(
-        "మీ వీడియో ఏ టాపిక్ గురించి? (ఉదా: మోటివేషనల్, స్టోరీ)"
-    )
+    topic = st.text_input("మీ వీడియో ఏ టాపిక్ గురించి? (ఉదా: మోటివేషనల్, స్టోరీ)")
     duration = st.selectbox(
         "వీడియో నిడివి (Duration) ఎంచుకోండి:",
         ["5 Seconds", "15 Seconds", "30 Seconds", "60 Seconds"],
     )
 
     if st.button("🚀 స్క్రిప్ట్ జనరేట్ చేయి"):
-        if topic:
-            st.success(
-                f"🎉 మీ {duration} స్క్రిప్ట్ విజయవంతంగా తయారైంది! టాపిక్: {topic}"
-            )
-            st.markdown(
-                "> **[హుక్/ప్రారంభం]:** ఇక్కడ మీ వీడియో ప్రారంభం వస్తుంది."
-            )
-            st.markdown(
-                "> **[మెయిన్ కంటెంట్]:** ఇక్కడ మీ కథ మెయిన్ పాయిಂಟ್ ఉంటుంది."
-            )
+        if not api_key:
+            st.error("దయచేసి సైడ్‌బార్‌లో మీ Gemini API Key ఇవ్వండి!")
+        elif topic:
+            with st.spinner("AI స్క్రిప్ట్ తయారు చేస్తోంది... దయచేసి వేచి ఉండండి."):
+                try:
+                    # Gemini AI మోడల్ కాల్ చేయడం
+                    model = genai.GenerativeModel('gemini-pro')
+                    prompt = f"Write a {duration} viral social media video script about: {topic} in Telugu or English as requested."
+                    response = model.generate_content(prompt)
+                    
+                    st.success(f"🎉 మీ {duration} స్క్రిప్ట్ విజయవంతంగా తయారైంది!")
+                    st.write(response.text)
+                except Exception as e:
+                    st.error(f"ఎర్రర్ వచ్చింది: {e}")
         else:
             st.warning("దయచేసి ఏదైనా టాపిక్ రాయండి.")
 
@@ -68,8 +70,8 @@ elif choice == "3. Image Generator":
     img_prompt = st.text_input("మీకు ఎలాంటి ఇమేజ్ కావాలి?")
     if st.button("🖼️ ఇమేజ్ జనరేట్ చేయి"):
         if img_prompt:
-            st.success("🎉 మీ ఇమేజ్ విజయవంతంగా తయారైంది!")
-            # ఇక్కడ ఇమేజ్ డిస్ప్లే కోడ్ రాసుకోవచ్చు
+            st.success("🎉 ఇమేజ్ జనరేషన్ ఫీచర్ త్వరలో అనుసంధానించబడుతుంది!")
+            st.info(f"మీరు కోరిన ప్రాంప్ట్: {img_prompt}")
         else:
             st.warning("దయచేసి ప్రొంప్ట్ రాయండి.")
 
@@ -79,7 +81,7 @@ elif choice == "4. Video Creator":
     vid_prompt = st.text_input("మీకు ఎలాంటి వీడియో కావాలి?")
     if st.button("🎥 వీడియో జనరేట్ చేయి"):
         if vid_prompt:
-            st.success("🎉 మీ వీడియో ప్రాసెస్ ప్రారంభమైంది!")
+            st.success("🎉 వీడియో క్రియేషన్ ప్రాసెస్ ప్రారంభమైంది!")
         else:
             st.warning("దయచేసి వివరాలు ఇవ్వండి.")
 
@@ -87,23 +89,27 @@ elif choice == "4. Video Creator":
 elif choice == "5. Face Swap":
     st.subheader("🔄 AI ఫేస్ స్వాప్")
     st.write("మీ ఫోటోను అప్‌లోడ్ చేసి ముఖం మార్చుకోండి.")
-    uploaded_file = st.file_uploader(
-        "ఒక ఫోటోను ఎంచుకోండి", type=["jpg", "png", "jpeg"]
-    )
+    uploaded_file = st.file_uploader("ఒక ఫోటోను ఎంచుకోండి", type=["jpg", "png", "jpeg"])
     if uploaded_file is not None:
         st.success("ఫోటో విజయవంతంగా అప్‌లోడ్ అయింది!")
 
 # ---------------- 6. VOICE CLONING ----------------
 elif choice == "6. Voice Cloning":
-    st.subheader("🎤 AI వాయిస్ క్లోనింగ్")
-    st.text_input("మీరు చెప్పాలనుకున్న టెక్స్ట్ ఇక్కడ రాయండి:")
+    st.subheader("🎤 AI వాయిస్ క్లోనింగ్ (ElevenLabs Integration Ready)")
+    voice_text = st.text_input("మీరు చెప్పాలనుకున్న టెక్స్ట్ ఇక్కడ రాయండి:")
     if st.button("🔊 వాయిస్ జనరేట్ చేయి"):
-        st.success("వాయిస్ జనరేట్ అవుతోంది!")
+        if voice_text:
+            st.success("వాయిస్ జనరేట్ అవుతోంది!")
+        else:
+            st.warning("దయచేసి టెక్స్ట్ రాయండి.")
 
 # ---------------- 7. WEBSITE BUILDER ----------------
 elif choice == "7. Website Builder":
     st.subheader("🌐 AI వెబ్‌సైట్ బిల్డర్")
-    st.text_input("మీకు ఎలాంటి వెబ్‌సైట్ కావాలి? (ఉదా: Business, Portfolio)")
+    web_prompt = st.text_input("మీకు ఎలాంటి వెబ్‌సైట్ కావాలి? (ఉదా: Business, Portfolio)")
     if st.button("💻 వెబ్‌సైట్ క్రియేట్ చేయి"):
-        st.success("మీ వెబ్‌సైట్ కోడ్ రెడీ అవుతోంది!")
-    
+        if web_prompt:
+            st.success("మీ వెబ్‌సైట్ కోడ్ రెడీ అవుతోంది!")
+        else:
+            st.warning("వివరాలు ఇవ్వండి.")
+                
