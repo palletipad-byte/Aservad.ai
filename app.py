@@ -53,7 +53,7 @@ elif choice == "2. Script Maker (Story)":
             with st.spinner("AI స్క్రిప్ట్ తయారు చేస్తోంది... దయచేసి వేచి ఉండండి."):
                 try:
                     # Gemini AI మోడల్ కాల్ చేయడం
-                    model = genai.GenerativeModel('gemini-pro')
+                    model = genai.GenerativeModel('gemini-1.5-flash')
                     prompt = f"Write a {duration} viral social media video script about: {topic} in Telugu or English as requested."
                     response = model.generate_content(prompt)
                     
