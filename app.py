@@ -1,9 +1,10 @@
 import streamlit as st
 import google.generativeai as genai
 
-st.set_page_config(page_title="అసర్వాద్ AI ప్రాజెక్ట్", layout="wide")
+# యాప్ పేరు మార్చడం
+st.set_page_config(page_title="ఆశీర్వాద AI", layout="wide")
 
-st.sidebar.title("🛠️ AI టూల్స్ మెను")
+st.sidebar.title("✨ ఆశీర్వాద AI") # ఇక్కడ సైడ్‌బార్‌లో పేరు మారుతుంది
 api_key = st.sidebar.text_input("Gemini API Key నమోదు చేయండి:", type="password")
 
 if api_key:
