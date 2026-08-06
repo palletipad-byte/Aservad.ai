@@ -77,8 +77,8 @@ elif choice == "3. Image Generator":
             
 # ---------------- 4. VIDEO CREATOR ----------------
 elif choice == "4. Video Creator":
-    st.subheader("🎥 AI వీడియో క్రియేటర్")
-    vid_prompt = st.text_input("మీకు ఎలాంటి వీడియో కావాలి?")
+    .subheader("🎥 AI వీడియో క్రియేటర్")
+    vid_prompstt = st.text_input("మీకు ఎలాంటి వీడియో కావాలి?")
     if st.button("🎬 వీడియో జనరేట్ చేయి"):
         if vid_prompt:
             st.success("🎉 వీడియో క్రియేషన్ ప్రాసెస్ ప్రారంభమైంది!")
