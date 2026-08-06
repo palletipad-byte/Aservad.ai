@@ -60,22 +60,23 @@ elif choice == "2. Script Maker (Story)":
             st.warning("దయచేసి ఏదైనా టాపిక్ రాయండి.")
 
 elif choice == "3. Image Generator":
-    st.subheader("🖼️ AI ఇమేజ్ జనరేటర్ & డిజైనర్")
-    st.info("మీకు కావలసిన చిత్రాలను సృష్టించడానికి క్రింది ఉచిత ప్లాట్‌ఫాంలను ఉపయోగించండి.")
+    st.subheader("🖼️ AI ఇమేజ్ జనరేటర్")
+    st.info("మీకు కావలసిన చిత్రాన్ని నేరుగా ఇక్కడే సృష్టించండి.")
     
-    img_prompt = st.text_input("మీకు ఎలాంటి ఇమేజ్ కావాలి? (చిత్రం గురించి వివరంగా రాయండి)")
-    st.caption("ఉదాహరణ: A cute baby elephant in a jungle, realistic style, golden hour light")
-
-    if st.button("🖼️ ఇమేజ్ లింక్స్ చూపించు"):
+    img_prompt = st.text_input("మీకు ఎలాంటి ఇమేజ్ కావాలి? (ఇంగ్లీష్‌లో రాయండి)")
+    
+    if st.button("🖼️ ఇమేజ్ జనరేట్ చేయి"):
         if img_prompt:
-            st.success("✨ మీ ప్రాంప్ట్ సిద్ధంగా ఉంది!")
-            st.markdown(f"**మీ డిజైన్ ఐడియా:** `{img_prompt}`")
-            st.markdown("---")
-            st.markdown("🌐 **ఉచితంగా ఇమేజ్‌లు తయారు చేసుకోవడానికి క్రింది బటన్స్ క్లిక్ చేయండి:**")
-            st.markdown("- [👉 Hugging Face AI Image Space (Click Here)](https://huggingface.co)")
-            st.markdown("- [👉 Civitai AI Art Generator (Click Here)](https://civitai.com)")
+            with st.spinner("ఇమేజ్ తయారవుతోంది... దయచేసి వేచి ఉండండి."):
+                import urllib.parse
+                encoded_prompt = urllib.parse.quote(img_prompt)
+                image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}"
+                
+                st.success("✨ మీ ఇమేజ్ విజయవంతంగా తయారైంది!")
+                st.image(image_url, caption=f"Generated for: {img_prompt}", use_container_width=True)
         else:
             st.warning("దయచేసి ప్రాంప్ట్ రాయండి.")
+                
 
 elif choice == "4. Video Creator":
     st.subheader("🎥 AI వీడియో క్రియేటర్")
