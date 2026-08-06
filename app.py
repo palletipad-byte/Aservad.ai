@@ -137,7 +137,6 @@ elif choice == "4. Video Creator":
                         st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది!")
                         st.image(target_file, caption="మార్పు చెందిన అవుట్‌పుట్ ఫోటో", use_container_width=True)
                         
-                        # క్రెడిట్స్ తగ్గించే కోడ్
                         if 'credits' in st.session_state and st.session_state.credits > 0:
                             st.session_state.credits -= 1
                             
@@ -145,7 +144,7 @@ elif choice == "4. Video Creator":
                         st.error(f"ఎర్రర్ వచ్చింది: {e}")
         else:
             st.warning("దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి.")
-
+            
 elif choice == "6. Voice Cloning":
     st.subheader("🎤 AI వాయిస్ క్లోనింగ్ (Voice Cloning)")
     st.info("మీ స్వంత గొంతును లేదా కావలసిన వాయిస్‌ని క్లోన్ చేయండి.")
