@@ -119,8 +119,7 @@ elif choice == "4. Video Creator":
         else:
             st.warning("దయచేసి వీడియో టాపిక్ రాయండి.")
 
-
- elif choice == "5. Face Swap":
+elif choice == "5. Face Swap":
     st.subheader("🔄 AI ఫేస్ స్వాప్ (Face Swap)")
     st.info("ఒక ఫోటోలోని ముఖాన్ని మరో ఫోటోలోకి విజయవంతంగా మార్చండి.")
 
@@ -144,7 +143,7 @@ elif choice == "4. Video Creator":
                         st.error(f"ఎర్రర్ వచ్చింది: {e}")
         else:
             st.warning("దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి.")
-            
+                        
 elif choice == "6. Voice Cloning":
     st.subheader("🎤 AI వాయిస్ క్లోనింగ్ (Voice Cloning)")
     st.info("మీ స్వంత గొంతును లేదా కావలసిన వాయిస్‌ని క్లోన్ చేయండి.")
