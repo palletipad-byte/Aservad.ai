@@ -64,7 +64,6 @@ elif choice == "2. Script Maker (Story)":
                     st.error(f"ఎర్రర్ వచ్చింది: {e}")
         else:
             st.warning("దయచేసి ఏదైనా టాపిక్ రాయండి.")
-
 # ---------------- 3. IMAGE GENERATOR ----------------
 elif choice == "3. Image Generator":
     st.subheader("🎨 AI ఇమేజ్ జనరేటర్")
@@ -84,6 +83,6 @@ elif choice == "4. Video Creator":
         if vid_prompt:
             st.success("🎉 వీడియో క్రియేషన్ ప్రాసెస్ ప్రారంభమైంది!")
         else:
+
             
 
-    
