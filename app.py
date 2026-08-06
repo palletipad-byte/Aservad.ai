@@ -61,40 +61,57 @@ elif choice == "2. Script Maker (Story)":
 
 elif choice == "3. Image Generator":
     st.subheader("🖼️ AI ఇమేజ్ జనరేటర్")
-    st.info("మీకు కావలసిన చిత్రాన్ని నేరుగా ఇక్కడే సృష్టించండి.")
+    st.info("మీకు కావలసిన చిత్రాన్ని తెలుగులో లేదా ఇంగ్లీష్‌లో టైప్ చేయండి.")
     
-    img_prompt = st.text_input("మీకు ఎలాంటి ఇమేజ్ కావాలి? (ఇంగ్లీష్‌లో రాయండి)")
+    img_prompt = st.text_input("మీకు ఎలాంటి ఇమేజ్ కావాలి? (తెలుగులో లేదా ఇంగ్లీష్‌లో రాయండి)")
     
     if st.button("🖼️ ఇమేజ్ జనరేట్ చేయి"):
         if img_prompt:
             with st.spinner("ఇమేజ్ తయారవుతోంది... దయచేసి వేచి ఉండండి."):
-                import urllib.parse
-                encoded_prompt = urllib.parse.quote(img_prompt)
-                image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}"
-                
-                st.success("✨ మీ ఇమేజ్ విజయవంతంగా తయారైంది!")
-                st.image(image_url, caption=f"Generated for: {img_prompt}", use_container_width=True)
+                try:
+                    # తెలుగులో రాస్తే ఇంగ్లీష్‌లోకి అనువదించడం కోసం Gemini AI వాడకం
+                    model = genai.GenerativeModel('gemini-1.5-flash')
+                    trans_prompt = f"Translate the following image description into a descriptive English prompt suitable for AI image generation, return only the translated prompt: {img_prompt}"
+                    response = model.generate_content(trans_prompt)
+                    english_prompt = response.text.strip()
+                    
+                    import urllib.parse
+                    encoded_prompt = urllib.parse.quote(english_prompt)
+                    image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}"
+                    
+                    st.success("✨ మీ ఇమేజ్ విజయవంతంగా తయారైంది!")
+                    st.image(image_url, caption=f"Generated for: {img_prompt}", use_container_width=True)
+                except Exception as e:
+                    st.error(f"ఎర్రర్ వచ్చింది: {e}")
         else:
             st.warning("దయచేసి ప్రాంప్ట్ రాయండి.")
-                
 
 elif choice == "4. Video Creator":
     st.subheader("🎥 AI వీడియో క్రియేటర్")
-    st.info("మీకు కావలసిన వీడియోను నేరుగా ఇక్కడే సృష్టించండి.")
+    st.info("మీకు కావలసిన వీడియో టాపిక్‌ని తెలుగులో లేదా ఇంగ్లీష్‌లో టైప్ చేయండి.")
     
-    vid_prompt = st.text_input("మీకు ఎలాంటి వీడియో కావాలి? (ఇంగ్లీష్‌లో రాయండి)")
+    vid_prompt = st.text_input("మీకు ఎలాంటి వీడియో కావాలి? (తెలుగులో లేదా ఇంగ్లీష్‌లో రాయండి)")
     
     if st.button("🎥 వీడియో జనరేట్ చేయి"):
         if vid_prompt:
             with st.spinner("వీడియో తయారవుతోంది... దయచేసి వేచి ఉండండి."):
-                import urllib.parse
-                encoded_vid_prompt = urllib.parse.quote(vid_prompt)
-                video_url = f"https://image.pollinations.ai/prompt/{encoded_vid_prompt}?width=720&height=1280&nologo=true"
-                
-                st.success("✨ మీ వీడియో విజయవంతంగా తయారైంది!")
-                st.image(video_url, caption=f"Generated Video for: {vid_prompt}", use_container_width=True)
+                try:
+                    model = genai.GenerativeModel('gemini-1.5-flash')
+                    trans_prompt = f"Translate the following video description into a descriptive English prompt suitable for AI video generation, return only the translated prompt: {vid_prompt}"
+                    response = model.generate_content(trans_prompt)
+                    english_vid_prompt = response.text.strip()
+                    
+                    import urllib.parse
+                    encoded_vid_prompt = urllib.parse.quote(english_vid_prompt)
+                    video_url = f"https://image.pollinations.ai/prompt/{encoded_vid_prompt}?width=720&height=1280&nologo=true"
+                    
+                    st.success("✨ మీ వీడియో విజయవంతంగా తయారైంది!")
+                    st.image(video_url, caption=f"Generated Video for: {vid_prompt}", use_container_width=True)
+                except Exception as e:
+                    st.error(f"ఎర్రర్ వచ్చింది: {e}")
         else:
             st.warning("దయచేసి వీడియో టాపిక్ రాయండి.")
+
             
 elif choice in ["5. Face Swap", "6. Voice Cloning", "7. Website Builder"]:
     st.subheader(f"🛠️ {choice}")
