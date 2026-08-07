@@ -41,10 +41,6 @@ api_key = st.sidebar.text_input("Gemini API Key నమోదు చేయండ�
 
 
 
-st.sidebar.title("✨ ఆశీర్వాద AI")
-
-st.sidebar.title("✨ ఆశీర్వాద AI") # ఇక్కడ సైడ్‌బార్‌లో పేరు మారుతుంది
-api_key = st.sidebar.text_input("Gemini API Key నమోదు చేయండి:", type="password")
 
 if api_key:
     genai.configure(api_key=api_key)
