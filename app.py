@@ -260,3 +260,31 @@ elif choice == "9. AI Code Assistant & Debugger":
         else:
             st.warning("దయచేసి కోడ్ వివరాలు రాయండి.")
             
+elif choice == "10. AI Chatbot & Content Writer":
+    st.subheader("🤖 AI చాట్‌బాట్ & కంటెంట్ రైటర్")
+    st.info("మీకు కావలసిన అంశంపై కంటెంట్ రాయించుకోండి లేదా ఏ విషయమైనా చాట్ చేయండి.")
+
+    chat_prompt = st.text_area("మీకు ఏ అంశంపై సమాచారం లేదా కంటెంట్ కావాలి? (ఉదాహరణకు: తెలుగు సంస్కృతి గురించి రాయండి)")
+    language = st.selectbox("భాషను ఎంచుకోండి:", ["Telugu", "English", "Hindi"])
+
+    if st.button("🚀 కంటెంట్ జనరేట్ చేయి"):
+        if not api_key:
+            st.error("దయచేసి సైడ్‌బార్‌లో మీ Gemini API Key ఇవ్వండి!")
+        elif chat_prompt:
+            with st.spinner("కంటెంట్ తయారవుతోంది... వేచి ఉండండి."):
+                try:
+                    model = genai.GenerativeModel("gemini-1.5-flash")
+                    prompt = f"Write detailed content about: {chat_prompt} in {language} language."
+                    response = model.generate_content(prompt)
+                    
+                    st.success("✨ కంటెంట్ విజయవంతంగా తయారైంది!")
+                    st.write(response.text)
+                    
+                    if 'credits' in st.session_state and st.session_state.credits > 0:
+                        st.session_state.credits -= 1
+                        
+                except Exception as e:
+                    st.error(f"ఎర్రర్ వచ్చింది: {e}")
+        else:
+            st.warning("దయచేసి కావలసిన అంశం గురించి రాయండి.")
+            
