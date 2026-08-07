@@ -200,3 +200,31 @@ elif choice == "7. Website Builder":
         else:
             st.warning("దయచేసి వెబ్‌సైట్ వివరాలు రాయండి.")
 
+elif choice == "8. AI Resume & Cover Letter":
+    st.subheader("📄 AI రెజ్యూమ్ & కవర్ లెటర్ బిల్డర్")
+    st.info("మీ ఉద్యోగ అవకాశాల కోసం ప్రొఫెషనల్ రెజ్యూమ్ మరియు కవర్ లెటర్ తయారు చేసుకోండి.")
+
+    job_title = st.text_input("మీరు ఏ జాబ్/పొజిషన్‌కి అప్లై చేస్తున్నారు? (ఉదాహరణకు: Python Developer)")
+    skills = st.text_area("మీ నైపుణ్యాలు మరియు అనుభవం గురించి రాయండి (Skills & Experience):")
+
+    if st.button("🚀 రెజ్యూమ్ & కవర్ లెటర్ జనరేట్ చేయు"):
+        if not api_key:
+            st.error("దయచేసి సైడ్‌బార్‌లో మీ Gemini API Key ఇవ్వండి!")
+        elif job_title and skills:
+            with st.spinner("ప్రొఫెషనల్ రెజ్యూమ్ తయారవుతోంది... వేచి ఉండండి."):
+                try:
+                    model = genai.GenerativeModel("gemini-1.5-flash")
+                    prompt = f"Create a professional resume summary and a job cover letter for the position of {job_title} based on these skills: {skills}. Format it nicely."
+                    response = model.generate_content(prompt)
+                    
+                    st.success("✨ మీ రెజ్యూమ్ మరియు కవర్ లెటర్ విజయవంతంగా తయారైంది!")
+                    st.write(response.text)
+                    
+                    if 'credits' in st.session_state and st.session_state.credits > 0:
+                        st.session_state.credits -= 1
+                        
+                except Exception as e:
+                    st.error(f"ఎర్రర్ వచ్చింది: {e}")
+        else:
+            st.warning("దయచేసి జాబ్ టైటిల్ మరియు మీ వివరాలు పూర్తిగా రాయండి.")
+                
