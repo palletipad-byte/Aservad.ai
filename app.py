@@ -16,7 +16,7 @@ if api_key:
     st.sidebar.subheader("💎 మీ ఖాతా వివరాలు")
     st.sidebar.write(f"మిగిలిన క్రెడిట్స్: **{st.session_state.credits} / 5**")
 
-    choice = st.sidebar.selectbox(
+choice = st.sidebar.selectbox(
     "ఒక ఫీచర్‌ని ఎంచుకోండి:",
     (
         "1. Home / Dashboard",
@@ -28,10 +28,11 @@ if api_key:
         "7. Website Builder",
         "8. AI Resume & Cover Letter",
         "9. AI Code Assistant & Debugger",
-        "10. AI Chatbot & Content Writer"
+        "10. AI Chatbot & Content Writer",
+        "11. AI Voice Chat & Audio Assistant"
     )
-    )
-    
+)
+
     
 
 
