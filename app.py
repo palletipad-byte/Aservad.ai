@@ -1,4 +1,4 @@
- import streamlit as st
+import streamlit as st
 import google.generativeai as genai
 
 # యాప్ పేరు మరియు డిజైన్ సెట్టింగ్
