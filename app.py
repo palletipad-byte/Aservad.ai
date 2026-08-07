@@ -17,8 +17,8 @@ if api_key:
     st.sidebar.write(f"మిగిలిన క్రెడిట్స్: **{st.session_state.credits} / 5**")
 
 choice = st.sidebar.selectbox(
-    "ఒక ఫీచర్‌ని ఎన్నుకోండి:",
-    [
+    "ఒక ఫీచర్‌ని ఎంచుకోండి:",
+    (
         "1. Home / Dashboard",
         "2. Script Maker (Story)",
         "3. Image Generator",
@@ -26,8 +26,10 @@ choice = st.sidebar.selectbox(
         "5. Face Swap",
         "6. Voice Cloning",
         "7. Website Builder",
-    ]
+        "8. AI Resume & Cover Letter"
+    )
 )
+
 
 if choice == "1. Home / Dashboard":
     st.subheader("🏠 హోమ్ పేజీ - స్వాగతం!")
