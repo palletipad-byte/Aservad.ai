@@ -177,7 +177,7 @@ elif choice == "5. Face Swap":
         st.markdown("**2. టార్గెట్ ఫోటో (ఎవరి మీదకి మార్చాలో అది)**")
         target_file = st.file_uploader("టార్గెట్ ఫోటో అప్‌లోడ్ చేయండి:", type=["jpg", "jpeg", "png"], key="target_img")
         if target_file is not None:
-        st.image(target_file, caption="టార్గెట్ ఫోటో", width=200)
+            st.image(target_file, caption="టార్గెట్ ఫోటో", width=200)
             
     if st.button("🔄 ఫేస్ స్వాప్ ప్రాసెస్ చేయండి"):
         if source_file and target_file:
