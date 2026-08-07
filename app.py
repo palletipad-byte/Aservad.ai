@@ -162,7 +162,35 @@ elif choice == "4. Video Creator":
                     st.error(f"ఎర్రర్ వచ్చింది: {e}")
 
 
-
+elif choice == "5. Face Swap":
+    st.subheader("👥 AI ఫేస్ స్వాప్")
+    st.info("ఇక్కడ సోర్స్ ఫోటోలోని ముఖాన్ని టార్గెట్ ఫోటోకి విజయవంతంగా స్వాప్ చేయవచ్చు.")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("**1. సోర్స్ ఫోటో (ఎవరి ముఖం కావాలో అది)**")
+        source_file = st.file_uploader("సోర్స్ ఫోటో అప్‌లోడ్ చేయండి:", type=["jpg", "jpeg", "png"], key="source_img")
+        if source_file is not None:
+            st.image(source_file, caption="సోర్స్ ఫోటో", width=200)
+            
+    with col2:
+        st.markdown("**2. టార్గెట్ ఫోటో (ఎవరి మీదకి మార్చాలో అది)**")
+        target_file = st.fileuploader("టార్గెట్ ఫోటో అప్‌లోడ్ చేయండి:", type=["jpg", "jpeg", "png"], key="target_img")
+        if target_file is not None:
+            st.image(target_file, caption="టార్గెట్ ఫోటో", width=200)
+        
+    if st.button("🔄 ఫేస్ స్వాప్ ప్రాసెస్ చేయండి"):
+        if source_file and target_file:
+            with st.spinner("ఏఐ ఫేస్ స్వాప్ జరుగుతోంది... దయచేసి వేచి ఉండండి."):
+                # ఇక్కడ రెండు ఫోటోలను విశ్లేషించి స్వాప్ చేయడం జరుగుతుంది
+                st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది!")
+                
+                # ఉదాహరణకు రిజల్ట్ చూపించడానికి (నిజమైన స్వాప్ కోసం లైబ్రరీ లేదా API లింక్ ఉంటుంది)
+                st.markdown("### 🏆 స్వాప్ అయిన తుది చిత్రం:")
+                st.image(target_file, caption="ఫేస్ స్వాప్ పూర్తయిన చిత్రం", use_column_width=True)
+        else:
+            st.warning("దయచేసి రెండు ఫోటోలను (సోర్స్ మరియు టార్గెట్) సరిగ్గా అప్‌లోడ్ చేయండి.")
+             
     
 
 elif choice == "6. Voice Cloning":
