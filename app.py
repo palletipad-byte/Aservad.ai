@@ -29,9 +29,11 @@ choice = st.sidebar.selectbox(
         "8. AI Resume & Cover Letter",
         "9. AI Code Assistant & Debugger",
         "10. AI Chatbot & Content Writer",
-        "11. AI Voice Chat & Audio Assistant"
+        "11. AI Voice Chat & Audio Assistant",
+        "12. AI PDF Document Summarizer"
     )
 )
+
 
     
 
@@ -324,3 +326,27 @@ elif choice == "11. AI Voice Chat & Audio Assistant":
                     except Exception as e:
                         st.error(f"ఎర్రర్ వచ్చింది: {e}")
                     
+elif choice == "12. AI PDF Document Summarizer":
+    st.subheader("📄 AI PDF డాక్యుమెంట్ సమ్మరైజర్")
+    st.info("మీ PDF ఫైల్‌ని అప్‌లోడ్ చేయండి, AI మీకు దాని సారాంశాన్ని అందిస్తుంది.")
+
+    pdf_file = st.file_uploader("PDF ఫైల్‌ని అప్‌లోడ్ చేయండి:", type=["pdf"])
+
+    if pdf_file is not None:
+        st.success("ఫైల్ అప్‌లోడ్ అయ్యింది!")
+        if st.button("🚀 సమ్మరీని జనరేట్ చేయి"):
+            if not api_key:
+                st.error("API Key ఇవ్వండి!")
+            else:
+                with st.spinner("PDFని విశ్లేషిస్తోంది..."):
+                    try:
+                        model = genai.GenerativeModel("gemini-1.5-flash")
+                        # PDF నుండి టెక్స్ట్ తీయడానికి మనం ఇక్కడ ప్రాంప్ట్ ఇస్తున్నాం
+                        prompt = "Analyze the uploaded PDF and provide a comprehensive summary."
+                        response = model.generate_content([prompt, pdf_file.getvalue()])
+                        
+                        st.write("### 📝 సమ్మరీ:")
+                        st.write(response.text)
+                    except Exception as e:
+                        st.error(f"ఎర్రర్ వచ్చింది: {e}")
+                        
