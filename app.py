@@ -117,36 +117,7 @@ elif choice == "4. Video Creator":
                 except Exception as e:
                     st.error(f"ఎర్రర్ వచ్చింది: {e}")
 
-elif choice == "5. Face Swap":
-    st.subheader("🔄 AI ఫేస్ స్వాప్ (Face Swap)")
-    st.info("ఒక ఫోటోలోని ముఖాన్ని మరో ఫోటోలోకి విజయవంతంగా మార్చండి.")
 
-    source_file = st.file_uploader("సోర్స్ ఫేస్ ఫోటోను (మీ ఫోటో) అప్లోడ్ చేయండి:", type=["jpg", "jpeg", "png"], key="source_swap")
-    target_file = st.file_uploader("టార్గెట్ ఇమేజ్ ఫోటోను అప్లోడ్ చేయండి:", type=["jpg", "jpeg", "png"], key="target_swap")
-
-    if source_file and target_file:
-        col1, col2 = st.columns(2)
-        with col1:
-            st.image(source_file, caption="సోర్స్ ఫోటో", use_container_width=True)
-        with col2:
-            st.image(target_file, caption="టార్గెట్ ఫోటో", use_container_width=True)
-
-        if st.button("🚀 ఫేస్ స్వాప్ చేయు"):
-            if not api_key:
-                st.error("దయచేసి సైడ్‌బార్‌లో మీ Gemini API Key ఇవ్వండి!")
-            else:
-                with st.spinner("ఫేస్ స్వాప్ జరుగుతోంది... దయచేసి వేచి ఉండండి."):
-                    try:
-                        from PIL import Image
-                        target_image = Image.open(target_file)
-                        st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది!")
-                        st.image(target_image, caption="మార్పు చెందిన అవుట్‌పుట్ ఫోటో", use_container_width=True)
-                        if 'credits' in st.session_state and st.session_state.credits > 0:
-                            st.session_state.credits -= 1
-                    except Exception as e:
-                        st.error(f"ఎర్రర్ వచ్చింది: {e}")
-    else:
-        st.warning("దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి.")
 
 
 elif choice == "6. Voice Cloning":
