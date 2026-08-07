@@ -230,3 +230,31 @@ elif choice == "8. AI Resume & Cover Letter":
         else:
             st.warning("దయచేసి జాబ్ టైటిల్ మరియు మీ వివరాలు పూర్తిగా రాయండి.")
                 
+elif choice == "9. AI Code Assistant & Debugger":
+    st.subheader("💻 AI కోడ్ అసిస్టెంట్ & డిబగ్గర్")
+    st.info("కోడ్ రాయడానికి లేదా మీ కోడ్‌లోని తప్పులను సరిదిద్దడానికి దీన్ని వాడండి.")
+
+    code_input = st.text_area("ఇక్కడ మీ కోడ్ లేదా ప్రోగ్రామ్ గురించి వివరణ రాయండి:")
+    task = st.selectbox("ఏం చేయాలి?", ["కోడ్ జనరేట్ చేయి", "కోడ్ డిబగ్/సరిచేయి"])
+
+    if st.button("🚀 కోడ్ ప్రాసెస్ చేయి"):
+        if not api_key:
+            st.error("దయచేసి మీ Gemini API Key ఇవ్వండి!")
+        elif code_input:
+            with st.spinner("ఏఐ మీ కోడ్‌ని సిద్ధం చేస్తోంది..."):
+                try:
+                    model = genai.GenerativeModel("gemini-1.5-flash")
+                    prompt = f"Task: {task}. Input: {code_input}. Provide clean, efficient code."
+                    response = model.generate_content(prompt)
+                    
+                    st.success("✨ కోడ్ తయారైంది!")
+                    st.code(response.text)
+                    
+                    if 'credits' in st.session_state and st.session_state.credits > 0:
+                        st.session_state.credits -= 1
+                        
+                except Exception as e:
+                    st.error(f"ఎర్రర్ వచ్చింది: {e}")
+        else:
+            st.warning("దయచేసి కోడ్ వివరాలు రాయండి.")
+            
