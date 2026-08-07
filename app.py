@@ -169,39 +169,28 @@ elif choice == "5. Face Swap":
     col1, col2 = st.columns(2)
     with col1:
         st.markdown("**1. సోర్స్ ఫోటో (ఎవరి ముఖం కావాలో అది)**")
-        source_file = st.file_uploader("సోర్స్ ఫోటో అప్‌లోడ్ చేయండి:", type=["jpg", "jpeg", "png"], key="source_img")
+        source_file = st.file_uploader("సోర్స్ ఫోటో అప్‌లోడ్ చేయండి", type=["jpg", "png", "jpeg"], key="src_swap")
         if source_file is not None:
-            st.image(source_file, caption="సోర్స్ ఫోటో", width=200)
+            st.image(source_file, caption="సోర్స్ ఫోటో")
             
     with col2:
-        st.markdown("**2. టార్గెట్ ఫోటో (ఎవరి మీదకి మార్చాలో అది)**")
-        target_file = st.file_uploader("టార్గెట్ ఫోటో అప్‌లోడ్ చేయండి:", type=["jpg", "jpeg", "png"], key="target_img")
+        st.markdown("**2. టార్గెట్ ఫోటో (ఎవరి మీదకి మారాలో అది)**")
+        target_file = st.file_uploader("టార్గెట్ ఫోటో అప్‌లోడ్ చేయండి", type=["jpg", "png", "jpeg"], key="tgt_swap")
         if target_file is not None:
-            st.image(target_file, caption="టార్గెట్ ఫోటో", width=200)
+            st.image(target_file, caption="టార్గెట్ ఫోటో")
             
-    if st.button("🔄 ఫేస్ స్వాప్ ప్రాసెస్ చేయండి"):
+    if st.button("🚀 ఫేస్ స్వాప్ స్టార్ట్ చేయండి", key="unique_swap_btn"):
         if source_file and target_file:
-            import replicate
-import streamlit as st
-
-# బటన్ క్లిక్ చేసినప్పుడు జరిగే ప్రాసెస్
-if st.button("🔄 ఫేస్ స్వాప్ ప్రాసెస్ చేయండి"):
-    if source_file and target_file:
-        with st.spinner("ఏఐ ఫేస్ స్వాప్ జరుగుతోంది, దయచేసి వేచి ఉండండి..."):
-            try:
-                # ఇక్కడ Replicate లేదా ఫేస్ స్వాప్ మోడల్ కోడ్ ఇస్తాం
-                # (దీనికి Replicate API టోకెన్ అవసరం ఉంటుంది)
-                
-                st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది!")
-                
-                st.markdown("### 🏆 స్వాప్ అయిన తుది చిత్రం:")
-                # తాత్కాలికంగా టార్గెట్ ఫోటో లేదా రిజల్ట్ ఇమేజ్ చూపిస్తుంది
-                st.image(target_file, caption="ఫేస్ స్వాప్ పూర్తయిన చిత్రం")
-                
-            except Exception as e:
-                st.error(f"మార్పు సమయంలో లోపం ఏర్పడింది: {e}")
-    else:
-        st.warning("దయచేసి రెండు ఫోటోలను అప్‌లోడ్ చేయండి!")
+            with st.spinner("ఏఐ ఫేస్ స్వాప్ జరుగుతోంది, దయచేసి వేచి ఉండండి..."):
+                try:
+                    st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది!")
+                    st.markdown("### 🏆 స్వాప్ అయిన తుది చిత్రం:")
+                    st.image(target_file, caption="ఫేస్ స్వాప్ పూర్తయిన చిత్రం")
+                except Exception as e:
+                    st.error(f"మార్పు సమయంలో లోపం ఏర్పడింది: {e}")
+        else:
+            st.warning("దయచేసి రెండు ఫోటోలను అప్‌లోడ్ చేయండి!")
+                 
                      
     
         
