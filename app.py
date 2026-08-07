@@ -1,12 +1,44 @@
-import streamlit as st
+ import streamlit as st
 import google.generativeai as genai
 
-# యాప్ పేరు మార్చడం
+# యాప్ పేరు మరియు డిజైన్ సెట్టింగ్
 st.set_page_config(page_title="ఆశీర్వాద AI", layout="wide")
-import streamlit as st
-import google.generativeai as genai
 
-# యాప్ పేరు మార్చడం
+# CSS డిజైన్ మరియు యానిమేషన్ కోడ్
+st.markdown("""
+    <style>
+    .stApp {
+        background-color: #0e1117;
+        color: #ffffff;
+    }
+    [data-testid="stSidebar"] {
+        background-color: #161b22;
+        border-right: 1px solid #30363d;
+    }
+    .stButton>button {
+        background: linear-gradient(45deg, #FF4B4B, #FF914D);
+        color: white;
+        border-radius: 10px;
+        border: none;
+        padding: 0.5rem 1rem;
+        font-weight: bold;
+        transition: 0.3s ease;
+        box-shadow: 0 4px 10px rgba(255, 75, 75, 0.3);
+    }
+    .stButton>button:hover {
+        transform: scale(1.02);
+        box-shadow: 0 6px 15px rgba(255, 75, 75, 0.5);
+    }
+    h1, h2, h3 {
+        color: #58a6ff;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    </style>
+""", unsafe_allow_html=True)
+
+st.sidebar.title("✨ ఆశీర్వాద AI")
+api_key = st.sidebar.text_input("Gemini API Key నమోదు చేయండి:", type="password")
+
 st.set_page_config(page_title="ఆశీర్వాద AI", layout="wide")
 
 # === CSS డిజైన్ మరియు యానిమేషన్ కోడ్ ఇక్కడ పేస్ట్ చేయండి ===
