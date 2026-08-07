@@ -119,29 +119,7 @@ elif choice == "4. Video Creator":
         else:
             st.warning("దయచేసి వీడియో టాపిక్ రాయండి.")
 
-elif choice == "5. Face Swap":
-    st.subheader("🔄 AI ఫేస్ స్వాప్ (Face Swap)")
-    st.info("ఒక ఫోటోలోని ముఖాన్ని మరో ఫోటోలోకి విజయవంతంగా మార్చండి.")
 
-    source_file = st.file_uploader("సోర్స్ ఫేస్ ఫోటోను అప్లోడ్ చేయండి:", type=["jpg", "jpeg", "png"])
-    target_file = st.file_uploader("టార్గెట్ ఇమేజ్ ఫోటోను అప్లోడ్ చేయండి:", type=["jpg", "jpeg", "png"])
-
-    if st.button("🚀 ఫేస్ స్వాప్ చేయు"):
-        if source_file and target_file:
-            if not api_key:
-                st.error("దయచేసి సైడ్‌బార్‌లో మీ Gemini API Key ఇవ్వండి!")
-            else:
-                with st.spinner("ఫేస్ స్వాప్ జరుగుతోంది... దయచేసి వేచి ఉండండి."):
-                    try:
-                        st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది!")
-                        st.image(target_file, caption="మార్పు చెందిన అవుట్‌పుట్ ఫోటో", use_container_width=True)
-                        
-                        if 'credits' in st.session_state and st.session_state.credits > 0:
-                            st.session_state.credits -= 1
-                            
-                    except Exception as e:
-                        st.error(f"ఎర్రర్ వచ్చింది: {e}")
-        else:
             st.warning("దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి.")
                         
 elif choice == "6. Voice Cloning":
