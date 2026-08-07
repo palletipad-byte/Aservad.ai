@@ -290,3 +290,36 @@ elif choice == "10. AI Chatbot & Content Writer":
         else:
             st.warning("దయచేసి కావలసిన అంశం గురించి రాయండి.")
             
+elif choice == "11. AI Voice Chat & Audio Assistant":
+    st.subheader("🎙️ AI వాయిస్ చాట్ & ఆడియో అసిస్టెంట్")
+    st.info("మైక్ ద్వారా ఆడియోను రికార్డ్ చేసి లేదా అప్‌లోడ్ చేసి మీ ప్రశ్నలను అడగండి.")
+
+    audio_data = st.audio_input("ఇక్కడ మీ వాయిస్‌ని రికార్డ్ చేయండి:")
+
+    if audio_data is not None:
+        st.audio(audio_data)
+        
+        if st.button("🚀 వాయిస్ మెసేజ్ ప్రాసెస్ చేయి"):
+            if not api_key:
+                st.error("దయచేసి సైడ్‌బార్‌లో మీ Gemini API Key ఇవ్వండి!")
+            else:
+                with st.spinner("మీ ఆడియోను విశ్లేషిస్తోంది..."):
+                    try:
+                        # ఆడియో ఫైల్‌ని జెమిని మోడల్‌కు పంపడం కోసం
+                        model = genai.GenerativeModel("gemini-1.5-flash")
+                        
+                        # ఆడియో డేటాను ప్రాసెస్ చేయడానికి 
+                        response = model.generate_content([
+                            "Listen to this audio recording and provide a helpful response or answer in text format.",
+                            audio_data
+                        ])
+                        
+                        st.success("✨ సమాధానం సిద్ధం!")
+                        st.write(response.text)
+                        
+                        if 'credits' in st.session_state and st.session_state.credits > 0:
+                            st.session_state.credits -= 1
+                            
+                    except Exception as e:
+                        st.error(f"ఎర్రర్ వచ్చింది: {e}")
+                    
