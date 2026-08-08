@@ -162,47 +162,7 @@ elif choice == "4. Video Creator":
                     st.error(f"ఎర్రర్ వచ్చింది: {e}")
 
 
- elif choice == "5. Face Swap":
-    st.subheader("👥 AI ఫేస్ స్వాప్")
-    st.info("ఇక్కడ సోర్స్ ఫోటోలోని ముఖాన్ని టార్గెట్ ఫోటోకి విజయవంతంగా స్వాప్ చేయవచ్చు.")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        st.markdown("**1. సోర్స్ ఫోటో (ఎవరి ముఖం కావాలో అది)**")
-        source_file = st.file_uploader("సోర్స్ ఫోటో అప్‌లోడ్ చేయండి", type=["jpg", "png", "jpeg"], key="src_swap")
-        if source_file is not None:
-            st.image(source_file, caption="సోర్స్ ఫోటో")
-            
-    with col2:
-        st.markdown("**2. టార్గెట్ ఫోటో (ఎవరి మీదకి మారాలో అది)**")
-        target_file = st.file_uploader("టార్గెట్ ఫోటో అప్‌లోడ్ చేయండి", type=["jpg", "png", "jpeg"], key="tgt_swap")
-        if target_file is not None:
-            st.image(target_file, caption="టార్గెట్ ఫోటో")
-
-    import replicate
-
-    if st.button("🚀 ఫేస్ స్వాప్ స్టార్ట్ చేయండి", key="unique_swap_btn"):
-        if source_file and target_file:
-            with st.spinner("ఏఐ ఫేస్ స్వాప్ జరుగుతోంది, దయచేసి వేచి ఉండండి..."):
-                try:
-                    # రియల్ ఫేస్ స్వాప్ మోడల్ మరియు కరెక్ట్ వెర్షన్
-                    output = replicate.run(
-                        "lucataco/faceswap:9a4454d4fac9eb431c4f5264b3ef776e01a052ff37c54178696b994d50f01a35",
-                        input={
-                            "source_image": source_file,
-                            "target_image": target_file
-                        }
-                    )
-                    st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది!")
-                    st.markdown("### 🏆 స్వాప్ అయిన తుది చిత్రం:")
-                    st.image(output, caption="ఫేస్ స్వాప్ పూర్తయిన చిత్రం")
-                except Exception as e:
-                    st.error(f"మార్పు సమయంలో లోపం ఏర్పడింది: {e}")
-        else:
-            st.warning("దయచేసి రెండు ఫోటోలను అప్‌లోడ్ చేయండి!")
-        
-                     
-    
+ 
         
              
     
