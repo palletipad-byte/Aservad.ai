@@ -162,119 +162,52 @@ elif choice == "4. Video Creator":
                     st.error(f"ఎర్రర్ వచ్చింది: {e}")
 
 
-import cv2
-import insightface
-import numpy as np
-import streamlit as st
-from PIL import Image
-
-# 1. Page Configuration
-st.set_page_config(
-    page_title="AI Face Swap & Tools App", page_icon="🔄", layout="centered"
-)
-
-# Sidebar / Menu
-choice = st.sidebar.selectbox(
-    "ఒక ఫీచర్‌ని ఎంచుకోండి:",
-    [
-        "1. Home / Dashboard",
-        "2. About",
-        "3. Features",
-        "4. Video Creator",
-        "5. Face Swap",
-    ],
-)
-
-if choice == "1. Home / Dashboard":
-  st.subheader("🏠 హోమ్ పేజ్ - స్వాగతం!")
-  st.info("ఇక్కడ మీ యాప్ యొక్క మెయిన్ డాష్‌బోర్డ్ కనిపిస్తుంది.")
-  col1, col2, col3 = st.columns(3)
-  col1.metric("మొత్తం యూజర్లు", "1,240+")
-  col2.metric("జనరేట్ అయిన స్వాప్స్", "5,800+")
-  col3.metric("వీడియోలు / టెక్స్ట్", "3,120+")
-
-elif choice == "2. About":
-  st.subheader("ℹ️ మా గురించి")
-  st.write("ఇది AI ఆధారిత ఫేస్ స్వాప్ మరియు కంటెంట్ క్రియేషన్ అప్లికేషన్.")
-
-elif choice == "3. Features":
-  st.subheader("⚡ ఫీచర్లు")
-  st.write(
-      "1. ఫేస్ స్వాప్\n2. AI వీడియో జనరేటర్\n3. సింపుల్ అండ్ యూజర్ ఫ్రెండ్లీ"
-      " ఇంటర్‌ఫేస్."
-  )
-
-elif choice == "4. Video Creator":
-  st.subheader("🎥 AI వీడియో క్రియేటర్")
-  vid_prompt = st.text_input("మీకు కావలసిన వీడియో టాపిక్‌ని టైప్ చేయండి:")
-  if st.button("🎥 వీడియో జనరేట్ చేయి"):
-    if vid_prompt:
-      st.success("✨ మీ వీడియో విజయవంతంగా తయారైంది!")
-    else:
-      st.warning("దయచేసి ప్రాంప్ట్ రాయండి.")
-
 elif choice == "5. Face Swap":
-  st.subheader("🔄 AI Face Swap Tool")
-  st.write(
-      "సోర్స్ ఫోటోలోని ముఖాన్ని, టార్గెట్ ఫోటోలోకి మార్చడానికి ఇది ఉపయోగపడుతుంది."
-  )
+    st.subheader("🔄 AI Face Swap Tool")
+    st.write("సోర్స్ ఫోటోలోని ముఖాన్ని, టార్గెట్ ఫోటోలోకి మార్చడానికి ఇది ఉపయోగపడుతుంది.")
 
-  try:
-    model = insightface.app.FaceAnalysis(name="buffalo_l")
-    model.prepare(ctx_id=-1, det_size=(640, 640))
-    swapper = insightface.model_zoo.get_model(
-        "inswapper_128.onnx", download=True, download_zip=True
-    )
+    try:
+        model = insightface.app.FaceAnalysis(name='buffalo_l')
+        model.prepare(ctx_id=-1, det_size=(640, 640))
+        swapper = insightface.model_zoo.get_model('inswapper_128.onnx', download=True, download_zip=True)
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            source_file = st.file_uploader("1. Source Face (ముఖం కావాల్సిన ఫోటో)", type=['jpg', 'jpeg', 'png'], key="src")
+            if source_file:
+                source_img = Image.open(source_file)
+                st.image(source_img, caption="Source Face", use_column_width=True)
 
-    col1, col2 = st.columns(2)
-    with col1:
-      source_file = st.file_uploader(
-          "1. Source Face (ముఖం కావాల్సిన ఫోటో)",
-          type=["jpg", "jpeg", "png"],
-          key="src",
-      )
-      if source_file:
-        source_img = Image.open(source_file)
-        st.image(source_img, caption="Source Face", use_column_width=True)
+        with col2:
+            target_file = st.file_uploader("2. Target Image (ఎక్కడ మార్చాలి)", type=['jpg', 'jpeg', 'png'], key="tgt")
+            if target_file:
+                target_img = Image.open(target_file)
+                st.image(target_img, caption="Target Image", use_column_width=True)
 
-    with col2:
-      target_file = st.file_uploader(
-          "2. Target Image (ఎక్కడ మార్చాలి)",
-          type=["jpg", "jpeg", "png"],
-          key="tgt",
-      )
-      if target_file:
-        target_img = Image.open(target_file)
-        st.image(target_img, caption="Target Image", use_column_width=True)
+        if st.button("🚀 Face Swap ప్రారంభించు", type="primary"):
+            if source_file is None or target_file is None:
+                st.warning("దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి!")
+            else:
+                with st.spinner("ఫేస్ స్వాపింగ్ జరుగుతోంది..."):
+                    source_cv = cv2.cvtColor(np.array(source_img), cv2.COLOR_RGB2BGR)
+                    target_cv = cv2.cvtColor(np.array(target_img), cv2.COLOR_RGB2BGR)
 
-    if st.button("🚀 Face Swap ప్రారంభించు", type="primary"):
-      if source_file is None or target_file is None:
-        st.warning("దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి!")
-      else:
-        with st.spinner("ఫేస్ స్వాపింగ్ జరుగుతోంది..."):
-          source_cv = cv2.cvtColor(np.array(source_img), cv2.COLOR_RGB2BGR)
-          target_cv = cv2.cvtColor(np.array(target_img), cv2.COLOR_RGB2BGR)
+                    source_faces = model.get(source_cv)
+                    target_faces = model.get(target_cv)
 
-          source_faces = model.get(source_cv)
-          target_faces = model.get(target_cv)
+                    if len(source_faces) == 0 or len(target_faces) == 0:
+                        st.error("ఫోటోలలో ముఖం సరిగ్గా గుర్తించబడలేదు. వేరే ఫోటో ప్రయత్నించండి.")
+                    else:
+                        source_face = source_faces[0]
+                        res_img = target_cv.copy()
+                        for target_face in target_faces:
+                            res_img = swapper.get(res_img, target_face, source_face, paste_back=True)
 
-          if len(source_faces) == 0 or len(target_faces) == 0:
-            st.error(
-                "ఫోటోలలో ముఖం సరిగ్గా గుర్తించబడలేదు. వేరే ఫోటో ప్రయత్నించండి."
-            )
-          else:
-            source_face = source_faces[0]
-            res_img = target_cv.copy()
-            for target_face in target_faces:
-              res_img = swapper.get(
-                  res_img, target_face, source_face, paste_back=True
-              )
-
-            final_img = cv2.cvtColor(res_img, cv2.COLOR_BGR2RGB)
-            st.success("🎉 ఫేస్ స్వాప్ పూర్తయింది!")
-            st.image(final_img, caption="Result", use_column_width=True)
-  except Exception as e:
-    st.error(f"ఎర్రర్ వచ్చింది: {e}")
+                        final_img = cv2.cvtColor(res_img, cv2.COLOR_BGR2RGB)
+                        st.success("🎉 ఫేస్ స్వాప్ పూర్తయింది!")
+                        st.image(final_img, caption="Result", use_column_width=True)
+    except Exception as e:
+        st.error(f"ఎర్రర్ వచ్చింది: {e}")
                     
     
 elif choice == "6. Voice Cloning":
