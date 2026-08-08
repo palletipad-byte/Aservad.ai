@@ -1,3 +1,9 @@
+import cv2
+import insightface
+import numpy as np
+import streamlit as st
+from PIL import Image
+
 import streamlit as st
 import google.generativeai as genai
 
