@@ -11,10 +11,8 @@ import google.generativeai as genai
 st.set_page_config(page_title="ఆశీర్వాద AI", layout="wide")
 
 # CSS డిజైన్ మరియు యానిమేషన్ కోడ్
-st.markdown("""
-    <style>
-    .stApp {
-        st.markdown(
+# CSS డిజైన్ మరియు యానిమేషన్ కోడ్
+st.markdown(
     """
     <style>
     .stApp {
@@ -29,6 +27,7 @@ st.markdown("""
 """,
     unsafe_allow_html=True,
 )
+
 
     }
     [data-testid="stSidebar"] {
