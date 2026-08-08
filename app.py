@@ -4,7 +4,7 @@ import numpy as np
 import streamlit as st
 from PIL import Image
 
-import streamlit as st
+
 import google.generativeai as genai
 
 # యాప్ పేరు మరియు డిజైన్ సెట్టింగ్
