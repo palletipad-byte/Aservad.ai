@@ -161,9 +161,11 @@ elif choice == "4. Video Creator":
                 except Exception as e:
                     st.error(f"ఎర్రర్ వచ్చింది: {e}")
 
- elif choice == "5. Face Swap":
-     st.subheader("🔄 AI Face Swap Tool")
-     st.write("సోర్స్ ఫోటోలోని ముఖాన్ని, టార్గెట్ ఫోటోలోకి మార్చడానికి ఇది ఉపయోగపడుతుంది.")
+
+
+elif choice == "5. Face Swap":
+    st.subheader("🔄 AI Face Swap Tool")
+    st.write("సోర్స్ ఫోటోలోని ముఖాన్ని, టార్గెట్ ఫోటోలోకి మార్చడానికి ఇది ఉపయోగపడుతుంది.")
 
         # Load models
         try:
@@ -208,7 +210,7 @@ elif choice == "4. Video Creator":
                             st.image(final_img, caption="Result", use_column_width=True)
         except Exception as e:
             st.error(f"ఎర్రర్ వచ్చింది: {e}")
-
+            
             
     
 
