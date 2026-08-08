@@ -24,9 +24,6 @@ st.markdown(
         border-right: 1px solid #d3d3d3;
     }
     </style>
-""",
-    unsafe_allow_html=True,
-)
 
 
     
