@@ -14,8 +14,22 @@ st.set_page_config(page_title="ఆశీర్వాద AI", layout="wide")
 st.markdown("""
     <style>
     .stApp {
-        background-color: #0e1117;
-        color: #ffffff;
+        st.markdown(
+    """
+    <style>
+    .stApp {
+        background-color: #ffffff;
+        color: #000000;
+    }
+    [data-testid="stSidebar"] {
+        background-color: #f0f2f6;
+        border-right: 1px solid #d3d3d3;
+    }
+    </style>
+""",
+    unsafe_allow_html=True,
+)
+
     }
     [data-testid="stSidebar"] {
         background-color: #161b22;
