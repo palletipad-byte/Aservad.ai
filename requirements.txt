@@ -3,3 +3,7 @@ streamlit
 
 opencv-python-headless
 replicate
+insightface
+onnxruntime
+numpy
+pillow
