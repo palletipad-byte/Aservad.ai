@@ -49,8 +49,8 @@ st.markdown(
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     </style>
-""", unsafe_allow_html=True)
-
+""", unsafe_allow_html=True
+)
 st.sidebar.title("✨ ఆశీర్వాద AI")
 api_key = st.sidebar.text_input("Gemini API Key నమోదు చేయండి:", type="password")
 
