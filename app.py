@@ -29,11 +29,7 @@ st.markdown(
 )
 
 
-    }
-    [data-testid="stSidebar"] {
-        background-color: #161b22;
-        border-right: 1px solid #30363d;
-    }
+    
     .stButton>button {
         background: linear-gradient(45deg, #FF4B4B, #FF914D);
         color: white;
