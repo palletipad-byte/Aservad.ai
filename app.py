@@ -162,9 +162,56 @@ elif choice == "4. Video Creator":
                     st.error(f"ఎర్రర్ వచ్చింది: {e}")
 
 
- 
+    
+    elif choice == "5. Face Swap":
+        st.subheader("🔄 AI Face Swap Tool")
+        st.write("సోర్స్ ఫోటోలోని ముఖాన్ని, టార్గెట్ ఫోటోలోకి మార్చడానికి ఇది ఉపయోగపడుతుంది.")
 
-             
+        # Load models
+        try:
+            model = insightface.app.FaceAnalysis(name='buffalo_l')
+            model.prepare(ctx_id=-1, det_size=(640, 640))
+            swapper = insightface.model_zoo.get_model('inswapper_128.onnx', download=True, download_zip=True)
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                source_file = st.file_uploader("1. Source Face (ముఖం కావాల్సిన ఫోటో)", type=['jpg', 'jpeg', 'png'], key="src")
+                if source_file:
+                    source_img = Image.open(source_file)
+                    st.image(source_img, caption="Source Face", use_column_width=True)
+
+            with col2:
+                target_file = st.file_uploader("2. Target Image (ఎక్కడ మార్చాలి)", type=['jpg', 'jpeg', 'png'], key="tgt")
+                if target_file:
+                    target_img = Image.open(target_file)
+                    st.image(target_img, caption="Target Image", use_column_width=True)
+
+            if st.button("🚀 Face Swap ప్రారంభించు", type="primary"):
+                if source_file is None or target_file is None:
+                    st.warning("దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి!")
+                else:
+                    with st.spinner("ఫేస్ స్వాపింగ్ జరుగుతోంది..."):
+                        source_cv = cv2.cvtColor(np.array(source_img), cv2.COLOR_RGB2BGR)
+                        target_cv = cv2.cvtColor(np.array(target_img), cv2.COLOR_RGB2BGR)
+
+                        source_faces = model.get(source_cv)
+                        target_faces = model.get(target_cv)
+
+                        if len(source_faces) == 0 or len(target_faces) == 0:
+                            st.error("ఫోటోలలో ముఖం సరిగ్గా గుర్తించబడలేదు. వేరే ఫోటో ప్రయత్నించండి.")
+                        else:
+                            source_face = source_faces[0]
+                            res_img = target_cv.copy()
+                            for target_face in target_faces:
+                                res_img = swapper.get(res_img, target_face, source_face, paste_back=True)
+
+                            final_img = cv2.cvtColor(res_img, cv2.COLOR_BGR2RGB)
+                            st.success("🎉 ఫేస్ స్వాప్ పూర్తయింది!")
+                            st.image(final_img, caption="Result", use_column_width=True)
+        except Exception as e:
+            st.error(f"ఎర్రర్ వచ్చింది: {e}")
+
+            
     
 
 elif choice == "6. Voice Cloning":
