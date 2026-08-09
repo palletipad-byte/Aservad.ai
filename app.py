@@ -1,6 +1,7 @@
 import streamlit as st
 import os
 from PIL import Image
+st.markdown('<meta name="google-site-verification" content="PNowRl2lVSEH2QtYOk0yRc6PkYitO1rW_a_Qjh6kuDU" />', unsafe_allow_html=True)
 
 # పేజ్ సెటప్ (ఆశీర్వాదం AI పేరుతో)
 st.set_page_config(
