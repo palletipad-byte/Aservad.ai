@@ -16,7 +16,7 @@ selected_lang = st.sidebar.selectbox("🌐 భాషను ఎంచుకోం
 ])
 
 # సైడ్‌బార్ మెనూ - 12 ఫీచర్లు
-st.sidebar.title("🧭 ఆశీర్వాదం మెనూ / Navigation")
+st.sidebar.title("🧭 ఆశీర్వాదం AI / Navigation")
 choice = st.sidebar.selectbox("ఫీచర్‌ని ఎంచుకోండి / Select Feature", [
     "1. హోమ్ / Dashboard",
     "2. ఫేస్ స్వాప్ (Face Swap)",
