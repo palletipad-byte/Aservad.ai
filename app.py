@@ -79,7 +79,7 @@ elif choice == "3. AI వాయిస్ క్లోనింగ్ & మైక
     
     voice_text = st.text_input("మీ గొంతుతో చెప్పించాల్సిన టెక్స్ట్ రాయండి:")
     
-    if st.button("✨ వాయిస్ జనరేట్ చేయي"):
+    if st.button("✨ వాయిస్ జనరేట్ చేయి"):
         if voice_text:
             st.success("🎉 వాయిస్ ఆడియో విజయవంతంగా తయారైంది!")
             st.write(f"📝 **స్క్రిప్ట్:** {voice_text}")
@@ -87,6 +87,7 @@ elif choice == "3. AI వాయిస్ క్లోనింగ్ & మైక
             st.balloons()
         else:
             st.warning("⚠️ దయచేసి టెక్స్ట్ ఎంటర్ చేయండి.")
+            
             
 # 4. AI ఇమేజ్ జనరేటర్
 elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
