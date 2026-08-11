@@ -200,3 +200,24 @@ elif choice == "13. సహాయం & ఫీడ్‌బ్యాక్ (Help & 
         else:
             st.warning("దయచేసి వివరాలు నింపండి.")
   
+# 14. AI వీడియో & టాకింగ్ అవతార్ టూల్స్
+elif choice == "14. AI వీడియో & టాకింగ్ అవతార్ టూల్స్":
+    st.subheader("🎬 AI వీడియో మేకర్ & టాకింగ్ అవతార్")
+    
+    st.markdown("### 🎥 వీడియో జనరేషన్:")
+    col1, col2 = st.columns(2)
+    with col1:
+        if st.button("🚀 Kling AI (వీడియో)"):
+            st.markdown("[👉 Kling AI ఓపెన్ చేయి](https://klingai.com)", unsafe_allow_html=True)
+    with col2:
+        if st.button("🚀 Luma Dream Machine"):
+            st.markdown("[👉 Luma AI ఓపెన్ చేయి](https://lumalabs.ai/dream-machine)", unsafe_allow_html=True)
+            
+    st.markdown("---")
+    st.markdown("### 🗣️ టాకింగ్ అవతార్ (AI టాకింగ్ ఫోటో):")
+    st.write("మీ ఫోటోకు ప్రాణం పోసి, మాటలు చెప్పించండి (D-ID/HeyGen).")
+    if st.button("🚀 D-ID (Talking Photo) ఓపెన్ చేయి"):
+        st.markdown("[👉 D-ID ఓపెన్ చేయి](https://www.d-id.com)", unsafe_allow_html=True)
+
+    st.success("💡 మీరు ఎంచుకున్న టూల్ ఓపెన్ అవుతుంది, అక్కడ మీ క్రియేషన్స్ పూర్తి చేయండి!")
+    
