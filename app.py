@@ -127,7 +127,20 @@ elif choice == "6. భాషా అనువాదం (Multi-Language Translatio
     if st.button("🔄 ఇప్పుడే అనువదించు"):
         st.success(f"[{lang}] లోకి విజయవంతంగా అనువదించబడింది: {t_text}")
 
-
+# 7. కోడింగ్ అసిస్టెంట్
+elif choice == "7. కోడింగ్ అసిస్టెంట్":
+    st.subheader("💻 AI కోడింగ్ అసిస్టెంట్")
+    st.info("మీకు కావలసిన ప్రోగ్రామింగ్ కోడ్ లేదా డౌట్లను ఇక్కడ అడగండి.")
+    
+    code_query = st.text_area("మీకు ఏ కోడింగ్ సహాయం కావాలి?")
+    
+    if st.button("కోడ్ జనరేట్ చేయి"):
+        if code_query:
+            st.success("సమాచారం సిద్ధంగా ఉంది!")
+            st.code("print('Hello, Welcome!')", language="python")
+        else:
+            st.warning("దయచేసి ఏదైనా రాయండి.")
+            
 # 8. చాట్‌బాట్ సపోర్ట్
 elif choice == "8. చాట్‌బాట్ సపోర్ట్ (AI Chatbot)":
     st.subheader("💬 AI చాట్‌బాట్")
