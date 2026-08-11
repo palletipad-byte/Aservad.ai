@@ -15,7 +15,7 @@ selected_lang = st.sidebar.selectbox("🌐 భాషను ఎంచుకోం
     "ಕನ್ನಡ (Kannada)", "മലയാളം (Malayalam)", "Español", "Français"
 ])
 
-# సైడ్‌బార్ మెనూ - 13 ఫీచర్లు (వీడియో క్రియేటర్‌తో సహా)
+# సైడ్‌బార్ మెనూ - 15 ఫీచర్లు
 st.sidebar.title("🧭 ఆశీర్వాదం AI / Navigation")
 choice = st.sidebar.selectbox("ఫీచర్‌ని ఎంచుకోండి / Select Feature", [
     "1. హోమ్ / Dashboard",
@@ -32,7 +32,9 @@ choice = st.sidebar.selectbox("ఫీచర్‌ని ఎంచుకోండ
     "12. సెట్టింగ్‌లు (Settings)",
     "13. సహాయం & ఫీడ్‌బ్యాక్ (Help & Feedback)",
     "14. AI వీడియో & టాకింగ్ అవతార్ టూల్స్",
+    "15. సోషల్ మీడియా & వాట్సాప్ మార్కెటింగ్ జనరేటర్",
 ])
+
 
 # 1. హోమ్ / డాష్‌బోర్డ్
 if choice == "1. హోమ్ / Dashboard":
