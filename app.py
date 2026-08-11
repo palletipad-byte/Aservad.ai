@@ -75,15 +75,26 @@ elif choice == "3. AI వాయిస్ క్లోనింగ్ & మైక
     v_text = st.text_input("వాయిస్ ప్రాంప్ట్ టైప్ చేయండి:", "Joshna Tailors - Best Designer")
     if st.button("🎤 వాయిస్ ప్రాసెస్ చేయండి"):
         st.success(f"🎉 వాయిస్ ప్రాసెస్ విజయవంతం అయింది! ఔట్‌పుట్: '{v_text}'")
-
 # 4. AI ఇమేజ్ జనరేటర్
 elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
     st.subheader("🎨 AI ఇమేజ్ జనరేటర్")
-    img_prompt = st.text_input("బొమ్మ గురించిన వివరణ:", "Modern tailoring shop interior design")
+    st.info("సినిమాటిక్ మరియు రియలిస్టిక్ ఇమేజ్‌లను సృష్టించండి.")
+    
+    img_prompt = st.text_input("బొమ్మ గురించిన వివరణ రాయండి:", "Cinematic modern tailoring shop interior design, 8k")
+    
     if st.button("🖼️ ఇమేజ్ సృష్టించు"):
         if img_prompt:
-            st.success("✨ ఇమేజ్ విజయవంతంగా తయారైంది!")
-            st.info(f"వివరణ: {img_prompt}")
+            with st.spinner("✨ ఇమేజ్ తయారవుతోంది... దయచేసి వేచి ఉండండి!"):
+                # సురక్షితమైన మరియు వేగవంతమైన ఫ్రీ AI ఇమేజ్ జనరేషన్ లింక్
+                encoded_prompt = img_prompt.replace(" ", "%20")
+                image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}"
+                
+                st.success("✨ ఇమేజ్ విజయవంతంగా తయారైంది!")
+                st.image(image_url, caption=f"ఫలితం: {img_prompt}", use_container_width=True)
+                st.balloons()
+        else:
+            st.warning("⚠️ దయచేసి బొమ్మ గురించిన వివరణ రాయండి.")
+    
 
 # 5. టెక్స్ట్ సమ్మరైజర్
 elif choice == "5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer)":
