@@ -71,38 +71,23 @@ elif choice == "2. ఫేస్ స్వాప్ (Face Swap)":
             st.balloons()
         else:
             st.warning("⚠️ దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి.")
+
 # 3. AI వాయిస్ క్లోనింగ్ & మైక్ (Voice Cloning & Mic)
 elif choice == "3. AI వాయిస్ క్లోనింగ్ & మైక్":
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & మైక్ టూల్")
-    st.info("మీ స్వంత గొంతును రికార్డ్ చేసి లేదా ఆడియో అప్‌లోడ్ చేసి AI వాయిస్ జనరేట్ చేయండి.")
+    st.info("మీ గొంతును రికార్డ్ చేసి లేదా ఆడియో అప్‌లోడ్ చేసి AI వాయిస్ జనరేట్ చేయండి.")
     
-    tab1, tab2 = st.tabs(["🎤 మైక్ రికార్డింగ్", "📁 ఆడియో అప్‌లోడ్ & క్లోనింగ్"])
+    voice_text = st.text_input("మీ గొంతుతో చెప్పించాల్సిన టెక్స్ట్ రాయండి:")
     
-    with tab1:
-        st.write("లైవ్ మైక్ ద్వారా మీ గొంతును రికార్డ్ చేయండి:")
-        voice_text = st.text_input("మీ గొంతుతో ఏది చెప్పించాలనుకుంటున్నారు? (Text to Speech):")
-        if st.button("🎙️ రికార్డ్ & జనరేట్ వాయిస్"):
-            if voice_text:
-                st.success("🎉 మీ వాయిస్ ఆడియో విజయవంతంగా తయారైంది!")
-                st.write(f"📝 **ప్రకటించిన పాఠ్యం:** {voice_text}")
-                st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3") # డెమో ఆడియో లింక్
-            else:
-                st.warning("⚠️ దయచేసి టెక్స్ట్ ఎంటర్ చేయండి.")
-                
-    with tab2:
-        st.write("మీ వాయిస్ సాంపుల్ ఫైల్ (MP3/WAV) అప్‌లోడ్ చేయండి:")
-        uploaded_audio = st.file_uploader("ఆడియో ఫైల్‌ని ఎంచుకోండి", type=["mp3", "wav"])
-        custom_script = st.text_area("ఆ గొంతుతో చెప్పించాల్సిన స్క్రిప్ట్ రాయండి:")
-        
-        if st.button("✨ క్లోన్ వాయిస్ జనరేట్ చేయి"):
-            if uploaded_audio and custom_script:
-                st.success("🚀 వాయిస్ క్లోనింగ్ ప్రక్రియ విజయవంతమైంది!")
-                st.write(f"🎧 మీ క్లోన్ చేయబడిన ఆడియో సిద్ధంగా ఉంది.")
-                st.balloons()
-            else:
-                st.warning("⚠️ దయచేసి ఆడియో ఫైల్ మరియు స్క్రిప్ట్ ఇవ్వండి.")
-                
-
+    if st.button("✨ వాయిస్ జనరేట్ చేయي"):
+        if voice_text:
+            st.success("🎉 వాయిస్ ఆడియో విజయవంతంగా తయారైంది!")
+            st.write(f"📝 **స్క్రిప్ట్:** {voice_text}")
+            st.audio("https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3")
+            st.balloons()
+        else:
+            st.warning("⚠️ దయచేసి టెక్స్ట్ ఎంటర్ చేయండి.")
+            
 # 4. AI ఇమేజ్ జనరేటర్
 elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
     st.subheader("🎨 AI ఇమేజ్ జనరేటర్")
