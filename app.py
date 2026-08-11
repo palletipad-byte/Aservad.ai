@@ -80,13 +80,15 @@ elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
     st.subheader("🎨 AI ఇమేజ్ జనరేటర్")
     st.info("సినిమాటిక్ మరియు రియలిస్టిక్ ఇమేజ్‌లను సృష్టించండి.")
     
-    img_prompt = st.text_input("బొమ్మ గురించిన వివరణ రాయండి:", "Cinematic modern tailoring shop interior design, 8k")
+    # ఇక్కడ ఉన్న డిఫాల్ట్ టెక్స్ట్ తీసేసాము, కాబట్టి బాక్స్ ఖాళీగా వస్తుంది
+    img_prompt = st.text_input("బొమ్మ గురించిన వివరణ రాయండి (ഉదా: Modern tailoring shop):", "")
     
     if st.button("🖼️ ఇమేజ్ సృష్టించు"):
         if img_prompt:
             with st.spinner("✨ ఇమేజ్ తయారవుతోంది... దయచేసి వేచి ఉండండి!"):
-                # సురక్షితమైన మరియు వేగవంతమైన ఫ్రీ AI ఇమేజ్ జనరేషన్ లింక్
-                encoded_prompt = img_prompt.replace(" ", "%20")
+                # సినిమాటిక్ లుక్ కోసం బ్యాక్‌గ్రౌండ్‌లో ఆటోమేటిక్‌గా యాడ్ అవుతుంది
+                full_prompt = f"Cinematic, hyper-realistic, 8k, {img_prompt}"
+                encoded_prompt = full_prompt.replace(" ", "%20")
                 image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}"
                 
                 st.success("✨ ఇమేజ్ విజయవంతంగా తయారైంది!")
@@ -95,7 +97,6 @@ elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
         else:
             st.warning("⚠️ దయచేసి బొమ్మ గురించిన వివరణ రాయండి.")
     
-
 # 5. టెక్స్ట్ సమ్మరైజర్
 elif choice == "5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer)":
     st.subheader("📝 టెక్స్ట్ సమ్మరైజర్")
