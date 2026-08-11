@@ -141,7 +141,7 @@ elif choice == "7. కోడింగ్ అసిస్టెంట్":
             st.balloons()
         else:
             st.warning("⚠️ దయచేసి మీ ప్రశ్న లేదా టాపిక్ రాయండి.")
-                 
+            
 # 8. చాట్‌బాట్ సపోర్ట్
 elif choice == "8. చాట్‌బాట్ సపోర్ట్ (AI Chatbot)":
     st.subheader("💬 AI చాట్‌బాట్")
