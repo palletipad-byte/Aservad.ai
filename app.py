@@ -1,133 +1,67 @@
 import streamlit as st
+from gtts import gTTS
 import os
-from PIL import Image
 
-# పేజ్ సెటప్ (ఆశీర్వాదం AI పేరుతో)
-st.set_page_config(
-    page_title="ఆశీర్వాదం AI (Aservad AI)",
-    page_icon="🤖",
-    layout="wide"
-)
+# పేజీ సెటప్
+st.set_page_config(page_title="Aservad.ai - AI Studio", page_icon="🎙️", layout="centered")
 
-# గ్లోబల్ లాంగ్వేజ్ సెలెక్షన్
-selected_lang = st.sidebar.selectbox("🌐 భాషను ఎంచుకోండి / Choose Language", [
-    "తెలుగు (Telugu)", "English", "हिंदी (Hindi)", "தமிழ் (Tamil)", 
-    "ಕನ್ನಡ (Kannada)", "മലയാളം (Malayalam)", "Español", "Français"
-])
-
-# సైడ్‌బార్ మెనూ - 15 ఫీచర్లు
-st.sidebar.title("🧭 ఆశీర్వాదం AI / Navigation")
-choice = st.sidebar.selectbox("ఫీచర్‌ని ఎంచుకోండి / Select Feature", [
+# సైడ్ బార్ మెనూ
+choice = st.sidebar.selectbox("ఫీచర్‌ని ఎంచుకోండి / Select Feature:", [
     "1. హోమ్ / Dashboard",
     "2. ఫేస్ స్వాప్ (Face Swap)",
-    "3. AI వాయిస్ క్లోనింగ్ & మైక్ (Voice Cloning & Mic)",
-    "4. AI ఇమేజ్ జనరేటర్ (Image Generator)",
-    "5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer)",
-    "6. భాషా అనువాదం (Multi-Language Translation)",
-    "7. కోడింగ్ అసిస్టెంట్ (Coding Assistant)",
-    "8. చాట్‌బాట్ సపోర్ట్ (AI Chatbot)",
-    "9. డాక్యుమెంట్ ఎనాలిసిస్ (Document Analysis)",
-    "10. ఆడియో ట్రాన్స్‌క్రిప్షన్ (Audio Transcription)",
-    "11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్",
-    "12. సెట్టింగ్‌లు (Settings)",
-    "13. సహాయం & ఫీడ్‌బ్యాక్ (Help & Feedback)",
-    "14. AI వీడియో & టాకింగ్ అవతార్ టూల్స్",
-    "15. సోషల్ మీడియా & వాట్సాప్ మార్కెటింగ్ జనరేటర్",
+    "3. వాయిస్ క్లోనింగ్ / ఆడియో స్టూడియో (Voice Cloning)",
+    "4. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer)",
+    "5. భాషా అనువాదం (Multi-language Translation)",
+    "6. కోడింగ్ అసిస్టెంట్ (Coding Assistant)",
+    "7. డైలాగ్ చాట్‌బాట్ (AI Chatbot)",
+    "8. డాక్యుమెంట్ అనాలిసిస్ (Document Analysis)",
+    "9. ఆడియో ట్రాన్స్‌క్రిప్షన్ (Audio Transcription)",
+    "10. వీడియో ఫార్మాట్ & స్పీచ్ టూల్",
+    "11. సెట్టింగ్‌లు (Settings)",
+    "12. సహాయం & ఫీడ్‌బ్యాక్ (Help & Feedback)",
+    "13. AI వీడియో & టాకింగ్ అవతార్ టూల్స్",
+    "14. షార్ట్ మీడియా & వాయిస్ మార్ఫింగ్ టూల్స్",
+    "15. ఇతరులు (Others)"
 ])
 
+# 1. హోమ్ / Dashboard
+if choice.startswith("1."):
+    st.subheader("🌟 ఆశీర్వాదం AI - హోమ్ పేజ్")
+    st.info("అశీర్వాదం AI స్టూడియోకు స్వాగతం. ప్రస్తుతం మనం 3వ ఫీచర్ (వాయిస్ క్లోనింగ్) మీద దృష్టి పెడుతున్నాం.")
 
-# 1. హోమ్ / డాష్‌బోర్డ్
-if choice == "1. హోమ్ / Dashboard":
-    st.subheader("🏠 ఆశీర్వాదం AI - హోమ్ పేజీ")
-    st.info("ఆశీర్వాదం AI ప్లాట్‌ఫారమ్‌కు స్వాగతం. అన్ని 13 ఫీచర్లు ఇక్కడ యాక్టివ్‌గా ఉన్నాయి.")
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric(label="మొత్తం యూసర్లు (Total Users)", value="1,240+")
-    with col2:
-        st.metric(label="ఈరోజు యాక్టివిటీ (Activity Today)", value="5,800+")
-    with col3:
-        st.metric(label="సర్వర్ స్థితి (Server Status)", value="Online 🟢")
+# 2. ఫేస్ స్వాప్
+elif choice.startswith("2."):
+    st.subheader("🎭 AI ఫేస్ స్వాప్ టూల్")
+    st.info("ఇక్కడ ఫేస్ స్వాప్ ఫీచర్ త్వరలో అందుబాటులోకి వస్తుంది.")
 
-# 2. ఫేస్ స్వాప్ (Face Swap)
-elif choice == "2. ఫేస్ స్వాప్ (Face Swap)":
-    st.subheader("🔄 AI ఫేస్ స్వాప్ టూల్")
-    st.info("మీ సోర్స్ మరియు టార్గెట్ ఫోటోలను అప్లోడ్ చేసి ప్రాసెస్ చేయండి.")
-    
-    col1, col2 = st.columns(2)
-    with col1:
-        source_file = st.file_uploader("సోర్స్ ఫోటోను అప్లోడ్ చేయండి:", type=["jpg", "png", "jpeg"], key="s_img")
-        if source_file:
-            st.image(source_file, caption="సోర్స్ ఫోటో", width=220)
-    with col2:
-        target_file = st.file_uploader("టార్గెట్ ఫోటోను అప్లోడ్ చేయండి:", type=["jpg", "png", "jpeg"], key="t_img")
-        if target_file:
-            st.image(target_file, caption="టార్గెట్ ఫోటో", width=220)
-            
-    if st.button("🚀 ఫేస్ స్వాప్ ప్రారంభించండి"):
-        if source_file and target_file:
-            st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది!")
-            st.image(target_file, caption="ఫైనల్ ఫలితం", width=300)
-            st.balloons()
-        else:
-            st.warning("⚠️ దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి.")
-
-
-# 3. వాయిస్ క్లోనింగ్ / ఆడియో స్టూడియో (అప్‌డేటెడ్)
+# 3. వాయిస్ క్లోనింగ్ (మీరు అడిగిన మెయిన్ ఫీచర్)
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో స్టూడియో")
-    st.write("మిత్రమా, ఇక్కడ మీరు మీ లైవ్ వాయిస్ రికార్డ్ చేయవచ్చు లేదా ఆడియో ఫైల్ అప్లోడ్ చేసుకోవచ్చు.")
+    st.write("ఇక్కడ మీ వాయిస్ లేదా టెక్స్ట్ ద్వారా ఆడియోను జనరేట్ చేయవచ్చు.")
+    
+    # సెషన్ స్టేట్ సెటప్
+    if "audio_file" not in st.session_state: st.session_state.audio_file = None
 
-    # సెషన్ స్టేట్ లో ఆడియో సేవ్ అయి ఉండేలా సెటప్
-    if "audio_file" not in st.session_state:
-        st.session_state.audio_file = None
+    recorded_audio = st.audio_input("ఇక్కడే మీ మైక్ నొక్కి మాట్లాడండి")
+    if recorded_audio: st.session_state.audio_file = recorded_audio
 
-    st.markdown("### 1. ఆడియో సాంపుల్ ఇవ్వండి (మొబైల్ మైక్ లేదా ఫైల్)")
+    user_text = st.text_area("టెక్స్ట్ టైప్ చేయండి:", value="జ్యోష్న టైలర్స్ - ఆశీర్వాదం")
 
-    # మొబైల్ నేరుగా మైక్ లో రికార్డ్ చేసే ఆప్షన్
-    recorded_audio = st.audio_input("ఇక్కడే మీ మైక్ నొక్కి మాట్లాడండి / రికార్డ్ చేయండి")
-    uploaded_file = st.file_uploader("లేదా మీ ఫోన్ నుండి ఆడియో ఫైల్ (MP3/WAV) అప్లోడ్ చేయండి", type=["mp3", "wav", "m4a"])
+    if st.button("🚀 ఆడియో జనరేట్ చేయి"):
+        if user_text:
+            tts = gTTS(text=user_text, lang='te')
+            tts.save("cloned_output.mp3")
+            st.session_state.generated_audio = "cloned_output.mp3"
+            st.success("ఆడియో తయారైంది!")
+    
+    if "generated_audio" in st.session_state:
+        st.audio(st.session_state.generated_audio)
 
-    if recorded_audio is not None:
-        st.session_state.audio_file = recorded_audio
-        st.success("✨ మీ లైవ్ వాయిస్ విజయవంతంగా రికార్డ్ చేయబడింది!")
-    elif uploaded_file is not None:
-        st.session_state.audio_file = uploaded_file
-        st.success("📁 మీ ఆడియో ఫైల్ విజయవంతంగా అప్లోడ్ చేయబడింది!")
-
-    # టెక్స్ట్ ఇన్పుట్ సెక్షన్
-    st.markdown("### 2. మీరు మాట్లాడించాలనుకుంటున్న టెక్స్ట్ రాయండి")
-    user_text = st.text_area("క్లోన్ చేయవలసిన టెక్స్ట్ ని ఇక్కడ టైప్ చేయండి:", "హాయ్ స్టైల్ కింగ్ ఆశీర్వాదం YouTube ఛానల్ గ్రేట్", key="voice_text_area")
-
-    if st.button("🚀 వాయిస్ క్లోనింగ్ & ఆడియో జనరేట్ చేయి", key="gen_voice_btn"):
-        if user_text.strip() == "":
-            st.warning("దయచేసి కొంచెం టెక్స్ట్ రాయండి మిత్రమా!")
-        else:
-            with st.spinner("ఆడియో తయారవుతోంది, కొద్దిగా వేచి ఉండండి..."):
-                try:
-                    tts = gTTS(text=user_text, lang='te')
-                    output_audio_path = "cloned_output.mp3"
-                    tts.save(output_audio_path)
-                    
-                    st.session_state.generated_audio = output_audio_path
-                    st.success("🎉 ఆడియో విజయవంతంగా తయారైంది!")
-                except Exception as e:
-                    st.error(e)
-
-    # ఆడియో ప్లేయర్ మరియు డౌన్లోడ్ బటన్
-    if "generated_audio" in st.session_state and os.path.exists(st.session_state.generated_audio):
-        st.markdown("### 🎧 మీ తయారైన ఆడియో వినండి & డౌన్లోడ్ చేసుకోండి")
-        st.audio(st.session_state.generated_audio, format="audio/mp3")
-        
-        with open(st.session_state.generated_audio, "rb") as file:
-            st.download_button(
-                label="📥 ఆడియో ఫైల్ డౌన్లోడ్ చేసుకోండి",
-                data=file,
-                file_name="aservadam_ai_voice.mp3",
-                mime="audio/mp3",
-                key="download_voice_btn"
-            )
-            
+# మిగతా ఫీచర్లకు ఖాళీ ప్లేస్‌హోల్డర్
+else:
+    st.subheader(f"{choice}")
+    st.info("ఈ ఫీచర్ పనులు త్వరలో ప్రారంభమవుతాయి. ప్రస్తుతానికి 1, 2, 3 ఫీచర్లు చూడండి మిత్రమా.")
+    
                 
 # 4. AI ఇమేజ్ జనరేటర్
 elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
