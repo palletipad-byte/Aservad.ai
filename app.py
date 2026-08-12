@@ -124,12 +124,27 @@ elif choice == "6. భాషా అనువాదం (Multi-Language Translatio
     lang = st.selectbox("భాష:", ["Telugu", "Hindi", "Tamil", "Kannada"])
     if st.button("🔄 ఇప్పుడే అనువదించు"):
         st.success(f"[{lang}] లోకి విజయవంతంగా అనువదించబడింది: {t_text}")
-# 7వ ఫీచర్ లో ఈ భాగాన్ని మార్చండి
+# 7. Coding Assistant
+elif choice.startswith("7."):
+    st.subheader("💻 AI కోడింగ్ అసిస్టెంట్")
+    st.info("కోడ్ లేదా డౌట్లను ఇక్కడ అడగండి.")
+    
+    q = st.text_input(
+        "మీ ప్రశ్న ఇక్కడ రాయండి", 
+        placeholder="ఉదాహరణకు: Python లో Hello World ప్రోగ్రామ్ వ్రాయి", 
+        key="coding_box"
+    )
+    
     if st.button("జనరేట్ చేయి", key="coding_btn"):
-        if "కలపడం" in q or "sum" in q.lower():
-            st.code("def add(a, b):\n    return a + b\n\nprint(add(5, 3))", language="python")
+        if q:
+            if "కలపడం" in q or "sum" in q.lower():
+                st.success("విజయవంతమైంది!")
+                st.code("def add(a, b):\n    return a + b\n\nprint(add(5, 3))", language="python")
+            else:
+                st.success("విజయవంతమైంది!")
+                st.code(f"print('మీరు అడిగిన ప్రశ్న: {q}')", language="python")
         else:
-            st.code("print('మీరు అడిగిన ప్రశ్న: ' + q)", language="python")
+            st.warning("దయచేసి ఏదైనా రాయండి.")
             
 # 8. చాట్‌బాట్ సపోర్ట్
 elif choice == "8. చాట్‌బాట్ సపోర్ట్ (AI Chatbot)":
