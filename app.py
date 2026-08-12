@@ -72,20 +72,18 @@ elif choice == "2. ఫేస్ స్వాప్ (Face Swap)":
         else:
             st.warning("⚠️ దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి.")
 
-# 3. AI వాయిస్ క్లోనింగ్ & మైక్ (Voice Cloning & Mic)
-elif choice == "3. AI వాయిస్ క్లోనింగ్ & మైక్":
-    st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & మైక్ టూల్")
-    st.info("మీ గొంతును రికార్డ్ చేసి లేదా ఆడియో అప్‌లోడ్ చేసి AI వాయిస్ జనరేట్ చేయండి.")
+# 3. AI అసిస్టెంట్ / ఫీచర్ 3
+elif choice.startswith("3."):
+    st.subheader("🤖 AI అసిస్టెంట్")
+    st.info("మీ సందేహాలను ఇక్కడ అడగండి.")
     
-    voice_text = st.text_input("మీ గొంతుతో చెప్పించాల్సిన టెక్స్ట్ రాయండి:", key="voice_input_box")
+    user_query = st.text_input("మీ ప్రశ్న ఇక్కడ టైప్ చేయండి", key="ai_input")
     
-    if st.button("✨ వాయిస్ జనరేట్ చేయి", key="voice_gen_btn"):
-        if voice_text:
-            st.success("🎉 వాయిస్ ఆడియో విజయవంతంగా తయారైంది!")
-            st.write(f"📝 **స్క్రిప్ట్:** {voice_text}")
-            st.balloons()
+    if st.button("సమాధానం పంపు", key="ai_btn"):
+        if user_query:
+            st.success("ఆశీర్వాదం AI సమాధానం: ఇది ఒక డెమో సమాధానం.")
         else:
-            st.warning("⚠️ దయచేసి టెక్స్ట్ ఎంటర్ చేయండి.")
+            st.warning("దయచేసి ఏదైనా రాయండి.")
             
             
 # 4. AI ఇమేజ్ జనరేటర్
