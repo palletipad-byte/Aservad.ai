@@ -72,18 +72,23 @@ elif choice == "2. ఫేస్ స్వాప్ (Face Swap)":
         else:
             st.warning("⚠️ దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి.")
 
-# 3. AI అసిస్టెంట్ / ఫీచర్ 3
+# 3. AI అసిస్టెంట్
 elif choice.startswith("3."):
     st.subheader("🤖 AI అసిస్టెంట్")
-    st.info("మీ సందేహాలను ఇక్కడ అడగండి.")
+    st.info("మీరు నన్ను ఏ ప్రశ్నలైనా అడగవచ్చు.")
     
-    user_query = st.text_input("మీ ప్రశ్న ఇక్కడ టైప్ చేయండి", key="ai_input")
+    # యూజర్ ప్రశ్న
+    ai_q = st.text_input("ప్రశ్న అడగండి:", placeholder="ఉదా: 'AI అంటే ఏమిటి?'", key="ai_q")
     
-    if st.button("సమాధానం పంపు", key="ai_btn"):
-        if user_query:
-            st.success("ఆశీర్వాదం AI సమాధానం: ఇది ఒక డెమో సమాధానం.")
+    if st.button("పంపండి", key="ai_btn"):
+        if ai_q:
+            # ఇక్కడ మనం ఒక కండిషన్ పెడదాం
+            if "ai" in ai_q.lower() or "ఏమిటి" in ai_q:
+                st.success("AI సమాధానం: AI అంటే కృత్రిమ మేధస్సు, ఇది మనుషుల లాగా ఆలోచించగల ప్రోగ్రామ్.")
+            else:
+                st.success(f"ఆశీర్వాదం AI: మీరు అడిగిన '{ai_q}' గురించి సమాచారం త్వరలో అప్డేట్ చేయబడుతుంది.")
         else:
-            st.warning("దయచేసి ఏదైనా రాయండి.")
+            st.warning("దయచేసి ఏదైనా ప్రశ్న అడగండి.")
             
             
 # 4. AI ఇమేజ్ జనరేటర్
