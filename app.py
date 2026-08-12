@@ -131,19 +131,14 @@ elif choice == "7. కోడింగ్ అసిస్టెంట్":
     st.subheader("💻 AI కోడింగ్ అసిస్టెంట్")
     st.info("కోడ్ లేదా డౌట్లను ఇక్కడ అడగండి.")
     
-    code_query = st.text_area(
-        "కోడింగ్ సహాయం కావాలి?"
-    )
+    q = st.text_input("మీ ప్రశ్న ఇక్కడ రాయండి")
     
-    if st.button("కోడ్ జనరేట్ చేయి"):
-        if code_query:
-            st.success("సిద్ధంగా ఉంది!")
-            st.code(
-                "print('Hello')", 
-                language="python"
-            )
+    if st.button("జనరేట్ చేయి"):
+        if q:
+            st.success("విజయవంతమైంది!")
+            st.code("print('Hello AI')", language="python")
         else:
-            st.warning("దయచేసి రాయండి.")
+            st.warning("దయచేసి ఏదైనా రాయండి.")
             
 # 8. చాట్‌బాట్ సపోర్ట్
 elif choice == "8. చాట్‌బాట్ సపోర్ట్ (AI Chatbot)":
