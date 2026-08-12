@@ -5,5 +5,5 @@ numpy
 pillow
 replicate
 gtts
-streamlit
+
 
