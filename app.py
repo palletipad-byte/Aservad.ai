@@ -131,7 +131,11 @@ elif choice.startswith("7."):
     st.subheader("💻 AI కోడింగ్ అసిస్టెంట్")
     st.info("కోడ్ లేదా డౌట్లను ఇక్కడ అడగండి.")
     
-    q = st.text_input("మీ ప్రశ్న ఇక్కడ రాయండి", key="coding_box")
+    q = st.text_input(
+        "మీ ప్రశ్న ఇక్కడ రాయండి", 
+        placeholder="ఉదాహరణకు: Python లో Hello World ప్రోగ్రామ్ వ్రాయి", 
+        key="coding_box"
+    )
     
     if st.button("జనరేట్ చేయి", key="coding_btn"):
         if q:
