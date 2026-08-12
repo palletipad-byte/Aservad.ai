@@ -131,13 +131,13 @@ elif choice.startswith("7."):
     
     q = st.text_input(
         "మీ ప్రశ్న ఇక్కడ రాయండి", 
-        placeholder="ఉదాహరణకు: Python లో Hello World ప్రోగ్రామ్ వ్రాయి", 
+        placeholder="ఉదాహరణకు: రెండు సంఖ్యలను కలపడానికి కోడ్", 
         key="coding_box"
     )
     
     if st.button("జనరేట్ చేయి", key="coding_btn"):
         if q:
-            if "కలపడం" in q or "sum" in q.lower():
+            if any(word in q.lower() for word in ["కలప", "sum", "add", "addition"]):
                 st.success("విజయవంతమైంది!")
                 st.code("def add(a, b):\n    return a + b\n\nprint(add(5, 3))", language="python")
             else:
@@ -145,7 +145,7 @@ elif choice.startswith("7."):
                 st.code(f"print('మీరు అడిగిన ప్రశ్న: {q}')", language="python")
         else:
             st.warning("దయచేసి ఏదైనా రాయండి.")
-            
+    
 # 8. చాట్‌బాట్ సపోర్ట్
 elif choice == "8. చాట్‌బాట్ సపోర్ట్ (AI Chatbot)":
     st.subheader("💬 AI చాట్‌బాట్")
