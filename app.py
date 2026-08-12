@@ -72,25 +72,22 @@ elif choice == "2. ఫేస్ స్వాప్ (Face Swap)":
         else:
             st.warning("⚠️ దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి.")
 
-# 3. AI అసిస్టెంట్
+
+ # 3. వాయిస్ క్లోనింగ్ / ఆడియో అసిస్టెంట్
 elif choice.startswith("3."):
-    st.subheader("🤖 AI అసిస్టెంట్")
-    st.info("మీరు నన్ను ఏ ప్రశ్నలైనా అడగవచ్చు.")
+    st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ అసిస్టెంట్")
+    st.info("మీ వాయిస్ సాపుల్ అప్లోడ్ చేసి క్లోన్ చేయండి.")
     
-    # యూజర్ ప్రశ్న
-    ai_q = st.text_input("ప్రశ్న అడగండి:", placeholder="ఉదా: 'AI అంటే ఏమిటి?'", key="ai_q")
+    audio_file = st.file_uploader("ఆడియో ఫైల్ అప్లోడ్ చేయండి (WAV/MP3):", type=["wav", "mp3"])
     
-    if st.button("పంపండి", key="ai_btn"):
-        if ai_q:
-            # ఇక్కడ మనం ఒక కండిషన్ పెడదాం
-            if "ai" in ai_q.lower() or "ఏమిటి" in ai_q:
-                st.success("AI సమాధానం: AI అంటే కృత్రిమ మేధస్సు, ఇది మనుషుల లాగా ఆలోచించగల ప్రోగ్రామ్.")
-            else:
-                st.success(f"ఆశీర్వాదం AI: మీరు అడిగిన '{ai_q}' గురించి సమాచారం త్వరలో అప్డేట్ చేయబడుతుంది.")
-        else:
-            st.warning("దయచేసి ఏదైనా ప్రశ్న అడగండి.")
-            
-            
+    if audio_file:
+        st.audio(audio_file)
+        if st.button("వాయిస్ క్లోనింగ్ ప్రారంభించండి", key="voice_btn"):
+            st.success("విజయవంతమైంది! వాయిస్ క్లోనింగ్ ప్రాసెస్ తయారైంది.")
+            st.balloons()
+    else:
+        st.warning("దయచేసి ఆడియో ఫైల్ అప్లోడ్ చేయండి.")
+        
 # 4. AI ఇమేజ్ జనరేటర్
 elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
     st.subheader("🎨 AI ఇమేజ్ జనరేటర్")
