@@ -73,50 +73,68 @@ elif choice == "2. ఫేస్ స్వాప్ (Face Swap)":
             st.warning("⚠️ దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి.")
 
 
-# 3. వాయిస్ క్లోనింగ్ / ఆడియో అసిస్టెంట్ (అడ్వాన్స్‌డ్)
-elif choice.startswith("3."):
-    st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & టెక్స్ట్-టు-స్పీచ్")
-    st.info("ముందుగా మీ వాయిస్ సాంపుల్ ఇవ్వండి, ఆపై టెక్స్ట్ టైప్ చేసి ఆడియోను పొందండి.")
-    
-    # ఆడియో అప్లోడ్ లేదా రికార్డింగ్ ఆప్షన్
-    audio_file = st.file_uploader("ఆడియో ఫైల్ అప్లోడ్ చేయండి (AAC/WAV/MP3):", type=["wav", "mp3", "aac", "amr"])
-    
-    if audio_file is not None:
-        st.success("✅ ఆడియో విజయవంతంగా అప్లోడ్ అయింది!")
-        st.audio(audio_file)
-    
-    # టెక్స్ట్ ఇన్పుట్ బాక్స్
-    text_to_speak = st.text_area("క్లోన్ చేయవలసిన టెక్స్ట్‌ని ఇక్కడ టైప్ చేయండి:")
-    
-    if st.button("🎤 వాయిస్ క్లోనింగ్ & ఆడియో జనరేట్ చేయండి", key="voice_btn"):
-        if text_to_speak:
-            with st.spinner("AI వాయిస్ ప్రాసెసింగ్ జరుగుతోంది... దయచేసి వేచి ఉండండి..."):
-                # ఇక్కడ gTTS లేదా TTS లైబ్రరీ ద్వారా ఆడియో జనరేట్ అవుతుంది
-                from gtts import gTTS
-                import os
-                
-                tts = gTTS(text=text_to_speak, lang='te') # తెలుగు లేదా ఇంగ్లీష్ కోసం
-                output_audio_path = "cloned_output.mp3"
+import streamlit as st
+from gtts import gTTS
+import os
+
+st.set_page_config(page_title="Voice Cloning & AI App", page_icon="🎙️", layout="centered")
+
+st.title("🎙️ AI వాయిస్ అండ్ ఆడియో స్టూడియో")
+st.write("మిత్రమా, మన యాప్ ఇప్పుడు మరింత అద్భుతంగా పనిచేస్తుంది! ఇక్కడ మీరు మీ వాయిస్‌ని రికార్డ్ చేయవచ్చు లేదా ఆడియో ఫైల్‌ని అప్లోడ్ చేయవచ్చు.")
+
+# సెషన్ స్టేట్ లో ఆడియో సేవ్ అయి ఉండేలా సెటప్
+if "audio_file" not in st.session_state:
+    st.session_state.audio_file = None
+
+# సైడ్ బార్ లేదా మెయిన్ స్క్రీన్ లో ఆడియో ఇన్పుట్ ఆప్షన్స్
+st.markdown("### 1. ఆడియో సాంపుల్ ఇవ్వండి (మొబైల్ మైక్ లేదా ఫైల్)")
+
+# మొబైల్ నేరుగా మైక్ లో రికార్డ్ చేసే ఆప్షన్ (Streamlit కొత్త ఫీచర్)
+recorded_audio = st.audio_input("ఇక్కడే మీ మైక్ నొక్కి మాట్లాడండి / రికార్డ్ చేయండి")
+
+# లేదా ఫైల్ అప్లోడ్ చేసే ఆప్షన్
+uploaded_file = st.file_uploader("లేదా మీ ఫోన్ నుండి ఆడియో ఫైల్ (MP3/WAV) అప్లోడ్ చేయండి", type=["mp3", "wav", "m4a"])
+
+if recorded_audio is not None:
+    st.session_state.audio_file = recorded_audio
+    st.success("✨ మీ లైవ్ వాయిస్ విజయవంతంగా రికార్డ్ చేయబడింది!")
+elif uploaded_file is not None:
+    st.session_state.audio_file = uploaded_file
+    st.success("📁 మీ ఆడియో ఫైల్ విజయవంతంగా అప్లోడ్ చేయబడింది!")
+
+# టెక్స్ట్ ఇన్పుట్ సెక్షన్
+st.markdown("### 2. మీరు మాట్లాడించాలనుకుంటున్న టెక్స్ట్ రాయండి")
+user_text = st.text_area("ఉదాహరణకు: 'హాయ్ స్టైల్ కింగ్ ఆశీర్వాదం YouTube ఛానల్ గ్రేట్'", "హాయ్ స్టైల్ కింగ్ ఆశీర్వాదం YouTube ఛానల్ గ్రేట్")
+
+if st.button("🚀 ఆడియో జనరేట్ చేయి"):
+    if user_text.strip() == "":
+        st.warning("దయచేసి కొంచెం టెక్స్ట్ రాయండి మిత్రమా!")
+    else:
+        with st.spinner("ఆడియో తయారవుతోంది, కొద్దిగా వేచి ఉండండి..."):
+            try:
+                # టెక్స్ట్ ని ఆడియోగా మార్చడం (gTTS ద్వారా)
+                tts = gTTS(text=user_text, lang='te')
+                output_audio_path = "output.mp3"
                 tts.save(output_audio_path)
                 
-                st.success("🎉 అద్భుతం! మీ వాయిస్ ఆడియో విజయవంతంగా తయారైంది.")
-                st.balloons()
-                
-                # ఆడియో ప్లేయర్ చూపించడం
-                st.subheader("🎧 జనరేట్ అయిన ఆడియో వినండి:")
-                st.audio(output_audio_path)
-                
-                # డౌన్లోడ్ బటన్
-                with open(output_audio_path, "rb") as file:
-                    st.download_button(
-                        label="📥 ఆడియో ఫైల్ డౌన్లోడ్ చేసుకోండి",
-                        data=file,
-                        file_name="asevadam_ai_voice.mp3",
-                        mime="audio/mp3"
-                    )
-        else:
-            st.warning("⚠️ దయచేసి ఏదైనా టెక్స్ట్ టైప్ చేయండి.")
+                st.session_state.generated_audio = output_audio_path
+                st.success("🎉 ఆడియో విజయవంతంగా తయారైంది!")
+            except Exception as e:
+                st.error(e)
+
+# ఆడియో ప్లేయర్ మరియు డౌన్లోడ్ బటన్ ఎప్పుడూ స్క్రీన్‌పై ఉండేలా డిస్ప్లే చేయడం
+if "generated_audio" in st.session_state and os.path.exists(st.session_state.generated_audio):
+    st.markdown("### 🎧 మీ తయారైన ఆడియో వినండి & డౌన్లోడ్ చేసుకోండి")
+    st.audio(st.session_state.generated_audio, format="audio/mp3")
     
+    with open(st.session_state.generated_audio, "rb") as file:
+        st.download_button(
+            label="📥 ఆడియో డౌన్లోడ్ చేసుకోండి",
+            data=file,
+            file_name="clone_voice_output.mp3",
+            mime="audio/mp3"
+)
+                
 # 4. AI ఇమేజ్ జనరేటర్
 elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
     st.subheader("🎨 AI ఇమేజ్ జనరేటర్")
