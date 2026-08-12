@@ -80,7 +80,7 @@ elif choice.startswith("3."):
     
     audio_file = st.file_uploader("ఆడియో ఫైల్ అప్లోడ్ చేయండి (WAV/MP3):", type=["wav", "mp3"])
     
-    if audio_file:
+    if audio_file is not None:
         st.audio(audio_file)
         if st.button("వాయిస్ క్లోనింగ్ ప్రారంభించండి", key="voice_btn"):
             st.success("విజయవంతమైంది! వాయిస్ క్లోనింగ్ ప్రాసెస్ తయారైంది.")
