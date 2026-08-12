@@ -126,14 +126,14 @@ elif choice == "6. భాషా అనువాదం (Multi-Language Translatio
     lang = st.selectbox("భాష:", ["Telugu", "Hindi", "Tamil", "Kannada"])
     if st.button("🔄 ఇప్పుడే అనువదించు"):
         st.success(f"[{lang}] లోకి విజయవంతంగా అనువదించబడింది: {t_text}")
-# 7. కోడింగ్ అసిస్టెంట్
-elif choice == "7. కోడింగ్ అసిస్టెంట్":
+# 7. Coding Assistant
+elif choice.startswith("7."):
     st.subheader("💻 AI కోడింగ్ అసిస్టెంట్")
     st.info("కోడ్ లేదా డౌట్లను ఇక్కడ అడగండి.")
     
-    q = st.text_input("మీ ప్రశ్న ఇక్కడ రాయండి")
+    q = st.text_input("మీ ప్రశ్న ఇక్కడ రాయండి", key="coding_box")
     
-    if st.button("జనరేట్ చేయి"):
+    if st.button("జనరేట్ చేయి", key="coding_btn"):
         if q:
             st.success("విజయవంతమైంది!")
             st.code("print('Hello AI')", language="python")
