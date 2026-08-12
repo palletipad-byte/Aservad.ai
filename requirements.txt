@@ -4,4 +4,6 @@ opencv-python-headless
 numpy
 pillow
 replicate
+gtts
+streamlit
 
