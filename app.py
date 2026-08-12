@@ -132,12 +132,13 @@ elif choice == "7. కోడింగ్ అసిస్టెంట్":
     st.subheader("💻 AI కోడింగ్ అసిస్టెంట్")
     st.info("మీకు కావలసిన ప్రోగ్రామింగ్ కోడ్ లేదా డౌట్లను ఇక్కడ అడగండి.")
     
-    code_query = st.text_area("మీకు ఏ కోడింగ్ సహాయం కావాలి?")
+    code_query = st.text_area("మీకు ఏ కోడింగ్ సహాయం కావాలి?", key="code_input")
     
-    if st.button("కోడ్ జనరేట్ చేయి"):
+    if st.button("కోడ్ జనరేట్ చేయి", key="code_btn"):
         if code_query:
-            st.success("సమాచారం సిద్ధంగా ఉంది!")
-            st.code("print('Hello, Welcome!')", language="python")
+            with st.spinner('కోడ్ జనరేట్ అవుతోంది...'):
+                st.success("సమాచారం సిద్ధంగా ఉంది!")
+                st.code("print('Hello, Welcome to Ashirvad AI Coding Assistant!')", language="python")
         else:
             st.warning("దయచేసి ఏదైనా రాయండి.")
             
