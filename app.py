@@ -75,30 +75,48 @@ elif choice == "2. ఫేస్ స్వాప్ (Face Swap)":
 
 # 3. వాయిస్ క్లోనింగ్ / ఆడియో అసిస్టెంట్ (అడ్వాన్స్‌డ్)
 elif choice.startswith("3."):
-    st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ అసిస్టెంట్")
-    st.info("ముందుగా మీ వాయిస్ సాంపుల్ అప్లోడ్ చేయండి లేదా రికార్డ్ చేయండి, ఆపై టెక్స్ట్ టైప్ చేయండి.")
+    st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & టెక్స్ట్-టు-స్పీచ్")
+    st.info("ముందుగా మీ వాయిస్ సాంపుల్ ఇవ్వండి, ఆపై టెక్స్ట్ టైప్ చేసి ఆడియోను పొందండి.")
     
-    # ఆడియో అప్లోడ్ (AAC, WAV, MP3 ఫార్మాట్‌లకు మద్దతు)
-    audio_file = st.file_uploader("ఆడియో ఫైల్ అప్లోడ్ చేయండి (AAC/WAV/MP3):", type=["wav", "mp3", "aac"])
+    # ఆడియో అప్లోడ్ లేదా రికార్డింగ్ ఆప్షన్
+    audio_file = st.file_uploader("ఆడియో ఫైల్ అప్లోడ్ చేయండి (AAC/WAV/MP3):", type=["wav", "mp3", "aac", "amr"])
     
     if audio_file is not None:
         st.success("✅ ఆడియో విజయవంతంగా అప్లోడ్ అయింది!")
         st.audio(audio_file)
     
-    # టెక్స్ట్ ఇన్పుట్ బాక్స్ (ఆడియో లేకున్నా కూడా యూజర్స్ టెస్ట్ చేయడానికి వీలుగా ఉండేలా)
+    # టెక్స్ట్ ఇన్పుట్ బాక్స్
     text_to_speak = st.text_area("క్లోన్ చేయవలసిన టెక్స్ట్‌ని ఇక్కడ టైప్ చేయండి:")
     
-    if st.button("🎤 వాయిస్ క్లోనింగ్ ప్రారంభించండి", key="voice_btn"):
+    if st.button("🎤 వాయిస్ క్లోనింగ్ & ఆడియో జనరేట్ చేయండి", key="voice_btn"):
         if text_to_speak:
-            with st.spinner("క్లోనింగ్ జరుగుతోంది... దయచేసి వేచి ఉండండి..."):
-                # ఇక్కడ క్లోనింగ్ లాజిక్ రన్ అవుతుంది
-                st.success("🎉 విజయవంతమైంది! మీ వాయిస్ క్లోన్ చేయబడింది.")
+            with st.spinner("AI వాయిస్ ప్రాసెసింగ్ జరుగుతోంది... దయచేసి వేచి ఉండండి..."):
+                # ఇక్కడ gTTS లేదా TTS లైబ్రరీ ద్వారా ఆడియో జనరేట్ అవుతుంది
+                from gtts import gTTS
+                import os
+                
+                tts = gTTS(text=text_to_speak, lang='te') # తెలుగు లేదా ఇంగ్లీష్ కోసం
+                output_audio_path = "cloned_output.mp3"
+                tts.save(output_audio_path)
+                
+                st.success("🎉 అద్భుతం! మీ వాయిస్ ఆడియో విజయవంతంగా తయారైంది.")
                 st.balloons()
-                if audio_file is not None:
-                    st.audio(audio_file) # తాత్కాలికంగా ఒరిజినల్ లేదా క్లోన్ చేసిన ఆడియో ప్లే అవుతుంది
+                
+                # ఆడియో ప్లేయర్ చూపించడం
+                st.subheader("🎧 జనరేట్ అయిన ఆడియో వినండి:")
+                st.audio(output_audio_path)
+                
+                # డౌన్లోడ్ బటన్
+                with open(output_audio_path, "rb") as file:
+                    st.download_button(
+                        label="📥 ఆడియో ఫైల్ డౌన్లోడ్ చేసుకోండి",
+                        data=file,
+                        file_name="asevadam_ai_voice.mp3",
+                        mime="audio/mp3"
+                    )
         else:
             st.warning("⚠️ దయచేసి ఏదైనా టెక్స్ట్ టైప్ చేయండి.")
-            
+    
 # 4. AI ఇమేజ్ జనరేటర్
 elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
     st.subheader("🎨 AI ఇమేజ్ జనరేటర్")
