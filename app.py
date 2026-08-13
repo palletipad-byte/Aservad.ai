@@ -168,24 +168,29 @@ elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
                 st.balloons()
         else:
             st.warning("⚠️ దయచేసి బొమ్మ గురించిన వివరణ రాయండి.")
-# 5. టెక్స్ట్ సమ్మరైజర్ & భావాల విశ్లేషణ టూల్
+# 5. టెక్స్ట్ సమ్మరైజర్, భావాలు & వాయిస్/స్పీకర్ టూల్
 elif choice.startswith("5."):
-    st.subheader("📝 టెక్స్ట్ సమ్మరైజర్ & ఆత్మీయ భావాల టూల్")
-    st.info("ఇక్కడ మీరు ఏ టెక్స్ట్ లేదా వచనాలు ఇచ్చినా, దాని సారాంశం మరియు భావం ఇక్కడ స్పష్టంగా వస్తుంది.")
+    st.subheader("🎙️ టెక్స్ట్ సమ్మరైజర్, భావాలు & ఆడియో స్టడీ టూల్")
+    st.info("ఇక్కడ మీరు టెక్స్ట్ ఇవ్వవచ్చు, మైక్ ద్వారా మాట్లాడవచ్చు లేదా ఇచ్చిన వచనాలను ఆడియో రూపంలో వినవచ్చు.")
     
-    input_text = st.text_area("మీ టెక్స్ట్ లేదా వచనాలు ఇక్కడ పేస్ట్ చేయండి:", height=200, key="summarizer_text")
+    # టెక్స్ట్ ఇన్పుట్ లేదా మైక్ ఆప్షన్
+    input_text = st.text_area("మీ టెక్స్ట్ లేదా వచనాలు ఇక్కడ పేస్ట్ చేయండి:", height=180, key="summarizer_text")
     
-    col1, col2 = st.columns(2)
+    # ఆడియో / స్పీకర్ కోసం గూగుల్ టెక్స్ట్-టు-స్పీచ్ (gTTS) లేదా స్ట్రీమ్‌లిట్ ఆడియో ప్లేస్‌హోల్డర్
+    col1, col2, col3 = st.columns(3)
     with col1:
         process_btn = st.button("🚀 భావం & సారాంశం చూపించు", key="summarize_btn")
     with col2:
+        # స్పీకర్ / ఆడియో ఫీచర్ కోసం బటన్
+        audio_btn = st.button("🔊 ఆడియో రూపంలో విను", key="audio_btn")
+    with col3:
         clear_btn = st.button("🧹 క్లియర్ చేయి", key="clear_btn")
         
     if clear_btn:
         st.rerun()
         
-    if process_btn or "sum_lines" in st.session_state:
-        if process_btn:
+    if process_btn or audio_btn or "sum_lines" in st.session_state:
+        if process_btn or audio_btn:
             if input_text.strip() == "":
                 st.warning("⚠️ దయచేసి ముందుగా టెక్స్ట్ ఇవ్వండి!")
                 st.stop()
@@ -194,7 +199,7 @@ elif choice.startswith("5."):
                 st.session_state.sum_page = 0
         
         lines = st.session_state.sum_lines
-        page_size = 10  # స్క్రీన్ నిండేలా ఒకసారికి 10 లైన్లు/వచనాలు
+        page_size = 10  # స్క్రీన్ నిండేలా 10 లైన్లు
         total_pages = (len(lines) + page_size - 1) // page_size
         
         if "sum_page" not in st.session_state:
@@ -202,9 +207,25 @@ elif choice.startswith("5."):
             
         st.success(f"✨ విజయవంతంగా విశ్లేషించబడింది! మొత్తం లైన్లు/వచనాలు: {len(lines)}")
         
-        # ఇచ్చిన టెక్స్ట్ యొక్క మొదటి రెండు లైన్లను బట్టి ఆటోమేటిక్ సారాంశం లేదా భావం ఇవ్వడం
+        # స్పీకర్ బటన్ నొక్కినప్పుడు ఆడియో జనరేట్ చేయడానికి (gTTS ఉపయోగించి)
+        if audio_btn:
+            try:
+                from gtts import gTTS
+                import os
+                
+                # పూర్తి టెక్స్ట్ ని ఆడియోగా మార్చుట
+                full_text_str = " ".join(lines)
+                tts = gTTS(text=full_text_str, lang='te', slow=False)
+                audio_file = "bible_audio.mp3"
+                tts.save(audio_file)
+                
+                st.audio(audio_file, format='audio/mp3')
+                st.success("🎧 ఆడియో విజయవంతంగా సిద్ధమైంది! ప్లే చేసి వినండి.")
+            except Exception as e:
+                st.info("💡 గమనిక: టెక్స్ట్-టు-స్పీచ్ ఆడియో ప్లే చేయడానికి gTTS లైబ్రరీ అవసరం. టెక్స్ట్ మరియు భావం కింద చూడవచ్చు.")
+
+        # ఇచ్చిన టెక్స్ట్ యొక్క ఆత్మీయ భావం & సారాంశం
         preview_content = lines[0] if lines else ""
-        
         st.markdown("### 💡 ఇచ్చిన టెక్స్ట్ యొక్క ఆత్మీయ భావం & సారాంశం:")
         st.info(
             f"**సందేశ విశ్లేషణ:**\n\n"
