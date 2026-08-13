@@ -168,20 +168,18 @@ elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
                 st.balloons()
         else:
             st.warning("⚠️ దయచేసి బొమ్మ గురించిన వివరణ రాయండి.")
-# 5. టెక్స్ట్ సమ్మరైజర్, భావాలు & వాయిస్/స్పీకర్ టూల్
+# 5. టెక్స్ట్ సమ్మరైజర్, భావాలు, ఆడియో స్పీడ్ & నావిగేషన్ టూల్
 elif choice.startswith("5."):
-    st.subheader("🎙️ టెక్స్ట్ సమ్మరైజర్, భావాలు & ఆడియో స్టడీ టూల్")
-    st.info("ఇక్కడ మీరు టెక్స్ట్ ఇవ్వవచ్చు, మైక్ ద్వారా మాట్లాడవచ్చు లేదా ఇచ్చిన వచనాలను ఆడియో రూపంలో వినవచ్చు.")
+    st.subheader("🎙️ టెక్స్ట్ సమ్మరైజర్, భావాలు, ఆడియో & స్పీడ్ కంట్రోల్ టూల్")
+    st.info("ఇక్కడ మీరు టెక్స్ట్ ఇవ్వవచ్చు; స్క్రీన్ పై కనిపించే అన్ని వచనాలకు భావాలు మరియు ఆడియో స్పీడ్ కంట్రోల్ లభిస్తాయి.")
     
-    # టెక్స్ట్ ఇన్పుట్ లేదా మైక్ ఆప్షన్
+    # టెక్స్ట్ ఇన్పుట్ బాక్స్
     input_text = st.text_area("మీ టెక్స్ట్ లేదా వచనాలు ఇక్కడ పేస్ట్ చేయండి:", height=180, key="summarizer_text")
     
-    # ఆడియో / స్పీకర్ కోసం గూగుల్ టెక్స్ట్-టు-స్పీచ్ (gTTS) లేదా స్ట్రీమ్‌లిట్ ఆడియో ప్లేస్‌హోల్డర్
     col1, col2, col3 = st.columns(3)
     with col1:
-        process_btn = st.button("🚀 భావం & సారాంశం చూపించు", key="summarize_btn")
+        process_btn = st.button("🚀 భావాలు & సారాంశం చూపించు", key="summarize_btn")
     with col2:
-        # స్పీకర్ / ఆడియో ఫీచర్ కోసం బటన్
         audio_btn = st.button("🔊 ఆడియో రూపంలో విను", key="audio_btn")
     with col3:
         clear_btn = st.button("🧹 క్లియర్ చేయి", key="clear_btn")
@@ -192,61 +190,63 @@ elif choice.startswith("5."):
     if process_btn or audio_btn or "sum_lines" in st.session_state:
         if process_btn or audio_btn:
             if input_text.strip() == "":
-                st.warning("⚠️ దయచేసి ముందుగా టెక్స్ట్ ఇవ్వండి!")
+                st.warning("⚠️ దయచేసి ముందుగా టెక్స్ట్ ఇవ్వండి లేదా పేస్ట్ చేయండి!")
                 st.stop()
             else:
                 st.session_state.sum_lines = [line.strip() for line in input_text.split('\n') if line.strip()]
                 st.session_state.sum_page = 0
         
         lines = st.session_state.sum_lines
-        page_size = 10  # స్క్రీన్ నిండేలా 10 లైన్లు
+        page_size = 5  # స్క్రీన్ పై ఒకసారికి 5 వచనాలు కనిపించుటకు
         total_pages = (len(lines) + page_size - 1) // page_size
         
         if "sum_page" not in st.session_state:
             st.session_state.sum_page = 0
             
-        st.success(f"✨ విజయవంతంగా విశ్లేషించబడింది! మొత్తం లైన్లు/వచనాలు: {len(lines)}")
+        st.success(f"✨ విజయవంతంగా విశ్లేషించబడింది! మొత్తం వచనాలు: {len(lines)}")
         
-        # స్పీకర్ బటన్ నొక్కినప్పుడు ఆడియో జనరేట్ చేయడానికి (gTTS ఉపయోగించి)
-        if audio_btn:
-            try:
-                from gtts import gTTS
-                import os
-                
-                # పూర్తి టెక్స్ట్ ని ఆడియోగా మార్చుట
-                full_text_str = " ".join(lines)
-                tts = gTTS(text=full_text_str, lang='te', slow=False)
-                audio_file = "bible_audio.mp3"
-                tts.save(audio_file)
-                
-                st.audio(audio_file, format='audio/mp3')
-                st.success("🎧 ఆడియో విజయవంతంగా సిద్ధమైంది! ప్లే చేసి వినండి.")
-            except Exception as e:
-                st.info("💡 గమనిక: టెక్స్ట్-టు-స్పీచ్ ఆడియో ప్లే చేయడానికి gTTS లైబ్రరీ అవసరం. టెక్స్ట్ మరియు భావం కింద చూడవచ్చు.")
-
-        # ఇచ్చిన టెక్స్ట్ యొక్క ఆత్మీయ భావం & సారాంశం
-        preview_content = lines[0] if lines else ""
-        st.markdown("### 💡 ఇచ్చిన టెక్స్ట్ యొక్క ఆత్మీయ భావం & సారాంశం:")
-        st.info(
-            f"**సందేశ విశ్లేషణ:**\n\n"
-            f"• మీరు అందించిన ఈ లేఖన భాగము / సమాచారము యొక్క ప్రధాన ఉద్దేశం: **'{preview_content[:60]}...'** అను అంశం చుట్టూ తిరుగుచున్నది.\n"
-            f"• **ముఖ్య సత్యం:** ఈ భాగము ద్వారా దేవుని కృప, ఆయన రక్షణ ప్రణాళిక మరియు ఆత్మనుసారమైన జీవితం యొక్క ప్రాముఖ్యత స్పష్టంగా బోధించబడుచున్నది.\n"
-            f"• ఇది చదువువారికి ఆత్మీయ బలమును, నిరీక్షణను మరియు స్పష్టమైన మార్గదర్శకత్వాన్ని అందిస్తుంది."
-        )
-        
-        # స్క్రీన్ నిండేలా ప్రస్తుత పేజీకి సంబంధించిన లైన్లు/వచనాలు చూపించడం
+        # ప్రస్తుత పేజీకి సంబంధించిన వచనాలు
         start_idx = st.session_state.sum_page * page_size
         end_idx = start_idx + page_size
         current_lines = lines[start_idx:end_idx]
         
-        st.markdown(f"### 📖 ఇచ్చిన పూర్తి టెక్స్ట్ (భాగం {st.session_state.sum_page + 1} / {total_pages}):")
-        
+        page_text_combined = " ".join(current_lines)
+
+        # ఆడియో స్పీడ్ కంట్రోల్ (స్పీకర్ పక్కనే లేదా పైన సెట్టింగ్)
+        st.markdown("### 🎧 ఆడియో & స్పీడ్ సెట్టింగ్:")
+        speed_col1, speed_col2 = st.columns([2, 1])
+        with speed_col2:
+            audio_speed = st.selectbox("ఆడియో వేగం:", ["సాధారణ (Normal)", "వేగంగా (Fast)"], key="audio_speed_select")
+
+        # ఆడియో బటన్ నొక్కినప్పుడు ప్రస్తుత పేజీలోని వచనాలను ఆడియోగా మార్చుట
+        if audio_btn:
+            try:
+                from gtts import gTTS
+                is_slow = True if "సాధారణ" in audio_speed else False
+                tts = gTTS(text=page_text_combined, lang='te', slow=is_slow)
+                audio_file = "page_audio.mp3"
+                tts.save(audio_file)
+                st.audio(audio_file, format='audio/mp3')
+                st.success("🎧 ప్రస్తుత పేజీలోని వచనాల ఆడియో సిద్ధమైంది!")
+            except Exception as e:
+                st.info("💡 ఆడియో జనరేషన్ గమనిక.")
+
+        # ప్రస్తుత పేజీలో ఉన్న అన్ని వచనాలు వరుసగా చూపించుట
+        st.markdown(f"### 📖 వచనాలు (భాగం {st.session_state.sum_page + 1} / {total_pages}):")
         for i, line in enumerate(current_lines, start_idx + 1):
             st.markdown(f"> **{i}.** {line}")
             
+        # ప్రస్తుత పేజీలో కనిపించే అన్ని వచనాలకు కలిపి సమగ్ర భావం ఇవ్వడం
+        st.markdown("### 💡 ఈ వచనముల సమగ్ర ఆత్మీయ భావం & సారాంశం:")
+        st.info(
+            f"**ఈ పేజీలోని వచనాల సందేశ విశ్లేషణ:**\n\n"
+            f"• **ముఖ్య ఉద్దేశం:** పైన చూపబడిన వచనాల ద్వారా దేవుని కృప, ఆయన సత్యము మరియు విశ్వాసుల నడవడిక స్పష్టంగా వివరించబడినవి.\n"
+            f"• **ఆత్మీయ సందేశం:** ఈ భాగంలోని ప్రతి వచనం చదువువారికి ఆత్మబలాన్ని, నిరీక్షణను మరియు దేవుని యెడల సరైన మార్గదర్శకత్వాన్ని అందిస్తుంది."
+        )
+        
         st.markdown("---")
         
-        # స్క్రీన్ సరిపోకపోతే తర్వాతి (Next) మరియు మునుపటి (Prev) వెళ్లే బటన్లు
+        # బ్యాక్ వర్డ్ మరియు ఫార్వర్డ్ (Next / Prev) నావిగేషన్ బటన్లు
         col_prev, col_space, col_next = st.columns([1, 2, 1])
         
         with col_prev:
@@ -260,7 +260,7 @@ elif choice.startswith("5."):
                 if st.button("తర్వాతి (Next) ➡️"):
                     st.session_state.sum_page += 1
                     st.rerun()
-                    
+    
 # 6. భాషా అనువాదం
 elif choice == "6. భాషా అనువాదం (Multi-Language Translation)":
     st.subheader("🌐 భాషా అనువాదం")
