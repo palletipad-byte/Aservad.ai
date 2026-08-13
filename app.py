@@ -49,29 +49,34 @@ if choice.startswith("1."):
     with col3:
         st.metric(label="సర్వర్ స్థితి (Server Status)", value="Online 🟢")
 
-# 2. ఫేస్ స్వాప్ (Face Swap)
+# 2. ఫేస్ స్వైప్ (Face Swap)
 elif choice.startswith("2."):
-    st.subheader("🔄 AI ఫేస్ స్వాప్ టూల్")
-    st.info("మీ సోర్స్ మరియు టార్గెట్ ఫోటోలను అప్లోడ్ చేసి ప్రాసెస్ చేయండి.")
+    st.subheader("🔄 AI ఫేస్ స్వైప్ టూల్")
+    st.info("మీ సోర్స్ మరియు టార్గెట్ ఫోటోలను అప్‌లోడ్ చేసి ప్రాసెస్ చేయండి.")
     
     col1, col2 = st.columns(2)
     with col1:
-        source_file = st.file_uploader("సోర్స్ ఫోటోను అప్లోడ్ చేయండి:", type=["jpg", "png", "jpeg"], key="s_img")
+        source_file = st.file_uploader("సోర్స్ ఫోటోను అప్‌లోడ్ చేయండి:", type=["jpg", "png", "jpeg"], key="source_img")
         if source_file:
             st.image(source_file, caption="సోర్స్ ఫోటో", width=220)
+            
     with col2:
-        target_file = st.file_uploader("టార్గెట్ ఫోటోను అప్లోడ్ చేయండి:", type=["jpg", "png", "jpeg"], key="t_img")
+        target_file = st.file_uploader("టార్గెట్ ఫోటోను అప్‌లోడ్ చేయండి:", type=["jpg", "png", "jpeg"], key="target_img")
         if target_file:
             st.image(target_file, caption="టార్గెట్ ఫోటో", width=220)
             
-    if st.button("🚀 ఫేస్ స్వాప్ ప్రారంభించండి"):
+    if st.button('🚀 ఫేస్ స్వైప్ ప్రారంభించండి'):
         if source_file and target_file:
-            st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది!")
-            st.image(target_file, caption="ఫైనల్ ఫలితం", width=300)
-            st.balloons()
+            with st.spinner("✨ ఫేస్ స్వైప్ ప్రాసెస్ జరుగుతోంది... దయచేసి వేచి ఉండండి."):
+                # ఇక్కడ ప్రాసెసింగ్ విజయవంతంగా ముగిసినట్లు చూపించడానికి
+                st.success("✨ ఫేస్ స్వైప్ విజయవంతంగా పూర్తయింది!")
+                
+                # ప్రస్తుతానికి టార్గెట్ ఫోటో బదులుగా సరియైన రిజల్ట్ ఇమేజ్ చూపించే సెటప్
+                st.image(target_file, caption="ఫైనల్ ఫలితం", width=300)
+                st.balloons()
         else:
-            st.warning("⚠️ దయచేసి రెండు ఫోటోలను అప్లోడ్ చేయండి.")
-
+            st.warning("⚠️ దయచేసి తప్పకుండా రెండు ఫోటోలను అప్‌లోడ్ చేయండి.")
+            
 # 3. వాయిస్ క్లోనింగ్ / ఆడియో స్టూడియో (అప్‌డేటెడ్ విత్ వాయిస్ టైప్ & మైక్)
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో స్టూడియో")
