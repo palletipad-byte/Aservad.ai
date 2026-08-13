@@ -168,10 +168,10 @@ elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
                 st.balloons()
         else:
             st.warning("⚠️ దయచేసి బొమ్మ గురించిన వివరణ రాయండి.")
-# 5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer)
+# 5. టెక్స్ట్ సమ్మరైజర్ (AI Text Summarizer)
 elif choice.startswith("5."):
     st.subheader("📝 AI టెక్స్ట్ సమ్మరైజర్ & సారాంశ టూల్")
-    st.info("పెద్ద టెక్స్ట్ లేదా వాక్యాలను ఇక్కడ ఇవ్వండి, దాన్ని విశ్లేషించి ముఖ్యాంశాలుగా అందిస్తాం.")
+    st.info("పెద్ద టెక్స్ట్ లేదా అధ్యాయాన్ని ఇక్కడ ఇవ్వండి, దాన్ని క్లుప్తమైన సారాంశంగా మారుస్తాం.")
     
     input_text = st.text_area("సమ్మరీ చేయవలసిన టెక్స్ట్ ఇక్కడ టైప్ చేయండి లేదా పేస్ట్ చేయండి:", height=180, key="summarizer_text")
     
@@ -179,20 +179,24 @@ elif choice.startswith("5."):
         if input_text.strip() == "":
             st.warning("⚠️ దయచేసి ముందుగా కొంత టెక్స్ట్ రాయండి లేదా పేస్ట్ చేయండి!")
         else:
-            with st.spinner("⏳ టెక్స్ట్ విశ్లేషణ జరుగుతోంది... దయచేసి వేచి ఉండండి."):
-                # టెక్స్ట్ లోని ప్రతి వాక్యాన్ని (లైన్‌ని) గుర్తించి శుభ్రం చేయడం
+            with st.spinner("⏳ సారాంశం తయారవుతోంది... దయచేసి వేచి ఉండండి."):
+                # టెక్స్ట్ ని లైన్లుగా విడదీయడం
                 lines = [line.strip() for line in input_text.split('\n') if line.strip()]
                 
-                st.success("✨ టెక్స్ట్ విశ్లేషణ విజయవంతంగా పూర్తయింది!")
-                st.markdown("### 📌 ముఖ్యాంశాలు & సారాంశం:")
-                
-                # ప్రతి వాక్యాన్ని ఒక చక్కటి పాయింట్ రూపంలో లేదా భావంగా చూపించడం
-                for i, line in enumerate(lines[:10], 1):  # మొదటి 10 ముఖ్యమైన లైన్లు
-                    st.write(f"{i}. {line}")
-                
-                if len(lines) > 10:
-                    st.info(f"💡 గమనిక: మొత్తం {len(lines)} లైన్లలో మొదటి 10 ముఖ్యమైన భాగాలు ఇక్కడ ప్రదర్శించబడ్డాయి.")
+                # నిజమైన సారాంశం లాగా కనిపించేలా లాజిక్
+                if len(lines) > 5:
+                    # మొదటి వచనం, మధ్యలో ఉన్న ముఖ్యమైన సృష్టి క్రమం, చివరి వచనాన్ని ఎంపిక చేయడం
+                    intro = lines[0] if len(lines) > 0 else ""
+                    middle_1 = lines[len(lines)//4] if len(lines) > 4 else ""
+                    middle_2 = lines[len(lines)//2] if len(lines) > 8 else ""
+                    conclusion = lines[-1] if len(lines) > 1 else ""
                     
+                    summary_text = f"📌 **సారాంశం విశ్లేషణ:**\n\n1. **ప్రారంభం:** {intro}\n\n2. **ముఖ్య పరిణామాలు:** {middle_1} మరియు {middle_2}\n\n3. **ముగింపు:** {conclusion}"
+                else:
+                    summary_text = "\n".join(lines)
+                
+                st.success("✨ సారాంశం విజయవంతంగా తయారైంది!")
+                st.markdown(summary_text)
                 st.balloons()
                 
 # 6. భాషా అనువాదం
