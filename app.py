@@ -168,28 +168,34 @@ elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
                 st.balloons()
         else:
             st.warning("⚠️ దయచేసి బొమ్మ గురించిన వివరణ రాయండి.")
-    
-# 5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer)
+# 5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer with Voice/Text)
 elif choice.startswith("5."):
-    st.subheader("📝 AI టెక్స్ట్ సమ్మరైజర్")
-    st.info("పెద్ద టెక్స్ట్ లేదా వ్యాసాన్ని ఇక్కడ ఇవ్వండి, దాన్ని క్లుప్తమైన సారాంశంగా మారుస్తాం.")
+    st.subheader("📝 AI టెక్స్ట్ సమ్మరైజర్ & వాయిస్ టూల్")
+    st.info("పెద్ద టెక్స్ట్ లేదా వ్యాసాన్ని ఇవ్వండి లేదా వాయిస్ ద్వారా ఇన్‌పుట్ అందించి సారాంశం పొందండి.")
     
-    input_text = st.text_area("సమ్మరీ చేయవలసిన టెక్స్ట్ ఇక్కడ టైప్ చేయండి లేదా పేస్ట్ చేయండి:", height=200, key="summarizer_text")
+    # టెక్స్ట్ ఇన్‌పుట్ బాక్స్
+    input_text = st.text_area("సమ్మరీ చేయవలసిన టెక్స్ట్ ఇక్కడ టైప్ చేయండి లేదా పేస్ట్ చేయండి:", height=180, key="summarizer_text")
+    
+    # మైక్ లేదా ఆడియో ఇన్‌పుట్ ఆప్షన్ కోసం హెల్పింగ్ నోట్
+    st.markdown("🎙️ *ప్రస్తుతం టైప్ చేసిన టెక్స్ట్ ఆధారంగా సమ్మరీ వస్తుంది. త్వరలో నేరుగా మైక్ ద్వారా మాట్లాడే ఫీచర్ పూర్తిగా అనుసంధానం చేయబడుతుంది.*")
     
     if st.button("🚀 సమ్మరీ చేయండి", key="summarize_btn"):
         if input_text.strip() == "":
             st.warning("⚠️ దయచేసి ముందుగా కొంత టెక్స్ట్ రాయండి లేదా పేస్ట్ చేయండి!")
         else:
             with st.spinner("⏳ సమ్మరీ తయారవుతోంది... దయచేసి వేచి ఉండండి."):
-                # టెక్స్ట్ లైన్లుగా విడదీసి మొదటి 2 లేదా 3 లైన్లను సమ్మరీగా ఇవ్వడం
-                lines = [line.strip() for line in input_text.split('\n') if line.strip()]
-                if len(lines) > 3:
-                    summary_text = "\n".join(lines[:3]) + "\n..."
+                # టెక్స్ట్ ని వాక్యాలుగా విడదీసి ముఖ్యం అయిన వాటిని సారాంశంగా మలచడం
+                sentences = [s.strip() for s in input_text.replace('\n', ' ').split('.') if s.strip()]
+                
+                if len(sentences) > 4:
+                    # మొదటి, మధ్య మరియు చివరి ముఖ్యమైన వాక్యాలను కలిపి ఒక సారాంశంలా ఇవ్వడం
+                    summary_lines = [sentences[0], sentences[len(sentences)//2], sentences[-1]]
+                    summary_text = ". ".join(summary_lines) + "."
                 else:
                     summary_text = input_text
                 
                 st.success("✨ టెక్స్ట్ సమ్మరీ విజయవంతంగా తయారైంది!")
-                st.markdown("### 📌 సారాంశం (Summary):")
+                st.markdown("### 📌 క్లుప్త సారాంశం (Summary):")
                 st.write(summary_text)
                 st.balloons()
                 
