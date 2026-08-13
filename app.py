@@ -181,17 +181,18 @@ elif choice.startswith("5."):
             st.warning("⚠️ దయచేసి ముందుగా కొంత టెక్స్ట్ రాయండి లేదా పేస్ట్ చేయండి!")
         else:
             with st.spinner("⏳ సమ్మరీ తయారవుతోంది... దయచేసి వేచి ఉండండి."):
-                # సింపుల్ సమ్మరైజేషన్ లాజిక్ (మొదటి కొన్ని వాక్యాలు లేదా టెక్స్ట్ విశ్లేషణ)
-                sentences = input_text.split('.')
-                summary_length = max(1, len(sentences) // 3)  
-                summary_text = '.'.join(sentences[:summary_length]) + '.'
+                # టెక్స్ట్ లైన్లుగా విడదీసి మొదటి 2 లేదా 3 లైన్లను సమ్మరీగా ఇవ్వడం
+                lines = [line.strip() for line in input_text.split('\n') if line.strip()]
+                if len(lines) > 3:
+                    summary_text = "\n".join(lines[:3]) + "\n..."
+                else:
+                    summary_text = input_text
                 
                 st.success("✨ టెక్స్ట్ సమ్మరీ విజయవంతంగా తయారైంది!")
                 st.markdown("### 📌 సారాంశం (Summary):")
                 st.write(summary_text)
                 st.balloons()
-        
-
+                
 # 6. భాషా అనువాదం
 elif choice == "6. భాషా అనువాదం (Multi-Language Translation)":
     st.subheader("🌐 భాషా అనువాదం")
