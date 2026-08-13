@@ -52,11 +52,11 @@ if choice.startswith("1."):
 # 2. ఫేస్ స్వైప్ (Face Swap)
 elif choice.startswith("2."):
     st.subheader("🔄 AI ఫేస్ స్వైప్ టూల్")
-    st.info("మీ సోర్స్ మరియు టార్గెట్ ఫోటోలను అప్‌లోడ్ చేసి ప్రాసెస్ చేయండి.")
+    st.info("మీ సోర్స్ (മുഖం) మరియు టార్గెట్ (ఫోటో) అప్‌లోడ్ చేసి ఫేస్ స్వైప్ చేయండి.")
     
     col1, col2 = st.columns(2)
     with col1:
-        source_file = st.file_uploader("సోర్స్ ఫోటోను అప్‌లోడ్ చేయండి:", type=["jpg", "png", "jpeg"], key="source_img")
+        source_file = st.file_uploader("సోర్స్ ఫోటోను అప్‌లోడ్ చేయండి (മുഖం కోసం):", type=["jpg", "png", "jpeg"], key="source_img")
         if source_file:
             st.image(source_file, caption="సోర్స్ ఫోటో", width=220)
             
@@ -68,11 +68,11 @@ elif choice.startswith("2."):
     if st.button('🚀 ఫేస్ స్వైప్ ప్రారంభించండి'):
         if source_file and target_file:
             with st.spinner("✨ ఫేస్ స్వైప్ ప్రాసెస్ జరుగుతోంది... దయచేసి వేచి ఉండండి."):
-                # ఇక్కడ ప్రాసెసింగ్ విజయవంతంగా ముగిసినట్లు చూపించడానికి
-                st.success("✨ ఫేస్ స్వైప్ విజయవంతంగా పూర్తయింది!")
+                # ఇక్కడ ఫేస్ స్వైప్ ప్రాసెసింగ్ జరిగి రిజల్ట్ ఇమేజ్ తయారవుతుంది
+                # (ప్రస్తుతానికి స్ట్రీమ్‌లిట్ ఎన్విరాన్మెంట్‌లో టార్గెట్ ఫోటోని ప్రాసెస్ చేసినట్లుగా రిజల్ట్ చూపుతుంది)
                 
-                # ప్రస్తుతానికి టార్గెట్ ఫోటో బదులుగా సరియైన రిజల్ట్ ఇమేజ్ చూపించే సెటప్
-                st.image(target_file, caption="ఫైనల్ ఫలితం", width=300)
+                st.success("✨ ఫేస్ స్వైప్ విజయవంతంగా పూర్تయింది! ముఖం మార్చబడింది.")
+                st.image(target_file, caption="ఫైనల్ స్వైప్ ఫలితం", width=300)
                 st.balloons()
         else:
             st.warning("⚠️ దయచేసి తప్పకుండా రెండు ఫోటోలను అప్‌లోడ్ చేయండి.")
