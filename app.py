@@ -168,49 +168,67 @@ elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
                 st.balloons()
         else:
             st.warning("⚠️ దయచేసి బొమ్మ గురించిన వివరణ రాయండి.")
-# 5. బైబిల్ అధ్యాయం & ఆత్మీయ భావాల టూల్
+# 5. బైబిల్ అధ్యాయం & పేజీల వారీగా రీడర్ (Pagination with Next/Prev)
 elif choice.startswith("5."):
-    st.subheader("📖 బైబిల్ అధ్యాయం & సారాంశ భావం")
-    st.info("ఇక్కడ మీ వచనాలు లేదా అధ్యాయాన్ని ఇవ్వండి, దానితో పాటు ముఖ్యమైన ఆత్మీయ భావాన్ని పొందండి.")
+    st.subheader("📖 బైబిల్ అధ్యాయం & పేజీల వారీగా స్టడీ టూల్")
+    st.info("ఇక్కడ మీరు ఏ బైబిల్ గ్రంథం లేదా వచనాలు ఇచ్చినా, వాటిని 5 వచనాల చొప్పున పేజీలుగా విడదీసి చూపుతుంది.")
     
     input_text = st.text_area("వచనాలు లేదా టెక్స్ట్ ఇక్కడ పేస్ట్ చేయండి:", height=180, key="summarizer_text")
     
     col1, col2 = st.columns(2)
     with col1:
-        process_btn = st.button("🚀 భావం & సారాంశం చూపించు", key="summarize_btn")
+        process_btn = st.button("🚀 లోడ్ చేయి & చూపించు", key="load_btn")
     with col2:
         clear_btn = st.button("🧹 క్లియర్ చేయి", key="clear_btn")
         
     if clear_btn:
         st.rerun()
         
-    if process_btn:
-        if input_text.strip() == "":
-            st.warning("⚠️ దయచేసి ముందుగా టెక్స్ట్ ఇవ్వండి!")
-        else:
-            with st.spinner("⏳ ఆత్మీయ భావం తయారవుతోంది..."):
-                lines = [line.strip() for line in input_text.split('\n') if line.strip()]
-                
-                st.success("✨ విజయవంతంగా విశ్లేషించబడింది!")
-                
-                # ముఖ్యమైన ఆత్మీయ భావం / సారాంశం (మనం ఆదికాండము 1 కి ప్రత్యేకంగా ఇస్తున్న భావం)
-                st.markdown("### 💡 ఈ అధ్యాయం యొక్క ఆత్మీయ భావం & సారాంశం:")
-                st.info(
-                    "**ఆదికాండము 1వ అధ్యాయం సారాంశం:**\n\n"
-                    "1. **సృష్టికర్త అయిన దేవుడు:** సమస్తాన్ని శూన్యంలో నుండి తన మాట ద్వారా సృజించిన సర్వాధికారి దేవుడు.\n"
-                    "2. **క్రమము మరియు రూపము:** భూమి నిరాకారంగా ఉన్నప్పుడు దేవుడు ప్రతిదీ ఒక చక్కని క్రమంలో అమర్చి వెలుగును, చీకటిని, జలాలను వేరుపరిచాడు.\n"
-                    "3. **జీవ సృష్టి:** చెట్లు, జంతువులు, పక్షులను సృజించి అన్నీ 'మంచివిగా' చూచాడు.\n"
-                    "4. **నరుని సృష్టి:** దేవుడు తన స్వరూపంలో నరుని (స్త్రీని, పురుషుని) సృజించి సమస్త సృష్టిని ఏలే అధికారాన్ని, ఆశీర్వాదాన్ని అనుగ్రహించాడు.\n"
-                    "5. **విశ్రాంతి & సంపూర్ణత:** ఆరవ నాటికి సృష్టిని ముగించి, అది 'చాలా మంచిది' అని దేవుడు ఆనందించాడు."
-                )
-                
-                st.markdown("### 📖 ఇచ్చిన పూర్తి వచనాలు:")
-                for i, line in enumerate(lines, 1):
-                    st.markdown(f"> **{i}.** {line}")
-                
-                st.info(f"📊 మొత్తం వచనాలు: **{len(lines)}**")
-                st.balloons()
-                
+    if process_btn or "pag_lines" in st.session_state:
+        if process_btn:
+            if input_text.strip() == "":
+                st.warning("⚠️ దయచేసి ముందుగా టెక్స్ట్ ఇవ్వండి!")
+                st.stop()
+            else:
+                st.session_state.pag_lines = [line.strip() for line in input_text.split('\n') if line.strip()]
+                st.session_state.page_num = 0
+        
+        lines = st.session_state.pag_lines
+        page_size = 5  # ఒక్కసారికి సరిగ్గా 5 వచనాలు మాత్రమే కనిపిస్తాయి
+        total_pages = (len(lines) + page_size - 1) // page_size
+        
+        if "page_num" not in st.session_state:
+            st.session_state.page_num = 0
+            
+        st.success(f"✨ విజయవంతంగా లోడ్ చేయబడింది! మొత్తం వచనాలు: {len(lines)}")
+        
+        # ప్రస్తుత పేజీకి సంబంధించిన 5 వచనాలు మాత్రమే కట్ చేసి చూపించడం
+        start_idx = st.session_state.page_num * page_size
+        end_idx = start_idx + page_size
+        current_lines = lines[start_idx:end_idx]
+        
+        st.markdown(f"### 📖 వచనాలు (పేజీ {st.session_state.page_num + 1} / {total_pages}):")
+        
+        for i, line in enumerate(current_lines, start_idx + 1):
+            st.markdown(f"> **{i}.** {line}")
+            
+        st.markdown("---")
+        
+        # నెక్స్ట్ మరియు మునుపటి (Prev) బటన్లు
+        col_prev, col_space, col_next = st.columns([1, 2, 1])
+        
+        with col_prev:
+            if st.session_state.page_num > 0:
+                if st.button("⬅️ మునుపటి (Prev)"):
+                    st.session_state.page_num -= 1
+                    st.rerun()
+                    
+        with col_next:
+            if st.session_state.page_num < total_pages - 1:
+                if st.button("తర్వాతి (Next) ➡️"):
+                    st.session_state.page_num += 1
+                    st.rerun()
+                    
 # 6. భాషా అనువాదం
 elif choice == "6. భాషా అనువాదం (Multi-Language Translation)":
     st.subheader("🌐 భాషా అనువాదం")
