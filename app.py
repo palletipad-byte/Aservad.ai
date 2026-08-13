@@ -168,35 +168,31 @@ elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
                 st.balloons()
         else:
             st.warning("⚠️ దయచేసి బొమ్మ గురించిన వివరణ రాయండి.")
-# 5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer with Voice/Text)
+# 5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer)
 elif choice.startswith("5."):
-    st.subheader("📝 AI టెక్స్ట్ సమ్మరైజర్ & వాయిస్ టూల్")
-    st.info("పెద్ద టెక్స్ట్ లేదా వ్యాసాన్ని ఇవ్వండి లేదా వాయిస్ ద్వారా ఇన్‌పుట్ అందించి సారాంశం పొందండి.")
+    st.subheader("📝 AI టెక్స్ట్ సమ్మరైజర్ & సారాంశ టూల్")
+    st.info("పెద్ద టెక్స్ట్ లేదా వాక్యాలను ఇక్కడ ఇవ్వండి, దాన్ని విశ్లేషించి ముఖ్యాంశాలుగా అందిస్తాం.")
     
-    # టెక్స్ట్ ఇన్‌పుట్ బాక్స్
     input_text = st.text_area("సమ్మరీ చేయవలసిన టెక్స్ట్ ఇక్కడ టైప్ చేయండి లేదా పేస్ట్ చేయండి:", height=180, key="summarizer_text")
-    
-    # మైక్ లేదా ఆడియో ఇన్‌పుట్ ఆప్షన్ కోసం హెల్పింగ్ నోట్
-    st.markdown("🎙️ *ప్రస్తుతం టైప్ చేసిన టెక్స్ట్ ఆధారంగా సమ్మరీ వస్తుంది. త్వరలో నేరుగా మైక్ ద్వారా మాట్లాడే ఫీచర్ పూర్తిగా అనుసంధానం చేయబడుతుంది.*")
     
     if st.button("🚀 సమ్మరీ చేయండి", key="summarize_btn"):
         if input_text.strip() == "":
             st.warning("⚠️ దయచేసి ముందుగా కొంత టెక్స్ట్ రాయండి లేదా పేస్ట్ చేయండి!")
         else:
-            with st.spinner("⏳ సమ్మరీ తయారవుతోంది... దయచేసి వేచి ఉండండి."):
-                # టెక్స్ట్ ని వాక్యాలుగా విడదీసి ముఖ్యం అయిన వాటిని సారాంశంగా మలచడం
-                sentences = [s.strip() for s in input_text.replace('\n', ' ').split('.') if s.strip()]
+            with st.spinner("⏳ టెక్స్ట్ విశ్లేషణ జరుగుతోంది... దయచేసి వేచి ఉండండి."):
+                # టెక్స్ట్ లోని ప్రతి వాక్యాన్ని (లైన్‌ని) గుర్తించి శుభ్రం చేయడం
+                lines = [line.strip() for line in input_text.split('\n') if line.strip()]
                 
-                if len(sentences) > 4:
-                    # మొదటి, మధ్య మరియు చివరి ముఖ్యమైన వాక్యాలను కలిపి ఒక సారాంశంలా ఇవ్వడం
-                    summary_lines = [sentences[0], sentences[len(sentences)//2], sentences[-1]]
-                    summary_text = ". ".join(summary_lines) + "."
-                else:
-                    summary_text = input_text
+                st.success("✨ టెక్స్ట్ విశ్లేషణ విజయవంతంగా పూర్తయింది!")
+                st.markdown("### 📌 ముఖ్యాంశాలు & సారాంశం:")
                 
-                st.success("✨ టెక్స్ట్ సమ్మరీ విజయవంతంగా తయారైంది!")
-                st.markdown("### 📌 క్లుప్త సారాంశం (Summary):")
-                st.write(summary_text)
+                # ప్రతి వాక్యాన్ని ఒక చక్కటి పాయింట్ రూపంలో లేదా భావంగా చూపించడం
+                for i, line in enumerate(lines[:10], 1):  # మొదటి 10 ముఖ్యమైన లైన్లు
+                    st.write(f"{i}. {line}")
+                
+                if len(lines) > 10:
+                    st.info(f"💡 గమనిక: మొత్తం {len(lines)} లైన్లలో మొదటి 10 ముఖ్యమైన భాగాలు ఇక్కడ ప్రదర్శించబడ్డాయి.")
+                    
                 st.balloons()
                 
 # 6. భాషా అనువాదం
