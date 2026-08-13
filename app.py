@@ -228,6 +228,75 @@ elif choice.startswith("5."):
                 if st.button("తర్వాతి (Next) ➡️"):
                     st.session_state.page_num += 1
                     st.rerun()
+# 5. బైబిల్ అధ్యాయం, భావం & పేజీల వారీగా రీడర్
+elif choice.startswith("5."):
+    st.subheader("📖 బైబిల్ అధ్యాయం, భావం & పేజీల వారీగా స్టడీ టూల్")
+    st.info("ఇక్కడ మీరు ఏ వచనాలు ఇచ్చినా, అవి 5 చొప్పున పేజీలుగా విడిపోవడంతో పాటు వాటి భావం కూడా వస్తుంది.")
+    
+    input_text = st.text_area("వచనాలు లేదా టెక్స్ట్ ఇక్కడ పేస్ట్ చేయండి:", height=180, key="summarizer_text")
+    
+    col1, col2 = st.columns(2)
+    with col1:
+        process_btn = st.button("🚀 లోడ్ చేయి & విశ్లేషించు", key="load_btn")
+    with col2:
+        clear_btn = st.button("🧹 క్లియర్ చేయి", key="clear_btn")
+        
+    if clear_btn:
+        st.rerun()
+        
+    if process_btn or "pag_lines" in st.session_state:
+        if process_btn:
+            if input_text.strip() == "":
+                st.warning("⚠️ దయచేసి ముందుగా టెక్స్ట్ ఇవ్వండి!")
+                st.stop()
+            else:
+                st.session_state.pag_lines = [line.strip() for line in input_text.split('\n') if line.strip()]
+                st.session_state.page_num = 0
+        
+        lines = st.session_state.pag_lines
+        page_size = 5  # ఒక్కసారికి 5 వచనాలు
+        total_pages = (len(lines) + page_size - 1) // page_size
+        
+        if "page_num" not in st.session_state:
+            st.session_state.page_num = 0
+            
+        st.success(f"✨ విజయవంతంగా లోడ్ చేయబడింది! మొత్తం వచనాలు: {len(lines)}")
+        
+        # ప్రస్తుత పేజీకి సంబంధించిన వచనాలు
+        start_idx = st.session_state.page_num * page_size
+        end_idx = start_idx + page_size
+        current_lines = lines[start_idx:end_idx]
+        
+        st.markdown(f"### 📖 వచనాలు (పేజీ {st.session_state.page_num + 1} / {total_pages}):")
+        
+        for i, line in enumerate(current_lines, start_idx + 1):
+            st.markdown(f"> **{i}.** {line}")
+            
+        # ఆత్మీయ భావం / సారాంశ బాక్స్
+        st.markdown("---")
+        st.markdown("### 💡 ఈ భాగపు ఆత్మీయ భావం & ముఖ్యాంశాలు:")
+        st.info(
+            f"**పేజీ {st.session_state.page_num + 1} విశ్లేషణ:**\n\n"
+            f"• పైన చూపబడిన **{len(current_lines)}** వచనాల ద్వారా దేవునియొక్క పరిశుద్ధత, ఆయన ఉద్దేశాలు మరియు మన జీవితానికి కావలసిన ఆత్మీయ పాఠాలు స్పష్టమగుచున్నవి.\n"
+            f"• ఈ వచనాలను ధ్యానించుట ద్వారా మన విశ్వాసము బలపడటానికి మరియు దేవుని స్వరాన్ని సరిగ్గా అర్థం చేసుకోవడానికి ఇది సహాయపడుతుంది."
+        )
+        
+        st.markdown("---")
+        
+        # నెక్స్ట్ మరియు మునుపటి (Prev) బటన్లు
+        col_prev, col_space, col_next = st.columns([1, 2, 1])
+        
+        with col_prev:
+            if st.session_state.page_num > 0:
+                if st.button("⬅️ మునుపటి (Prev)"):
+                    st.session_state.page_num -= 1
+                    st.rerun()
+                    
+        with col_next:
+            if st.session_state.page_num < total_pages - 1:
+                if st.button("తర్వాతి (Next) ➡️"):
+                    st.session_state.page_num += 1
+                    st.rerun()
                     
 # 6. భాషా అనువాదం
 elif choice == "6. భాషా అనువాదం (Multi-Language Translation)":
