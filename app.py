@@ -168,110 +168,72 @@ elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
                 st.balloons()
         else:
             st.warning("⚠️ దయచేసి బొమ్మ గురించిన వివరణ రాయండి.")
-# 5. టెక్స్ట్ సమరైజర్, డైనమిక్ భావాలు, ఆడియో స్పీడ్ & నావిగేషన్ టూల్
+# 5. AI టెక్స్ట్ సమరైజర్ & డైనమిక్ భావాల టూల్ (Gemini AI Powered)
 elif choice.startswith("5."):
-    st.subheader("🎙️ 5. టెక్స్ట్ సమరైజర్, డైనమిక్ భావాలు, ఆడియో & స్పీడ్ కంట్రోల్ టూల్")
-    st.info("ఇక్కడ మీరు ఏ టెక్స్ట్ లేదా వచనాలు ఇచ్చినా, స్క్రీన్ పై కనిపించే వాటికి తగినట్లుగా భావాలు మరియు ఆడియో లభిస్తాయి.")
+    st.subheader("🎙️ 5. AI టెక్స్ట్ సమరైజర్ & డైనమిక్ భావాల టూల్")
+    st.info("ఇక్కడ మీరు ఏ టెక్స్ట్, సైన్స్, సముద్రం లేదా వేరే అంశం ఇచ్చినా AI స్వయంగా దాని సారాంశాన్ని విశ్లేషించి ఇస్తుంది.")
     
-    input_text = st.text_area("మీ టెక్స్ట్ లేదా వచనాలు ఇక్కడ పేస్ట్ చేయండి:", height=180, key="summarizer_text")
+    input_text = st.text_area("మీ టెక్స్ట్ లేదా వ్యాసం ఇక్కడ పేస్ట్ చేయండి:", height=180, key="ai_summarizer_text")
     
     col1, col2, col3 = st.columns(3)
     with col1:
-        process_btn = st.button("🚀 భావాలు & సారాంశం చూపించు", key="summarize_btn")
+        process_btn = st.button("🚀 AI ద్వారా విశ్లేషించు", key="ai_process_btn")
     with col2:
-        audio_btn = st.button("🔊 ఆడియో రూపంలో విను", key="audio_btn")
+        audio_btn = st.button("🔊 ఆడియో రూపంలో విను", key="ai_audio_btn")
     with col3:
-        clear_btn = st.button("🧹 క్లియర్ చేయి", key="clear_btn")
+        clear_btn = st.button("🧹 క్లియర్ చేయి", key="ai_clear_btn")
         
     if clear_btn:
         st.rerun()
         
-    if process_btn or audio_btn or "sum_lines" in st.session_state:
-        if process_btn or audio_btn:
-            if input_text.strip() == "":
-                st.warning("⚠️ దయచేసి ముందుగా టెక్స్ట్ ఇవ్వండి లేదా పేస్ట్ చేయండి!")
-                st.stop()
-            else:
-                st.session_state.sum_lines = [line.strip() for line in input_text.split('\n') if line.strip()]
-                st.session_state.sum_page = 0
-        
-        lines = st.session_state.sum_lines
-        page_size = 5  # ఒక పేజీకి 5 వచనాలు కనిపించుటకు
-        total_pages = (len(lines) + page_size - 1) // page_size
-        
-        if "sum_page" not in st.session_state:
-            st.session_state.sum_page = 0
+    if process_btn or audio_btn:
+        if input_text.strip() == "":
+            st.warning("⚠️ దయచేసి ముందుగా టెక్స్ట్ ఇవ్వండి!")
+            st.stop()
             
-        st.success(f"✨ విజయవంతంగా విశ్లేషించబడింది! మొత్తం వచనాలు: {len(lines)}")
-        
-        # ప్రస్తుత పేజీకి సంబంధించిన వచనాలు
-        start_idx = st.session_state.sum_page * page_size
-        end_idx = start_idx + page_size
-        current_lines = lines[start_idx:end_idx]
-        
-        page_text_combined = " ".join(current_lines)
+        with st.spinner("🤖 AI సారాంశాన్ని మరియు భావాన్ని విశ్లేషిస్తోంది, దయచేసి వేచి ఉండండి..."):
+            try:
+                import google.generativeai as genai
+                
+                # Streamlit secrets నుండి API Key తీసుకోవడం
+                api_key = st.secrets["GEMINI_API_KEY"]
+                genai.configure(api_key=api_key)
+                
+                # Gemini మోడల్ ఇనిషియలైజ్ చేయడం
+                model = genai.GenerativeModel('gemini-1.5-flash')
+                
+                # AI కి ప్రాంప్ట్ పంపడం
+                prompt = f"ఈ క్రింది టెక్స్ట్ ని చదివి, దీని ముఖ్య ఉద్దేశం ఏంటి మరియు దీని సమగ్ర సారాంశం / భావం ఏంటి అని తెలుగులో స్పష్టంగా, అందంగా వివరించండి:\n\n{input_text}"
+                response = model.generate_content(prompt)
+                
+                ai_result = response.text
+                
+                # రిజల్ట్ స్టోర్ చేసుకోవడం
+                st.session_state.ai_summary_result = ai_result
+                
+            except Exception as e:
+                st.error(f"సాంకేతిక లోపం ఏర్పడింది లేదా API Key సరిగ్గా లేదు: {e}")
+                st.stop()
 
-        # ఆడియో స్పీడ్ కంట్రోల్
-        st.markdown("### 🎧 ఆడియో & స్పీడ్ సెట్టింగ్:")
-        speed_col1, speed_col2 = st.columns([2, 1])
-        with speed_col2:
-            audio_speed = st.selectbox("ఆడియో వేగం:", ["సాధారణ (Normal)", "కొంచెం వేగంగా (Fast)", "చాలా వేగంగా (Very Fast)"], key="audio_speed_select")
-
-        # ఆడియో జనరేషన్
+    # ఒకసారి విశ్లేషణ అయ్యాక స్క్రీన్ పై చూపించడం
+    if "ai_summary_result" in st.session_state:
+        st.success("✨ AI విశ్లేషణ విజయవంతం!")
+        st.markdown("### 💡 AI సమగ్ర భావం & సారాంశం:")
+        st.markdown(st.session_state.ai_summary_result)
+        
+        # ఆడియో రూపంలో వినడానికి gTTS ఇంటిగ్రేషన్
         if audio_btn:
             try:
                 from gtts import gTTS
-                is_slow = True if "సాధారణ" in audio_speed else False
-                tts = gTTS(text=page_text_combined, lang='te', slow=is_slow)
-                audio_file = "page_audio.mp3"
+                # AI ఇచ్చిన సారాంశాన్ని ఆడియోగా మార్చడం
+                tts = gTTS(text=st.session_state.ai_summary_result, lang='te', slow=False)
+                audio_file = "ai_audio.mp3"
                 tts.save(audio_file)
                 st.audio(audio_file, format='audio/mp3')
-                st.success("🎧 ప్రస్తుత పేజీలోని వచనాల ఆడియో సిద్ధమైంది!")
+                st.success("🎧 AI సారాంశం ఆడియో సిద్ధమైంది!")
             except Exception as e:
-                st.info("💡 ఆడియో జనరేషన్ గమనిక.")
-
-        # ప్రస్తుత పేజీలో ఉన్న అన్ని వచనాలు వరుసగా చూపించుట
-        st.markdown(f"### 📖 వచనాలు (భాగం {st.session_state.sum_page + 1} / {total_pages}):")
-        for i, line in enumerate(current_lines, start_idx + 1):
-            st.markdown(f"> **{i}.** {line}")
-            
-        # ఇచ్చిన టెక్స్ట్ ఆధారంగా డైనమిక్ భావం మరియు సారాంశం ఇవ్వడం
-        st.markdown("### 💡 ఈ వచనముల సమగ్ర భావం & సారాంశం:")
-        
-        combined_page_text = " ".join(current_lines)
-        
-        if "వ్యవసాయం" in combined_page_text or "పంటలు" in combined_page_text or "రైతు" in combined_page_text:
-            summary_title = "🌾 వ్యవసాయం & విజ్ఞాన విశ్లేషణ:"
-            summary_desc = (
-                "• **ముఖ్య ఉద్దేశం:** పై ఇవ్వబడిన అంశాల ద్వారా వ్యవసాయ పద్ధతులు, నేల స్వభావం, నీటి యాజమాన్యం మరియు పంటల దిగుబడికి కావలసిన జాగ్రత్తలు స్పష్టమగుచున్నవి.\n"
-                "• **సారాంశం:** ఈ విజ్ఞాన సమాచారము చదువువారికి వ్యవసాయంపై అవగాహన, ప్రకృతిని రక్షించే విధానం మరియు రైతుల శ్రమ యొక్క విలువ పూర్తిగా అర్థమగునుగాక!"
-            )
-        else:
-            summary_title = "✨ ఆత్మీయ / సాధారణ సారాంశం & భావం:"
-            summary_desc = (
-                "• **ముఖ్య ఉద్దేశం:** పైన చూపబడిన వచనాల యొక్క సందేశం మరియు భావం ఇక్కడ స్పష్టంగా వివరింపబడినవి.\n"
-                "• **సారాంశం:** ఈ వచనాలను చదువు ప్రతి ఒక్కరికి మంచి ఆలోచనలు, జ్ఞానము మరియు ఆచరణాత్మకమైన మార్గదర్శకత్వము కలుగునుగాక!"
-            )
-
-        st.info(f"**{summary_title}**\n\n{summary_desc}")
-        
-        st.markdown("---")
-        
-        # నావిగేషన్ బటన్లు (Next / Prev)
-        col_prev, col_space, col_next = st.columns([1, 2, 1])
-        
-        with col_prev:
-            if st.session_state.sum_page > 0:
-                if st.button("⬅️ మునుపటి (Prev)"):
-                    st.session_state.sum_page -= 1
-                    st.rerun()
-                    
-        with col_next:
-            if st.session_state.sum_page < total_pages - 1:
-                if st.button("తర్వాతి (Next) ➡️"):
-                    st.session_state.sum_page += 1
-                    st.rerun()
-            
+                st.info(f"ఆడియో జనరేషన్ గమనిక: {e}")
+    
 # 6. భాషా అనువాదం
 elif choice == "6. భాషా అనువాదం (Multi-Language Translation)":
     st.subheader("🌐 భాషా అనువాదం")
