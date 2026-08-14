@@ -177,11 +177,11 @@ elif choice.startswith("5."):
     
     col1, col2, col3 = st.columns(3)
     with col1:
-        process_btn = st.button("🚀 AI ద్వారా విశ్లేషించు", key="ai_process_btn")
+        process_btn = st.button("🚀 AI విశ్లేషణ", key="ai_process_btn")
     with col2:
-        audio_btn = st.button("🔊 ఆడియో రూపంలో విను", key="ai_audio_btn")
+        audio_btn = st.button("🔊 ఆడియో", key="ai_audio_btn")
     with col3:
-        clear_btn = st.button("🧹 క్లియర్ చేయి", key="ai_clear_btn")
+        clear_btn = st.button("🧹 క్లియర్", key="ai_clear_btn")
         
     if clear_btn:
         st.rerun()
@@ -191,7 +191,7 @@ elif choice.startswith("5."):
             st.warning("⚠️ దయచేసి ముందుగా టెక్స్ట్ ఇవ్వండి!")
             st.stop()
             
-        with st.spinner("🤖 AI సారాంశాన్ని మరియు భావాన్ని విశ్లేషిస్తోంది, దయచేసి వేచి ఉండండి..."):
+        with st.spinner("🤖 AI సారాంశాన్ని విశ్లేషిస్తోంది, వేచి ఉండండి..."):
             try:
                 import google.generativeai as genai
                 
@@ -202,38 +202,32 @@ elif choice.startswith("5."):
                 # Gemini మోడల్ ఇనిషియలైజ్ చేయడం
                 model = genai.GenerativeModel('gemini-1.5-flash')
                 
-                # AI కి ప్రాంప్ట్ పంపడం
+                # AI కి ప్రాంప్ట్ పంపడం (మీరు చెప్పిన కోడ్ భాగం ఇదే)
                 prompt = f"ఈ క్రింది టెక్స్ట్ ని చదివి, దీని ముఖ్య ఉద్దేశం ఏంటి మరియు దీని సమగ్ర సారాంశం / భావం ఏంటి అని తెలుగులో స్పష్టంగా, అందంగా వివరించండి:\n\n{input_text}"
                 response = model.generate_content(prompt)
                 
-                ai_result = response.text
-                
-                # రిజల్ట్ స్టోర్ చేసుకోవడం
-                st.session_state.ai_summary_result = ai_result
+                st.session_state.ai_summary_result = response.text
                 
             except Exception as e:
-                st.error(f"సాంకేతిక లోపం ఏర్పడింది లేదా API Key సరిగ్గా లేదు: {e}")
+                st.error(f"సాంకేతిక లోపం లేదా API Key సమస్య: {e}")
                 st.stop()
 
-    # ఒకసారి విశ్లేషణ అయ్యాక స్క్రీన్ పై చూపించడం
+    # రిజల్ట్ స్క్రీన్ పై చూపించడం
     if "ai_summary_result" in st.session_state:
         st.success("✨ AI విశ్లేషణ విజయవంతం!")
         st.markdown("### 💡 AI సమగ్ర భావం & సారాంశం:")
         st.markdown(st.session_state.ai_summary_result)
         
-        # ఆడియో రూపంలో వినడానికి gTTS ఇంటిగ్రేషన్
         if audio_btn:
             try:
                 from gtts import gTTS
-                # AI ఇచ్చిన సారాంశాన్ని ఆడియోగా మార్చడం
                 tts = gTTS(text=st.session_state.ai_summary_result, lang='te', slow=False)
-                audio_file = "ai_audio.mp3"
-                tts.save(audio_file)
-                st.audio(audio_file, format='audio/mp3')
-                st.success("🎧 AI సారాంశం ఆడియో సిద్ధమైంది!")
+                tts.save("ai_audio.mp3")
+                st.audio("ai_audio.mp3", format='audio/mp3')
+                st.success("🎧 ఆడియో సిద్ధమైంది!")
             except Exception as e:
-                st.info(f"ఆడియో జనరేషన్ గమనిక: {e}")
-    
+                st.info(f"ఆడియో గమనిక: {e}")
+                
 # 6. భాషా అనువాదం
 elif choice == "6. భాషా అనువాదం (Multi-Language Translation)":
     st.subheader("🌐 భాషా అనువాదం")
