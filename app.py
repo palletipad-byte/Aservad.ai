@@ -365,16 +365,46 @@ elif choice.startswith("8."):
         else:
             st.warning("⚠️ దయచేసి ఏదైనా సందేశం టైప్ చేయండి లేదా మాట్లాడండి మిత్రమా!")
                         
-# 9. డాక్యుమెంట్ ఎనాలిసిస్
-elif choice == "9. డాక్యుమెంట్ ఎనాలిసిస్ (Document Analysis)":
-    st.subheader("📄 డాక్యుమెంట్ ఎనాలిసిస్")
-    doc = st.file_uploader("ఫైల్ అప్లోడ్ చేయండి (PDF/TXT):", type=["pdf", "txt"])
-    if st.button("📊 డాక్యుమెంట్ పరిశీలించు"):
-        if doc:
-            st.success(f"ఫైల్ '{doc.name}' విజయవంతంగా విశ్లేషించబడింది!")
-        else:
-            st.warning("దయచేసి ఫైల్ అప్లోడ్ చేయండి.")
+# 9. డాక్యుమెంట్ అనాలిసిస్ (Document Analysis)
+elif choice == "9. డాక్యుమెంట్ అనాలిసిస్ (Document Analysis)":
+    st.subheader("📄 డాక్యుమెంట్ అనాలిసిస్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, ఫైల్ అప్‌లోడ్ చేయండి లేదా మీ సమాచారాన్ని టెక్స్ట్/వాయిస్ రూపంలో ఇవ్వండి.")
 
+    # అదనపు సదుపాయాలు: ఫైల్ అప్‌లోడ్ లేదా టెక్స్ట్/వాయిస్
+    input_method = st.radio("సమాచార సేకరణ పద్ధతి:", ["ఫైల్ అప్‌లోడ్", "టెక్స్ట్ టైప్", "వాయిస్ ఇన్పుట్"], key="doc_radio")
+    
+    analysis_input = ""
+    if input_method == "ఫైల్ అప్‌లోడ్":
+        doc = st.file_uploader("PDF లేదా TXT ఫైల్ అప్‌లోడ్ చేయండి:", type=["pdf", "txt"], key="doc_file")
+        if doc: analysis_input = doc.name
+    elif input_method == "టెక్స్ట్ టైప్":
+        analysis_input = st.text_area("సమాచారాన్ని ఇక్కడ టైప్ చేయండి:", key="doc_text")
+    else:
+        audio_val = st.audio_input("మైక్ నొక్కి మీ సమాచారం మాట్లాడండి:", key="doc_audio")
+        if audio_val: 
+            st.success("✨ ఆడియో స్వీకరించబడింది!")
+            analysis_input = "వాయిస్ ద్వారా అందించబడిన డేటా"
+
+    if st.button("📊 విశ్లేషించండి (Analyze)", key="doc_btn"):
+        if analysis_input:
+            with st.spinner("✨ జోష్నా టైలర్స్ & ఆశీర్వాదం AI విశ్లేషణ మొదలైంది..."):
+                result = f"నివేదిక: '{analysis_input}' అంశంపై విశ్లేషణ పూర్తయింది. ఇది ఆశీర్వాదం AI ద్వారా అందించబడిన ప్రత్యేక సమాచారం. (గమనిక: ప్రస్తుతం ఇది డెమో వెర్షన్)."
+                
+                st.success("✨ ఫలితం సిద్ధంగా ఉంది!")
+                st.write(result)
+                
+                # కాపీ బటన్
+                st.code(result, language="text")
+                
+                # లైక్/డిస్లైక్
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("👍 నచ్చింది", key="doc_like"): st.toast("ధన్యవాదాలు మిత్రమా!")
+                with col2:
+                    if st.button("👎 మార్పులు కావాలి", key="doc_dislike"): st.toast("మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది.")
+        else:
+            st.warning("⚠️ దయచేసి ఏదైనా ఇన్పుట్ (ఫైల్/టెక్స్ట్/వాయిస్) ఇవ్వండి మిత్రమా!")
+            
 # 10. ఆడియో ట్రాన్స్‌క్రిప్షన్
 elif choice == "10. ఆడియో ట్రాన్స్‌క్రిప్షన్ (Audio Transcription)":
     st.subheader("🎧 ఆడియో ట్రాన్స్‌క్రిప్షన్")
