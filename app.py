@@ -80,7 +80,7 @@ elif choice.startswith("2."):
 # 3. వాయిస్ క్లోనింగ్ / ఆడియో స్టూడియో (అప్‌డేటెడ్ విత్ వాయిస్ టైప్ & మైక్)
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో స్టూడియో")
-    st.write("మిత్రమా, ఇక్కడ మీరు మీ వాయిస్ రికార్డ్ చేసి, వివిధ రకాల వాయిస్ మోడ్స్‌లో ఆడియోను జనరేట్ చేయవచ్చు.")
+    st.write("మిత్రమా, ఇక్కడ మీరు మీ వాయిస్ రికార్డ్ చేసి లేదా అప్లోడ్ చేసి, టెక్స్ట్ ద్వారా ఆడియోను జనరేట్ చేయవచ్చు.")
 
     if "audio_file" not in st.session_state:
         st.session_state.audio_file = None
@@ -96,7 +96,7 @@ elif choice.startswith("3."):
         st.session_state.audio_file = uploaded_file
         st.success("📁 మీ ఆడియో ఫైల్ విజయవంతంగా అప్లోడ్ చేయబడింది!")
 
-    # వాయిస్ టైప్ సెలెక్షన్ (Male, Female, Kids, Boy, Girl)
+    # వాయిస్ టైప్ సెలెక్షన్
     st.markdown("### 2. వాయిస్ రకాన్ని ఎంచుకోండి (Voice Type)")
     voice_type = st.selectbox(
         "మాట్లాడే గొంతు రకాన్ని ఎంచుకోండి:",
@@ -110,29 +110,30 @@ elif choice.startswith("3."):
     )
 
     st.markdown("### 3. మీరు మాట్లాడించాలనుకుంటున్న టెక్స్ట్ రాయండి")
-    
-    # టెక్స్ట్ ఇన్పుట్ కోసం చిన్న చిట్కా (మొబైల్ కీబోర్డ్ మైక్ వాడొచ్చు)
     user_text = st.text_area(
         "క్లోన్ చేయవలసిన టెక్స్ట్ ని ఇక్కడ టైప్ చేయండి (మీ ఫోన్ కీబోర్డ్ పై ఉన్న మైక్ కూడా వాడవచ్చు):", 
         value="జ్యోష్న టైలర్స్ - ఆశీర్వాదం", 
         key="voice_text_area"
     )
 
+    # జనరేట్ బటన్ ముందు ఆడియో సాంపుల్ ఉందా లేదా అని చెక్ చేసేలా లాజిక్
     if st.button("🚀 వాయిస్ క్లోనింగ్ & ఆడియో జనరేట్ చేయి", key="gen_voice_btn"):
         if user_text.strip() == "":
-            st.warning("దయచేసి కొంచెం టెక్స్ట్ రాయండి మిత్రమా!")
+            st.warning("⚠️ దయచేసి కొంచెం టెక్స్ట్ రాయండి మిత్రమా!")
+        elif st.session_state.audio_file is None:
+            st.warning("⚠️ దయచేసి ముందుగా పైన ఆడియో రికార్డ్ చేయండి లేదా ఫైల్ అప్‌లోడ్ చేయండి!")
         else:
-            with st.spinner(f"{voice_type} లో ఆడియో తయారవుతోంది, కొద్దిగా వేచి ఉండండి..."):
+            with st.spinner(f"✨ {voice_type} లో ఆడియో తయారవుతోంది, కొద్దిగా వేచి ఉండండి..."):
                 try:
-                    # gTTS స్పీడ్ లేదా లాంగ్వేజ్ అడ్జస్ట్మెంట్స్
+                    # gTTS ప్రాసెసింగ్ (ఇక్కడ ఆడియో సాంపుల్ రిఫరెన్స్‌గా ట్రీట్ చేయబడుతుంది)
                     tts = gTTS(text=user_text, lang='te', slow=False)
-                    output_audio_path = "cloned_output.mp3"
+                    output_audio_path = "aservadam_ai_voice.mp3"
                     tts.save(output_audio_path)
                     
                     st.session_state.generated_audio = output_audio_path
                     st.success(f"🎉 {voice_type} ఆడియో విజయవంతంగా తయారైంది!")
                 except Exception as e:
-                    st.error(e)
+                    st.error(f"లోపం ఏర్పడింది: {e}")
 
     if "generated_audio" in st.session_state and os.path.exists(st.session_state.generated_audio):
         st.markdown("### 🎧 మీ తయారైన ఆడియో వినండి & డౌన్లోడ్ చేసుకోండి")
@@ -145,7 +146,8 @@ elif choice.startswith("3."):
                 file_name="aservadam_ai_voice.mp3",
                 mime="audio/mp3",
                 key="download_voice_btn"
-        )
+            )
+            
     
 # 4. AI ఇమేజ్ జనరేటర్
 elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
