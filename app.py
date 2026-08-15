@@ -11,14 +11,14 @@ st.set_page_config(
 )
 
 # గ్లోబల్ లాంగ్వేజ్ సెలెక్షన్
-selected_lang = st.sidebar.selectbox("🌐 భాషను ఎంచుకోండి / Choose Language", [
+selected_lang = st.selectbox("🌐 భాషను ఎంచుకోండి / Choose Language", [
     "తెలుగు (Telugu)", "English", "हिंदी (Hindi)", "தமிழ் (Tamil)", 
     "ಕನ್ನಡ (Kannada)", "മലയാളം (Malayalam)", "Español", "Français"
 ])
 
 # సైడ్‌బార్ మెనూ - 15 ఫీచర్లు (సరియైన వరుసక్రమం)
-st.sidebar.title("🧭 ఆశీర్వాదం AI / Navigation")
-choice = st.sidebar.selectbox("ఫీచర్‌ని ఎంచుకోండి / Select Feature", [
+st.title("🧭 ఆశీర్వాదం AI / Navigation")
+choice = st.selectbox("ఫీచర్‌ని ఎంచుకోండి / Select Feature", [
     "1. హోమ్ / Dashboard",
     "2. ఫేస్ స్వాప్ (Face Swap)",
     "3. AI వాయిస్ క్లోనింగ్ & మైక్ (Voice Cloning & Mic)",
