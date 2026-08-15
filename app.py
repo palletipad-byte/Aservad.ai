@@ -472,14 +472,28 @@ elif choice == "11. వీడియో క్రియేటర్ (Video Creato
             st.warning("⚠️ దయచేసి ఏదైనా వీడియో టాపిక్ లేదా టైటిల్ రాయండి.")
             
 
-# 12. సెట్టింగ్‌లు
-elif choice == "12. సెట్టింగ్‌లు (Settings)":
-    st.subheader("⚙️ యాప్ సెట్టింగ్‌లు")
-    st.checkbox("డార్క్ మోడ్ (Dark Mode) ఆన్ చేయి")
-    st.text_input("కస్టమ్ API కీ:", type="password")
-    if st.button("సెట్టింగ్‌లు సేవ్ చేయి"):
-        st.success("సెట్టింగ్‌లు సేవ్ చేయబడ్డాయి!")
-
+# 12. సెట్టింగ్‌లు (Settings)
+elif choice.startswith("12."):
+    st.subheader("⚙️ యాప్ సెట్టింగ్‌లు (Settings)")
+    
+    # డార్క్ మోడ్ లేదా థీమ్ సెట్టింగ్
+    theme = st.radio("థీమ్ ఎంచుకోండి:", ["Light", "Dark"], horizontal=True)
+    
+    # API కీ సెట్టింగ్
+    st.markdown("### 🔑 API సెట్టింగ్స్")
+    api_input = st.text_input("మీ జెమినీ API కీ ని ఇక్కడ ఎంటర్ చేయండి:", type="password")
+    
+    # ఇతర అడ్వాన్స్‌డ్ ఆప్షన్స్
+    st.markdown("### 🛠️ అడ్వాన్స్‌డ్ ఆప్షన్స్")
+    notifications = st.toggle("నోటిఫికేషన్లు ఆన్ చేయి")
+    
+    if st.button("💾 సెట్టింగ్‌లు సేవ్ చేయి"):
+        if api_input:
+            st.session_state.api_key = api_input
+            st.success("✅ మీ సెట్టింగ్‌లు విజయవంతంగా సేవ్ చేయబడ్డాయి! ఇప్పుడు AI ఫీచర్లు యాక్టివ్ అవుతాయి.")
+        else:
+            st.warning("⚠️ దయచేసి API కీ ఇవ్వండి మిత్రమా!")
+    
 # 13. సహాయం & ఫీడ్‌బ్యాక్
 elif choice == "13. సహాయం & ఫీడ్‌బ్యాక్ (Help & Feedback)":
     st.subheader("📞 సహాయం & ఫీడ్‌బ్యాక్")
