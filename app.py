@@ -229,13 +229,47 @@ elif choice.startswith("5."):
             except Exception as e:
                 st.info(f"ఆడియో గమనిక: {e}")
                 
-# 6. భాషా అనువాదం
-elif choice == "6. భాషా అనువాదం (Multi-Language Translation)":
-    st.subheader("🌐 భాషా అనువాదం")
-    t_text = st.text_input("అనువదించవలసిన పదం:", "Hello, how can I help you?")
-    lang = st.selectbox("భాష:", ["Telugu", "Hindi", "Tamil", "Kannada"])
-    if st.button("🔄 ఇప్పుడే అనువదించు"):
-        st.success(f"[{lang}] లోకి విజయవంతంగా అనువదించబడింది: {t_text}")
+# 6. భాషా అనువాదం (Multi-Language Translation)
+elif choice.startswith("6."):
+    st.subheader("🌐 AI భాషా అనువాదం (Multi-Language Translation)")
+    st.info("మిత్రమా, ఇక్కడ మీరు టెక్స్ట్ టైప్ చేసి లేదా మైక్ ద్వారా మాట్లాడి వేరే భాషలోకి అనువదించుకోవచ్చు.")
+
+    # వాయిస్ లేదా టెక్స్ట్ ఇన్పుట్ కోసం
+    translation_input_type = st.radio("ఇన్పుట్ పద్ధతిని ఎంచుకోండి:", ["టెక్స్ట్ టైప్ చేయండి", "మైక్ ద్వారా మాట్లాడండి"])
+    
+    source_text = ""
+    if translation_input_type == "టెక్స్ట్ టైప్ చేయండి":
+        source_text = st.text_area("అనువదించవలసిన టెక్స్ట్ ఇక్కడ రాయండి:", key="trans_text")
+    else:
+        audio_val = st.audio_input("మైక్ నొక్కి మాట్లాడండి:")
+        if audio_val:
+            st.success("✨ ఆడియో విజయవంతವಾಗಿ స్వీకరించబడింది!")
+            source_text = "ఆడియో నుండి సేకరించిన నమూనా టెక్స్ట్" # (దీన్ని ఆడియో ట్రాన్స్‌క్రిప్షన్‌తో లింక్ చేద్దాం)
+
+    target_lang = st.selectbox("ఏ భాషలోకి మార్చాలి?", ["తెలుగు (Telugu)", "English", "हिन्दी (Hindi)", "தமிழ் (Tamil)", "ಕನ್ನಡ (Kannada)", "മലയാളം (Malayalam)"])
+
+    if st.button("🚀 అనువదించండి (Translate)", key="translate_btn"):
+        if source_text.strip():
+            with st.spinner("✨ అనువాదం జరుగుతోంది... దయచేసి వేచి ఉండండి."):
+                # ఇక్కడ AI అనువాద ఫలితం వస్తుంది
+                translated_result = f"[{target_lang}లోకి అనువదించబడిన టెక్స్ట్]: {source_text}"
+                
+                st.success("✨ అనువాదం విజయవంతంగా పూర్తయింది!")
+                st.write(translated_result)
+                
+                # కాపీ చేసుకోవడానికి మరియు ఫీడ్‌బ్యాక్ కోసం
+                st.code(translated_result, language="text")
+                
+                col_like, col_dislike = st.columns(2)
+                with col_like:
+                    if st.button("👍 నచ్చింది (Like)", key="trans_like"):
+                        st.toast("ధన్యవాదాలు మీ ఫీడ్‌బ్యాక్‌కి!")
+                with col_dislike:
+                    if st.button("👎 మార్పులు కావాలి (Dislike)", key="trans_dislike"):
+                        st.toast("మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది.")
+        else:
+            st.warning("⚠️ దయచేసి అనువదించడానికి టెక్స్ట్ ఇవ్వండి లేదా మాట్లాడండి మిత్రమా!")
+            
 # 7. Coding Assistant
 elif choice.startswith("7."):
     st.subheader("💻 AI కోడింగ్ అసిస్టెంట్")
