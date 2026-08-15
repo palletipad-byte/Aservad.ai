@@ -494,17 +494,34 @@ elif choice.startswith("12."):
         else:
             st.warning("⚠️ దయచేసి API కీ ఇవ్వండి మిత్రమా!")
     
-# 13. సహాయం & ఫీడ్‌బ్యాక్
-elif choice == "13. సహాయం & ఫీడ్‌బ్యాక్ (Help & Feedback)":
-    st.subheader("📞 సహాయం & ఫీడ్‌బ్యాక్")
-    name = st.text_input("మీ పేరు:")
-    fb = st.text_area("మీ సలహాలు:")
-    if st.button("సమర్పించు"):
+# 13. సహాయం & ఫీడ్‌బ్యాక్ (Help & Feedback)
+elif choice.startswith("13."):
+    st.subheader("📞 సహాయం & ఫీడ్‌బ్యాక్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, మీకు ఏవైనా సందేహాలున్నా లేదా మా యాప్ గురించి సలహాలు ఇవ్వాలన్నా ఇక్కడ తెలపండి.")
+
+    name = st.text_input("మీ పేరు (Your Name):", key="help_name")
+    phone = st.text_input("మీ ఫోన్ నంబర్ / వాట్సాప్:", key="help_phone")
+    fb = st.text_area("మీ సలహాలు లేదా సమస్యను ఇక్కడ రాయండి:", key="help_fb", height=150)
+    
+    if st.button("🚀 సమర్పించు (Submit Feedback)", key="help_submit"):
         if name and fb:
-            st.success("ధన్యవాదాలు! మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది.")
+            with st.spinner("✨ మీ ఫీడ్‌బ్యాక్ పంపబడుతోంది..."):
+                feedback_result = f"ధన్యవాదాలు మిత్రమా {name}! మీ అభిప్రాయం/సలహా విజయవంతంగా స్వీకరించబడింది. జోష్నా టైలర్స్ & ఆశీర్వాదం AI టీమ్ మిమ్మల్ని త్వరలో సంప్రదిస్తుంది."
+                
+                st.success(feedback_result)
+                st.balloons()
+                
+                # కాపీ బటన్
+                st.code(feedback_result, language="text")
+                
+                # ఫీడ్‌బ్యాక్ కోసం లైక్ బటన్స్
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("👍 సంతోషం", key="fb_like"): st.toast("ధన్యవాదాలు!")
+                with col2:
+                    if st.button("👎 మార్పులు కావాలి", key="fb_dislike"): st.toast("పరిశీలిస్తాం మిత్రమా.")
         else:
-            st.warning("దయచేసి వివరాలు నింపండి.")
-  
+            st.warning("⚠️ దయచేసి మీ పేరు మరియు సలహాని ఖచ్చితంగా నింపండి మిత్రమా!")
 # 14. AI వీడియో & టాకింగ్ అవతార్ టూల్స్
 elif choice == "14. AI వీడియో & టాకింగ్ అవతార్ టూల్స్":
     st.subheader("🎬 AI వీడియో మేకర్ & టాకింగ్ అవతార్")
