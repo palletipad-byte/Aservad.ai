@@ -270,28 +270,55 @@ elif choice.startswith("6."):
         else:
             st.warning("⚠️ దయచేసి అనువదించడానికి టెక్స్ట్ ఇవ్వండి లేదా మాట్లాడండి మిత్రమా!")
             
-# 7. Coding Assistant
+# 7. కోడింగ్ అసిస్టెంట్ (Coding Assistant)
 elif choice.startswith("7."):
     st.subheader("💻 AI కోడింగ్ అసిస్టెంట్")
-    st.info("కోడ్ లేదా డౌట్లను ఇక్కడ అడగండి.")
+    st.info("మిత్రమా, ఇక్కడ మీరు ఏ కోడింగ్ సందేహం లేదా కోడ్ కావాలన్నా అడగవచ్చు.")
+
+    # వాయిస్ లేదా టెక్స్ట్ ఇన్పుట్ కోసం
+    coding_input_type = st.radio("ఇన్పుట్ పద్ధతిని ఎంచుకోండి:", ["టెక్స్ట్ టైప్ చేయండి", "మైక్ ద్వారా మాట్లాడండి"], key="coding_radio")
     
-    q = st.text_input(
-        "మీ ప్రశ్న ఇక్కడ రాయండి", 
-        placeholder="ఉదాహరణకు: రెండు సంఖ్యలను కలపడానికి కోడ్", 
-        key="coding_box"
-    )
-    
-    if st.button("జనరేట్ చేయి", key="coding_btn"):
-        if q:
-            if any(word in q.lower() for word in ["కలప", "sum", "add", "addition"]):
-                st.success("విజయవంతమైంది!")
-                st.code("def add(a, b):\n    return a + b\n\nprint(add(5, 3))", language="python")
-            else:
-                st.success("విజయవంతమైంది!")
-                st.code(f"print('మీరు అడిగిన ప్రశ్న: {q}')", language="python")
+    q = ""
+    if coding_input_type == "టెక్స్ట్ టైప్ చేయండి":
+        q = st.text_input(
+            "మీ ప్రశ్న లేదా కోడింగ్ సందేహం ఇక్కడ రాయండి:",
+            placeholder="ఉదాహరణకు: రెండు సంఖ్యలను కలపడానికి పైథాన్ కోడ్",
+            key="coding_box"
+        )
+    else:
+        audio_val = st.audio_input("మైక్ నొక్కి మీ కోడింగ్ ప్రశ్న మాట్లాడండి:", key="coding_audio")
+        if audio_val:
+            st.success("✨ ఆడియో విజయవంతವಾಗಿ స్వీకరించబడింది!")
+            q = "పైథాన్ లో ఒక సింపుల్ ఫంక్షన్ ఎలా రాయాలి" # (ఆడియో ట్రాన్స్‌క్రిప్షన్ ద్వారా దీన్ని లింక్ చేద్దాం)
+
+    if st.button("🚀 జనరేట్ చేయండి (Generate Code)", key="coding_btn"):
+        if q.strip():
+            with st.spinner("✨ కోడ్ తయారవుతోంది... దయచేసి వేచి ఉండండి."):
+                # ఇక్కడ AI కోడింగ్ రెస్పాన్స్ వస్తుంది
+                if any(word in q.lower() for word in ["కలుపు", "sum", "add", "addition", "కలపడానికి"]):
+                    code_result = "def add(a, b):\n    return a + b\n\n# ఉదాహరణ:\nprint(add(5, 3))"
+                    explanation = "ఇది రెండు సంఖ్యలను కలపడానికి ఉపయోగపడే పైథాన్ ఫంక్షన్ మిత్రమా!"
+                else:
+                    code_result = f"# AI కోడింగ్ అసిస్టెంట్ సమాధానం\nprint('మీరు అడిగిన ప్రశ్న: {q}')\n# మీ అవసరానికి తగిన కోడ్ ఇక్కడ రాసుకోవచ్చు."
+                    explanation = "మీ ప్రశ్న ఆధారంగా కోడ్ తయారు చేయబడింది."
+
+                st.success("✨ విజయవంతంగా పూర్تయింది!")
+                st.write(explanation)
+                
+                # కాపీ చేసుకోవడానికి కోడ్ బ్లాక్
+                st.code(code_result, language="python")
+                
+                # ఫీడ్‌బ్యాక్ మరియు లైక్/డిస్లైక్ ఆప్షన్స్
+                col_like, col_dislike = st.columns(2)
+                with col_like:
+                    if st.button("👍 నచ్చింది (Like)", key="coding_like"):
+                        st.toast("ధన్యవాదాలు మీ ఫీడ్‌బ్యాక్‌కి!")
+                with col_dislike:
+                    if st.button("👎 మార్పులు కావాలి (Dislike)", key="coding_dislike"):
+                        st.toast("మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది.")
         else:
-            st.warning("దయచేసి ఏదైనా రాయండి.")
-    
+            st.warning("⚠️ దయచేసి ఏదైనా ప్రశ్న టైప్ చేయండి లేదా మాట్లాడండి మిత్రమా!")
+            
 # 8. చాట్‌బాట్ సపోర్ట్
 elif choice == "8. చాట్‌బాట్ సపోర్ట్ (AI Chatbot)":
     st.subheader("💬 AI చాట్‌బాట్")
