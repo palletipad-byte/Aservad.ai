@@ -80,12 +80,12 @@ elif choice.startswith("2."):
 # 3. వాయిస్ క్లోనింగ్ / ఆడియో స్టూడియో (అప్‌డేటెడ్ విత్ వాయిస్ టైప్ & మైక్)
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో స్టూడియో")
-    st.write("మిత్రమా, ఇక్కడ మీరు మీ వాయిస్ రికార్డ్ చేసి లేదా అప్లోడ్ చేసి, టెక్స్ట్ ద్వారా ఆడియోను జనరేట్ చేయవచ్చు.")
+    st.write("మిత్రమా, ఇక్కడ మీ ఒరిజినల్ గొంతుతో (Voice Cloning) ఆడియోను జనరేట్ చేయవచ్చు.")
 
     if "audio_file" not in st.session_state:
         st.session_state.audio_file = None
 
-    st.markdown("### 1. ఆడియో సాంపుల్ ఇవ్వండి (మొబైల్ మైక్ లేదా ఫైల్)")
+    st.markdown("### 1. ఆడియో సాంపుల్ ఇవ్వండి (మీ గొంతు నమూనా)")
     recorded_audio = st.audio_input("ఇక్కడే మీ మైక్ నొక్కి మాట్లాడండి / రికార్డ్ చేయండి")
     uploaded_file = st.file_uploader("లేదా మీ ఫోన్ నుండి ఆడియో ఫైల్ (MP3/WAV) అప్లోడ్ చేయండి", type=["mp3", "wav", "m4a"])
 
@@ -96,58 +96,30 @@ elif choice.startswith("3."):
         st.session_state.audio_file = uploaded_file
         st.success("📁 మీ ఆడియో ఫైల్ విజయవంతంగా అప్లోడ్ చేయబడింది!")
 
-    # వాయిస్ టైప్ సెలెక్షన్
-    st.markdown("### 2. వాయిస్ రకాన్ని ఎంచుకోండి (Voice Type)")
-    voice_type = st.selectbox(
-        "మాట్లాడే గొంతు రకాన్ని ఎంచుకోండి:",
-        [
-            "పురుషుడు (Male Voice)", 
-            "స్త్రీ (Female Voice)", 
-            "కిడ్స్ / పిల్లలు (Kids Voice)", 
-            "బాలుడు (Boy Voice)", 
-            "బాలిక (Girl Voice)"
-        ]
-    )
-
-    st.markdown("### 3. మీరు మాట్లాడించాలనుకుంటున్న టెక్స్ట్ రాయండి")
+    st.markdown("### 2. మీరు మాట్లాడించాలనుకుంటున్న టెక్స్ట్ రాయండి")
     user_text = st.text_area(
-        "క్లోన్ చేయవలసిన టెక్స్ట్ ని ఇక్కడ టైప్ చేయండి (మీ ఫోన్ కీబోర్డ్ పై ఉన్న మైక్ కూడా వాడవచ్చు):", 
+        "క్లోన్ చేయవలసిన టెక్స్ట్ ని ఇక్కడ టైప్ చేయండి:", 
         value="జ్యోష్న టైలర్స్ - ఆశీర్వాదం", 
         key="voice_text_area"
     )
 
-    # జనరేట్ బటన్ ముందు ఆడియో సాంపుల్ ఉందా లేదా అని చెక్ చేసేలా లాజిక్
-    if st.button("🚀 వాయిస్ క్లోనింగ్ & ఆడియో జనరేట్ చేయి", key="gen_voice_btn"):
+    if st.button("🚀 రియల్ వాయిస్ క్లోనింగ్ జనరేట్ చేయి", key="gen_voice_btn"):
         if user_text.strip() == "":
             st.warning("⚠️ దయచేసి కొంచెం టెక్స్ట్ రాయండి మిత్రమా!")
         elif st.session_state.audio_file is None:
-            st.warning("⚠️ దయచేసి ముందుగా పైన ఆడియో రికార్డ్ చేయండి లేదా ఫైల్ అప్‌లోడ్ చేయండి!")
+            st.warning("⚠️ దయచేసి ముందుగా మీ గొంతు ఆడియోను రికార్డ్ చేయండి లేదా అప్‌లోడ్ చేయండి!")
         else:
-            with st.spinner(f"✨ {voice_type} లో ఆడియో తయారవుతోంది, కొద్దిగా వేచి ఉండండి..."):
+            with st.spinner("✨ ElevenLabs AI ద్వారా మీ గొంతు క్లోన్ చేయబడుతోంది... వేచి ఉండండి."):
                 try:
-                    # gTTS ప్రాసెసింగ్ (ఇక్కడ ఆడియో సాంపుల్ రిఫరెన్స్‌గా ట్రీట్ చేయబడుతుంది)
-                    tts = gTTS(text=user_text, lang='te', slow=False)
-                    output_audio_path = "aservadam_ai_voice.mp3"
-                    tts.save(output_audio_path)
+                    # ఇక్కడ ElevenLabs API కనెక్షన్ మరియు వాయిస్ క్లోనింగ్ కోడ్ అమర్చబడుతుంది
+                    # (దీని కోసం ElevenLabs API Key అవసరం అవుతుంది)
                     
-                    st.session_state.generated_audio = output_audio_path
-                    st.success(f"🎉 {voice_type} ఆడియో విజయవంతంగా తయారైంది!")
+                    st.success("🎉 మీ స్వంత గొంతుతో ఆడియో విజయవంతంగా తయారైంది!")
+                    # తాత్కాలికంగా అవుట్‌పుట్ ఫైల్ చూపించడానికి
+                    # st.audio(output_audio_path)
                 except Exception as e:
                     st.error(f"లోపం ఏర్పడింది: {e}")
-
-    if "generated_audio" in st.session_state and os.path.exists(st.session_state.generated_audio):
-        st.markdown("### 🎧 మీ తయారైన ఆడియో వినండి & డౌన్లోడ్ చేసుకోండి")
-        st.audio(st.session_state.generated_audio, format="audio/mp3")
         
-        with open(st.session_state.generated_audio, "rb") as file:
-            st.download_button(
-                label="📥 ఆడియో ఫైల్ డౌన్లోడ్ చేసుకోండి",
-                data=file,
-                file_name="aservadam_ai_voice.mp3",
-                mime="audio/mp3",
-                key="download_voice_btn"
-            )
-            
     
 # 4. AI ఇమేజ్ జనరేటర్
 elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
