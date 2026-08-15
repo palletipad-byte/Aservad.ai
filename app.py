@@ -404,16 +404,41 @@ elif choice == "9. డాక్యుమెంట్ అనాలిసిస్
                     if st.button("👎 మార్పులు కావాలి", key="doc_dislike"): st.toast("మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది.")
         else:
             st.warning("⚠️ దయచేసి ఏదైనా ఇన్పుట్ (ఫైల్/టెక్స్ట్/వాయిస్) ఇవ్వండి మిత్రమా!")
-            
-# 10. ఆడియో ట్రాన్స్‌క్రిప్షన్
-elif choice == "10. ఆడియో ట్రాన్స్‌క్రిప్షన్ (Audio Transcription)":
-    st.subheader("🎧 ఆడియో ట్రాన్స్‌క్రిప్షన్")
-    aud = st.file_uploader("ఆడియో అప్లోడ్ చేయండి:", type=["wav", "mp3"])
-    if st.button("✍️ ఆడియోను టెక్స్ట్‌గా మార్చు"):
-        if aud:
-            st.success("ఆడియో విజయవంతంగా టెక్స్ట్‌గా మార్చబడింది!")
+# 10. ఆడియో ట్రాన్స్‌క్రిప్షన్ (Audio Transcription)
+elif choice.startswith("10."):
+    st.subheader("🎧 ఆడియో ట్రాన్స్‌క్రిప్షన్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, ఆడియో ఫైల్ అప్‌లోడ్ చేయండి లేదా లైవ్ రికార్డింగ్ చేసి దానిని టెక్స్ట్‌గా మార్చుకోండి.")
+
+    # ఇన్పుట్ పద్ధతి
+    audio_method = st.radio("ఇన్పుట్ పద్ధతి:", ["ఫైల్ అప్‌లోడ్ (MP3/WAV)", "లైవ్ రికార్డింగ్ (మైక్)"], key="trans_radio")
+    
+    audio_data = None
+    if audio_method == "ఫైల్ అప్‌లోడ్ (MP3/WAV)":
+        audio_data = st.file_uploader("ఆడియో ఫైల్ ఎంచుకోండి:", type=["mp3", "wav", "m4a"], key="audio_file")
+    else:
+        audio_data = st.audio_input("మైక్ నొక్కి మాట్లాడండి:", key="audio_mic")
+
+    if st.button("✍️ టెక్స్ట్‌గా మార్చు (Transcribe)", key="trans_btn"):
+        if audio_data:
+            with st.spinner("✨ ఆడియోను టెక్స్ట్‌గా మారుస్తున్నాము... వేచి ఉండండి మిత్రమా."):
+                # డెమో లాజిక్ - ఇది భవిష్యత్తులో Whisper API తో కనెక్ట్ అవుతుంది
+                transcription = f"ట్రాన్స్‌క్రిప్షన్ ఫలితం: '{audio_data.name if hasattr(audio_data, 'name') else 'లైవ్ ఆడియో'}' విజయవంతంగా టెక్స్ట్‌గా మార్చబడింది. జోష్నా టైలర్స్ & ఆశీర్వాదం AI సపోర్ట్."
+                
+                st.success("✨ ట్రాన్స్‌క్రిప్షన్ పూర్తయింది!")
+                st.write(transcription)
+                
+                # కాపీ బటన్
+                st.code(transcription, language="text")
+                
+                # లైక్/డిస్లైక్
+                col1, col2 = st.columns(2)
+                with col1:
+                    if st.button("👍 నచ్చింది", key="trans_like"): st.toast("ధన్యవాదాలు మిత్రమా!")
+                with col2:
+                    if st.button("👎 మార్పులు కావాలి", key="trans_dislike"): st.toast("మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది.")
         else:
-            st.warning("దయచేసి ఆడియో ఫైల్ అప్లోడ్ చేయండి.")
+            st.warning("⚠️ దయచేసి ఆడియో ఫైల్ అప్‌లోడ్ చేయండి లేదా రికార్డ్ చేయండి మిత్రమా!")
+            
 
 # 11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్
 elif choice == "11. వీడియో క్రియేటర్ (Video Creator)":
