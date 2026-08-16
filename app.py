@@ -274,7 +274,6 @@ elif choice.startswith("7."):
     st.subheader("💻 AI కోడింగ్ అసిస్టెంట్ (Joshna Tailors & Aservad.ai)")
     st.info("మిత్రమా, ఇక్కడ మీరు కోడింగ్ సందేహం లేదా కోడ్ కావాల్సన్నా అడగవచ్చు.")
     
-    # ఇన్‌పుట్ పద్ధతి
     code_method = st.radio("ఇన్‌పుట్ పద్ధతి:", ["టెక్స్ట్ టైప్ చేయండి", "మైక్ ద్వారా మాట్లాడండి"], key="code_method_radio")
     
     user_prompt = ""
@@ -288,15 +287,17 @@ elif choice.startswith("7."):
             with st.spinner("✨ కోడ్ తయారవుతోంది... వేచి ఉండండి మిత్రమా."):
                 try:
                     import google.generativeai as genai
-                    # మీ యాప్‌లో ఉన్న ఏపీఐ కీ ని ఇక్కడ సెట్ చేయడం
+                    
+                    # సెషన్ స్టేట్ నుండి ఏపీఐ కీ ని చెక్ చేయడం
                     if "api_key" in st.session_state and st.session_state.api_key:
                         genai.configure(api_key=st.session_state.api_key)
+                    else:
+                        st.error("⚠️ దయచేసి ముందుగా '12. సెట్టింగ్‌లు' లో మీ జెమిని API కీ ని ఇవ్వండి మిత్రమా!")
+                        st.stop()
                     
-                    # జెమిని మోడల్ డిఫైన్ చేయడం
                     ai_model = genai.GenerativeModel('gemini-pro')
                     
                     prompt = f"Write clean, well-commented Python code for the following request: {user_prompt}"
-                    
                     response = ai_model.generate_content(prompt)
                     
                     generated_code = response.text
@@ -304,7 +305,6 @@ elif choice.startswith("7."):
                     st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
                     st.code(generated_code, language="python")
                     
-                    # లైక్ / డిస్‌లైక్ బటన్స్
                     col1, col2 = st.columns(2)
                     with col1:
                         if st.button("👍 నచ్చింది (Like)", key="code_like"):
