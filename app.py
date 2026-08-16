@@ -288,13 +288,15 @@ elif choice.startswith("7."):
                 try:
                     import google.generativeai as genai
                     
-                    # సెషన్ స్టేట్ నుండి ఏపీఐ కీ ని చెక్ చేయడం
+                    # ఇక్కడ సెషన్ స్టేట్ లేదా నేరుగా కీ ని చెక్ చేసుకుంటుంది
+                    api_key_to_use = None
                     if "api_key" in st.session_state and st.session_state.api_key:
-                        genai.configure(api_key=st.session_state.api_key)
+                        api_key_to_use = st.session_state.api_key
                     else:
-                        st.error("⚠️ దయచేసి ముందుగా '12. సెట్టింగ్‌లు' లో మీ జెమిని API కీ ని ఇవ్వండి మిత్రమా!")
-                        st.stop()
+                        # ఒకవేళ సెషన్ క్లియర్ అయితే, మీ ఒరిజినల్ కీ ని ఇక్కడ నేరుగా ఇచ్చుకోవచ్చు
+                        api_key_to_use = AQ.Ab8RN6It3QI5niW_-C76w5W-fgus7ecCgp6jnTkTfrFPR6oc2Q "మీ_జెమిని_ఏపీఐ_కీ_ఇక్కడ_ఇవ్వండి"
                     
+                    genai.configure(api_key=api_key_to_use)
                     ai_model = genai.GenerativeModel('gemini-pro')
                     
                     prompt = f"Write clean, well-commented Python code for the following request: {user_prompt}"
