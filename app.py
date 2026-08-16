@@ -269,34 +269,12 @@ elif choice.startswith("6."):
         else:
             st.warning("⚠️ దయచేసి అనువదించడానికి టెక్స్ట్ ఇవ్వండి లేదా మాట్లాడండి మిత్రమా!")
             
-# 7. కోడింగ్ అసిస్టెంట్ (Coding Assistant)
-elif choice.startswith("7."):
-    st.subheader("💻 AI కోడింగ్ అసిస్టెంట్ (Joshna Tailors & Aservad.ai)")
-    st.info("మిత్రమా, ఇక్కడ మీరు కోడింగ్ సందేహం లేదా కోడ్ కావాల్సన్నా అడగవచ్చు.")
-    
-    code_method = st.radio("ఇన్‌పుట్ పద్ధతి:", ["టెక్స్ట్ టైప్ చేయండి", "మైక్ ద్వారా మాట్లాడండి"], key="code_method_radio")
-    
-    user_prompt = ""
-    if code_method == "టెక్స్ట్ టైప్ చేయండి":
-        user_prompt = st.text_input("మీ ప్రశ్న లేదా కోడింగ్ సందేహం ఇక్కడ రాయండి:", key="code_input_text")
-    else:
-        user_prompt = st.text_input("మైక్ ద్వారా మాట్లాడిన కోడింగ్ ప్రశ్న:", key="code_input_mic")
-        
-    if st.button("🚀 కోడ్ జనరేట్ చేయండి (Generate Code)", key="code_btn"):
-        if user_prompt:
-            with st.spinner("✨ కోడ్ తయారవుతోంది... వేచి ఉండండి మిత్రమా."):
                 try:
                     import google.generativeai as genai
                     
-                    # ఇక్కడ సెషన్ స్టేట్ లేదా నేరుగా కీ ని చెక్ చేసుకుంటుంది
-                    api_key_to_use = None
-                    if "api_key" in st.session_state and st.session_state.api_key:
-                        api_key_to_use = st.session_state.api_key
-                    else:
-                        # ఒకవేళ సెషన్ క్లియర్ అయితే, మీ ఒరిజినల్ కీ ని ఇక్కడ నేరుగా ఇచ్చుకోవచ్చు
-                        api_key_to_use = AQ.Ab8RN6It3QI5niW_-C76w5W-fgus7ecCgp6jnTkTfrFPR6oc2Q "మీ_జెమిని_ఏపీఐ_కీ_ఇక్కడ_ఇవ్వండి"
+                    # మీ జెమిని API కీ ని నేరుగా ఇక్కడ ఇక్కడ డబుల్ కోట్స్‌లో పెట్టండి
+                    genai.configure(AQ.Ab8RN6KwEJQ4uRdeoDlm0ZZa0HflSXy3qcsSbXZ0S5PJvA0h6Q")
                     
-                    genai.configure(api_key=api_key_to_use)
                     ai_model = genai.GenerativeModel('gemini-pro')
                     
                     prompt = f"Write clean, well-commented Python code for the following request: {user_prompt}"
@@ -307,19 +285,6 @@ elif choice.startswith("7."):
                     st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
                     st.code(generated_code, language="python")
                     
-                    col1, col2 = st.columns(2)
-                    with col1:
-                        if st.button("👍 నచ్చింది (Like)", key="code_like"):
-                            st.toast("ధన్యవాదాలు మిత్రమా!")
-                    with col2:
-                        if st.button("👎 మార్పులు కావాలి (Dislike)", key="code_dislike"):
-                            st.toast("మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది.")
-                            
-                except Exception as e:
-                    st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
-        else:
-            st.warning("⚠️ దయచేసి ఏదైనా కోడింగ్ ప్రశ్న ఇవ్వండి మిత్రమా!")
-            
 # 8. చాట్‌బోట్ సపోర్ట్ (AI Chatbot)
 elif choice.startswith("8."):
     st.subheader("💬 AI చాట్‌బోట్ సపోర్ట్ (Joshna Tailors & Aservad.ai)")
