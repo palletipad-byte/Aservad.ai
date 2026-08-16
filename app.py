@@ -269,7 +269,47 @@ elif choice.startswith("6."):
         else:
             st.warning("⚠️ దయచేసి అనువదించడానికి టెక్స్ట్ ఇవ్వండి లేదా మాట్లాడండి మిత్రమా!")
             
-
+# 7. కోడింగ్ అసిస్టెంట్ (Coding Assistant)
+elif choice.startswith("7."):
+    st.subheader("💻 AI కోడింగ్ అసిస్టెంట్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, ఇక్కడ మీరు కోడింగ్ సందేహం లేదా కోడ్ కావాల్సన్నా అడగవచ్చు.")
+    
+    # ఇన్‌పుట్ పద్ధతి
+    code_method = st.radio("ఇన్‌పుట్ పద్ధతి:", ["టెక్స్ట్ టైప్ చేయండి", "మైక్ ద్వారా మాట్లాడండి"], key="code_method_radio")
+    
+    user_prompt = ""
+    if code_method == "టెక్స్ట్ టైప్ చేయండి":
+        user_prompt = st.text_input("మీ ప్రశ్న లేదా కోడింగ్ సందేహం ఇక్కడ రాయండి:", key="code_input_text")
+    else:
+        user_prompt = st.text_input("మైక్ ద్వారా మాట్లాడిన కోడింగ్ ప్రశ్న:", key="code_input_mic")
+        
+    if st.button("🚀 కోడ్ జనరేట్ చేయండి (Generate Code)", key="code_btn"):
+        if user_prompt:
+            with st.spinner("✨ కోడ్ తయారవుతోంది... వేచి ఉండండి మిత్రమా."):
+                try:
+                    # జెమిని ఏఐ ద్వారా రియల్-టైమ్‌లో కోడ్ తెప్పించడం
+                    prompt = f"Write clean, well-commented Python code for the following request and provide only the code block: {user_prompt}"
+                    response = model.generate_content(prompt)
+                    
+                    generated_code = response.text
+                    
+                    st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
+                    st.code(generated_code, language="python")
+                    
+                    # లైక్ / డిస్‌లైక్ బటన్స్
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        if st.button("👍 నచ్చింది (Like)", key="code_like"):
+                            st.toast("ధన్యవాదాలు మిత్రమా!")
+                    with col2:
+                        if st.button("👎 మార్పులు కావాలి (Dislike)", key="code_dislike"):
+                            st.toast("మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది.")
+                            
+                except Exception as e:
+                    st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
+        else:
+            st.warning("⚠️ దయచేసి ఏదైనా కోడింగ్ ప్రశ్న ఇవ్వండి మిత్రమా!")
+                
 # 8. చాట్‌బోట్ సపోర్ట్ (AI Chatbot)
 elif choice.startswith("8."):
     st.subheader("💬 AI చాట్‌బోట్ సపోర్ట్ (Joshna Tailors & Aservad.ai)")
