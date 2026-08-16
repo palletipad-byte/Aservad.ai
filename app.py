@@ -287,9 +287,16 @@ elif choice.startswith("7."):
         if user_prompt:
             with st.spinner("✨ కోడ్ తయారవుతోంది... వేచి ఉండండి మిత్రమా."):
                 try:
-                    # జెమిని ఏఐ ద్వారా రియల్-టైమ్‌లో కోడ్ తెప్పించడం
+                    import google.generativeai as genai
+                    # మీ యాప్‌లో ఉన్న ఏపీఐ కీ ని ఇక్కడ సెట్ చేయడం
+                    if "api_key" in st.session_state and st.session_state.api_key:
+                        genai.configure(api_key=st.session_state.api_key)
+                    
+                    # జెమిని మోడల్ డిఫైన్ చేయడం
+                    ai_model = genai.GenerativeModel('gemini-pro')
+                    
                     prompt = f"Write clean, well-commented Python code for the following request and provide only the code block: {user_prompt}"
-                    response = model.generate_content(prompt)
+                    response = ai_model.generate_content(prompt)
                     
                     generated_code = response.text
                     
@@ -309,7 +316,7 @@ elif choice.startswith("7."):
                     st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
         else:
             st.warning("⚠️ దయచేసి ఏదైనా కోడింగ్ ప్రశ్న ఇవ్వండి మిత్రమా!")
-                
+            
 # 8. చాట్‌బోట్ సపోర్ట్ (AI Chatbot)
 elif choice.startswith("8."):
     st.subheader("💬 AI చాట్‌బోట్ సపోర్ట్ (Joshna Tailors & Aservad.ai)")
