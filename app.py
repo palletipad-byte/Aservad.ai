@@ -295,7 +295,8 @@ elif choice.startswith("7."):
                     # జెమిని మోడల్ డిఫైన్ చేయడం
                     ai_model = genai.GenerativeModel('gemini-pro')
                     
-                    prompt = f"Write clean, well-commented Python code for the following request and provide only the code block: {user_prompt}"
+                    prompt = f"Write clean, well-commented Python code for the following request: {user_prompt}"
+                    
                     response = ai_model.generate_content(prompt)
                     
                     generated_code = response.text
