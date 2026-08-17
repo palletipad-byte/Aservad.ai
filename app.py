@@ -288,7 +288,7 @@ elif choice.startswith("7."):
                 try:
                     import google.generativeai as genai
                     
-                    genai.configure(api_key="AQ.Ab8RN6KdHXIMnYn5siUGcn2z1TJ_Q-dYgF3Nd62m82_2qfjjJg...")
+                    genai.configure(api_key="
                     
                     ai_model = genai.GenerativeModel('gemini-pro')
                     
