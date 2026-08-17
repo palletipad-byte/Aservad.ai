@@ -268,42 +268,47 @@ elif choice.startswith("6."):
                         st.toast("మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది.")
         else:
             st.warning("⚠️ దయచేసి అనువదించడానికి టెక్స్ట్ ఇవ్వండి లేదా మాట్లాడండి మిత్రమా!")
-            
 # 7. కోడింగ్ అసిస్టెంట్ (Coding Assistant)
 elif choice.startswith("7."):
     st.subheader("💻 AI కోడింగ్ అసిస్టెంట్ (Joshna Tailors & Aservad.ai)")
     st.info("మిత్రమా, ఇక్కడ మీరు కోడింగ్ సందేహం లేదా కోడ్ కావాల్సన్నా అడగవచ్చు.")
     
-    code_method = st.radio("ఇన్‌పుట్ పద్ధతి:", ["టెక్స్ట్ టైప్ చేయండి", "మైక్ ద్వారా మాట్లాడండి"], key="code_method_radio")
+    code_method = st.radio("ఇన్‌పుట్ పద్ధతి:", ["టెక్స్ట్ టైప్ చేయండి", "మైక్ ద్వారా మాట్లాడండి"])
     
     user_prompt = ""
     if code_method == "టెక్స్ట్ టైప్ చేయండి":
-        user_prompt = st.text_input("మీ ప్రశ్న లేదా కోడింగ్ సందేహం ఇక్కడ రాయండి:", key="code_input_text")
+        user_prompt = st.text_input("మీ ప్రశ్న లేదా కోడింగ్ సందేహం ఇక్కడ రాయండి:")
     else:
-        user_prompt = st.text_input("మైక్ ద్వారా మాట్లాడిన కోడింగ్ ప్రశ్న:", key="code_input_mic")
+        user_prompt = st.text_input("మైక్ ద్వారా మాట్లాడిన కోడింగ్ ప్రశ్న:")
         
-    if st.button("🚀 కోడ్ జనరేట్ చేయండి (Generate Code)", key="code_btn"):
+    if st.button("🚀 కోడ్ జనరేట్ చేయండి (Generate Code)", key="gen_code_btn"):
         if user_prompt:
             with st.spinner("✨ కోడ్ తయారవుతోంది... వేచి ఉండండి మిత్రమా."):
                 try:
                     import google.generativeai as genai
+                    import os
                     
-                    genai.configure(api_key="
+                    # ఇది Streamlit Secrets నుండి ఆటోమేటిక్‌గా కీని తీసుకుంటుంది
+                    api_key = st.secrets.get("GEMINI_API_KEY")
                     
-                    ai_model = genai.GenerativeModel('gemini-pro')
-                    
-                    prompt = f"Write clean, well-commented Python code for the following request: {user_prompt}"
-                    response = ai_model.generate_content(prompt)
-                    
-                    generated_code = response.text
-                    
-                    st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
-                    st.code(generated_code, language="python")
-                            
+                    if api_key:
+                        genai.configure(api_key=api_key)
+                        ai_model = genai.GenerativeModel('gemini-pro')
+                        
+                        prompt = f"Write clean, well-commented Python code for the following request: {user_prompt}"
+                        response = ai_model.generate_content(prompt)
+                        generated_code = response.text
+                        
+                        st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
+                        st.code(generated_code, language="python")
+                    else:
+                        st.warning("⚠️ దయచేసి Streamlit సెట్టింగ్స్‌లో 'GEMINI_API_KEY' ని సెట్ చేయండి మిత్రమా.")
+                        
                 except Exception as e:
                     st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
         else:
-            st.warning("⚠️ దయచేసి ఏదైనా కోడింగ్ ప్రశ్న ఇవ్వండి మిత్రమా!")               
+            st.warning("⚠️ దయచేసి ఏదైనా కోడింగ్ ప్రశ్న ఇవ్వండి మిత్రమా.")
+            
 # 8. చాట్‌బోట్ సపోర్ట్ (AI Chatbot)
 elif choice.startswith("8."):
     st.subheader("💬 AI చాట్‌బోట్ సపోర్ట్ (Joshna Tailors & Aservad.ai)")
