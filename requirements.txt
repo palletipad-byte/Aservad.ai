@@ -1,4 +1,4 @@
-google-genai
+google-generativeai
 streamlit
 opencv-python-headless
 numpy
