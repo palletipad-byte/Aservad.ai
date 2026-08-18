@@ -295,7 +295,8 @@ elif choice.startswith("7."):
                         genai.configure(api_key=api_key)
                         
                         # 404 ఎర్రర్ రాకుండా లేటెస్ట్ స్టేబుల్ మోడల్ పాత్
-                        ai_model = genai.GenerativeModel('gemini-2.5-flash')
+                        ai_model = genai.GenerativeModel('gemini-pro')
+                        
                         
                         prompt = f"Write clean, well-commented Python code for the following request: {user_prompt}"
                         response = ai_model.generate_content(prompt)
