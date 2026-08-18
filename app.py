@@ -293,7 +293,8 @@ elif choice.startswith("7."):
                     
                     if api_key:
                         genai.configure(api_key=api_key)
-                        ai_model = genai.GenerativeModel('gemini-pro')
+                        ai_model = genai.GenerativeModel('models/gemini-1.5-flash-latest')
+                        
                         
                     
                         
