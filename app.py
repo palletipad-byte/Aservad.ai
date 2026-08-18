@@ -293,8 +293,8 @@ elif choice.startswith("7."):
                     
                     if api_key:
                         genai.configure(api_key=api_key)
-                        ai_model = genai.GenerativeModel('gemini-pro')
                         
+                        ai_model = genai.GenerativeModel('gemini-1.5-flash')
                         
                         prompt = f"Write clean, well-commented Python code for the following request: {user_prompt}"
                         response = ai_model.generate_content(prompt)
