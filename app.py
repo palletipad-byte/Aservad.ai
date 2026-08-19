@@ -277,31 +277,30 @@ elif choice.startswith("7."):
     
     user_prompt = ""
     if code_method == "టెక్స్ట్ టైప్ చేయండి":
-        user_prompt = st.text_input("మీ ప్రశ్న లేదా కోడింగ్ సందేహం ఇక్కడ రాయండి:")
+        user_prompt = st.text_input("మీ ప్రశ్న లేదా కోడింగ్ సందేహం ఇక్కడ రాయండి:", key="code_text_box")
     else:
-        user_prompt = st.text_input("మైక్ ద్వారా మాట్లాడిన కోడింగ్ ప్రశ్న:")
+        user_prompt = st.text_input("మైక్ ద్వారా మాట్లాడిన కోడింగ్ ప్రశ్న:", key="code_mic_box")
         
     if st.button("🚀 కోడ్ జనరేట్ చేయండి (Generate Code)", key="gen_code_btn"):
         if user_prompt:
-            with st.spinner("✨ కోడ్ తయారవుతోంది... వేచి ఉండండి మిత్రమా."):
+            with st.spinner("✨ కోడ్ తయారవుతుంది... వేచి ఉండండి మిత్రమా."):
                 try:
                     import google.generativeai as genai
                     import os
-                    
-                    # ఇది Streamlit Secrets నుండి ఆటోమేటిక్‌గా కీని తీసుకుంటుంది
+
+                    # Streamlit Secrets నుండి ఆటోమేటిక్‌గా కీ తీసుకుంటుంది
                     api_key = st.secrets.get("GEMINI_API_KEY")
-                    
+
                     if api_key:
                         genai.configure(api_key=api_key)
                         
-                        # 404 ఎర్రర్ రాకుండా లేటెస్ట్ స్టేబుల్ మోడల్ పాత్
-                        ai_model = genai.GenerativeModel('gemini-1.5-flash')
-                        
-                        
+                        # అత్యంత సురక్షితమైన మరియు స్టేబుల్ అయిన లేటెస్ట్ మోడల్
+                        ai_model = genai.GenerativeModel('gemini-1.5-pro')
+
                         prompt = f"Write clean, well-commented Python code for the following request: {user_prompt}"
                         response = ai_model.generate_content(prompt)
                         generated_code = response.text
-                        
+
                         st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
                         st.code(generated_code, language="python")
                     else:
@@ -311,7 +310,7 @@ elif choice.startswith("7."):
                     st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
         else:
             st.warning("⚠️ దయచేసి ఏదైనా కోడింగ్ ప్రశ్న ఇవ్వండి మిత్రమా.")
-            
+                        
 # 8. చాట్‌బోట్ సపోర్ట్ (AI Chatbot)
 elif choice.startswith("8."):
     st.subheader("💬 AI చాట్‌బోట్ సపోర్ట్ (Joshna Tailors & Aservad.ai)")
