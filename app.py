@@ -285,7 +285,7 @@ elif choice.startswith("7."):
         if user_prompt:
             with st.spinner("✨ కోడ్ తయారవుతుంది... వేచి ఉండండి మిత్రమా."):
                 try:
-                    import google.generativeai as genai
+                    from google import genai
                     import os
 
                     # Streamlit Secrets నుండి ఆటోమేటిక్‌గా కీ తీసుకుంటుంది
