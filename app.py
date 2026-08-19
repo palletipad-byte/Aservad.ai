@@ -277,35 +277,35 @@ elif choice.startswith("7."):
     
     user_prompt = ""
     if code_method == "టెక్స్ట్ టైప్ చేయండి":
-        user_prompt = st.text_input("మీ ప్రశ్న లేదా కోడింగ్ సందేహం ఇక్కడ రాయండి:", key="code_text_box")
+        user_prompt = st.text_input("మీ ప్రశ్న లేదా కోడింగ్ సందేహం ఇక్కడ రాయండి:")
     else:
-        user_prompt = st.text_input("మైక్ ద్వారా మాట్లాడిన కోడింగ్ ప్రశ్న:", key="code_mic_box")
+        user_prompt = st.text_input("మైక్ ద్వారా మాట్లాడిన కోడింగ్ ప్రశ్న:", key="code_audio_prompt")
         
     if st.button("🚀 కోడ్ జనరేట్ చేయండి (Generate Code)", key="gen_code_btn"):
-            if user_prompt:
-                with st.spinner("✨ కోడ్ తయారవుతుంది... వేచి ఉండండి మిత్రమా."):
-                    # స్ట్రీమ్‌లిట్ సీక్రెట్స్ నుండి కీ తీసుకోవడం
-                    api_key = st.secrets.get("GEMINI_API_KEY")
-
-                    if api_key:
-                        try:
-                            from google import genai
-                            client = genai.Client(api_key=api_key)
-                            response = client.models.generate_content(
-                                model='gemini-1.5-flash',
-                                contents=user_prompt,
-                            )
-                            generated_code = response.text
-
-                            st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
-                            st.code(generated_code, language="python")
-                        except Exception as e:
-                            st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
-                    else:
-                        st.warning("⚠️ దయచేసి స్ట్రీమ్‌లిట్ సెట్టింగ్స్‌లో 'GEMINI_API_KEY' ని సెట్ చేయండి.")
-            else:
-                st.warning("⚠️ దయచేసి ఏదైనా కోడింగ్ ప్రశ్న ఇవ్వండి మిత్రమా.")
+        if user_prompt:
+            with st.spinner("✨ కోడ్ తయారవుతుంది... వేచి ఉండండి మిత్రమా."):
+                # స్ట్రీమ్‌లిట్ సీక్రెట్స్ నుండి కీ తీసుకోవడం
+                api_key = st.secrets.get("GEMINI_API_KEY")
                 
+                if api_key:
+                    try:
+                        from google import genai
+                        client = genai.Client(api_key=api_key)
+                        response = client.models.generate_content(
+                            model='gemini-1.5-flash',
+                            contents=user_prompt,
+                        )
+                        generated_code = response.text
+                        
+                        st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
+                        st.code(generated_code, language="python")
+                    except Exception as e:
+                        st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
+                else:
+                    st.warning("⚠️ దయచేసి స్ట్రీమ్‌లిట్ సెట్టింగ్స్‌లో 'GEMINI_API_KEY' ని సెట్ చేయండి.")
+        else:
+            st.warning("⚠️ దయచేసి ఏదైనా కోడింగ్ ప్రశ్న ఇవ్వండి మిత్రమా.")
+            
 # 8. చాట్‌బోట్ సపోర్ట్ (AI Chatbot)
 elif choice.startswith("8."):
     st.subheader("💬 AI చాట్‌బోట్ సపోర్ట్ (Joshna Tailors & Aservad.ai)")
