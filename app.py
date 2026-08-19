@@ -295,7 +295,23 @@ elif choice.startswith("7."):
                         genai.configure(api_key=api_key)
                         
                         # అత్యంత సురక్షితమైన మరియు స్టేబుల్ అయిన లేటెస్ట్ మోడల్
-                        ai_model = genai.GenerativeModel('gemini-1.5-pro')
+                        # స్ట్రీమ్‌లిట్ సీక్రెట్స్ నుండి కీ తీసుకోవడం
+api_key = st.secrets.get("GEMINI_API_KEY")
+
+if api_key:
+    # కొత్త పద్ధతిలో క్లయింట్ మరియు లేటెస్ట్ మోడల్ వాడటం
+    client = genai.Client(api_key=api_key)
+    response = client.models.generate_content(
+        model='gemini-2.5-flash',
+        contents=user_prompt,
+    )
+    generated_code = response.text
+
+    st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
+    st.code(generated_code, language="python")
+else:
+    st.warning("⚠️ దయచేసి స్ట్రీమ్‌లిట్ సెట్టింగ్స్‌లో 'GEMINI_API_KEY' ని సెట్ చేయండి మిత్రమా.")
+    
 
                         prompt = f"Write clean, well-commented Python code for the following request: {user_prompt}"
                         response = ai_model.generate_content(prompt)
