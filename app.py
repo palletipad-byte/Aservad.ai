@@ -281,7 +281,7 @@ elif choice.startswith("7."):
     else:
         user_prompt = st.text_input("మైక్ ద్వారా మాట్లాడిన కోడింగ్ ప్రశ్న:", key="code_mic_box")
         
-            if st.button("🚀 కోడ్ జనరేట్ చేయండి (Generate Code)", key="gen_code_btn"):
+ if st.button("🚀 కోడ్ జనరేట్ చేయండి (Generate Code)", key="gen_code_btn"):
             if user_prompt:
                 with st.spinner("✨ కోడ్ తయారవుతుంది... వేచి ఉండండి మిత్రమా."):
                     # స్ట్రీమ్‌లిట్ సీక్రెట్స్ నుండి కీ తీసుకోవడం
