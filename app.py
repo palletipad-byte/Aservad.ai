@@ -291,15 +291,19 @@ elif choice.startswith("7."):
                     try:
                         from google import genai
                         client = genai.Client(api_key=api_key)
+                                            try:
+                        from google import genai
+                        client = genai.Client(api_key=api_key)
                         response = client.models.generate_content(
-                                                    response = client.models.generate_content(
                             model='gemini-2.5-flash',
-                            contents=user_prompt,
-                                                    )
-                            
                             contents=user_prompt,
                         )
                         generated_code = response.text
+                        
+                        st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
+                        st.code(generated_code, language="python")
+                    except Exception as e:
+                        st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
                         
                         st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
                         st.code(generated_code, language="python")
