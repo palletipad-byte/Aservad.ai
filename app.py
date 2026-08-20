@@ -292,7 +292,11 @@ elif choice.startswith("7."):
                         from google import genai
                         client = genai.Client(api_key=api_key)
                         response = client.models.generate_content(
-                            model='gemini-1.5-flash',
+                                                    response = client.models.generate_content(
+                            model='gemini-2.5-flash',
+                            contents=user_prompt,
+                                                    )
+                            
                             contents=user_prompt,
                         )
                         generated_code = response.text
