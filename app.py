@@ -287,15 +287,15 @@ elif choice.startswith("7."):
                 api_key = st.secrets.get("GEMINI_API_KEY")
                 
                 if api_key:
-                    try:
+                                        try:
                         from google import genai
                         client = genai.Client(api_key=api_key)
                         response = client.models.generate_content(
-                            model='gemini-2.5-flash',
+                            model='gemini-3.6-flash',
                             contents=user_prompt,
                         )
                         generated_code = response.text
-                        
+                                            
                         st.success("✨ కోడ్ విజయవంతంగా తయారైంది!")
                         st.code(generated_code, language="python")
                     except Exception as e:
