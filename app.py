@@ -304,7 +304,7 @@ elif choice.startswith("7."):
                     st.warning("⚠️ దయచేసి స్ట్రీమ్‌లిట్ సెట్టింగ్స్‌లో 'GEMINI_API_KEY' ని సెట్ చేయండి.")
         else:
             st.warning("⚠️ దయచేసి ఏదైనా కోడింగ్ ప్రశ్న ఇవ్వండి మిత్రమా.")
-            
+                        
 # 8. చాట్‌బోట్ సపోర్ట్ (AI Chatbot)
 elif choice.startswith("8."):
     st.subheader("💬 AI చాట్‌బోట్ సపోర్ట్ (Joshna Tailors & Aservad.ai)")
