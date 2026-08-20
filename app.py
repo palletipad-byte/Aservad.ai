@@ -287,7 +287,7 @@ elif choice.startswith("7."):
                 api_key = st.secrets.get("GEMINI_API_KEY")
                 
                 if api_key:
-                                        try:
+                    try:
                         from google import genai
                         client = genai.Client(api_key=api_key)
                         response = client.models.generate_content(
