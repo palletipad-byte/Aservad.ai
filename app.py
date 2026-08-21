@@ -483,27 +483,33 @@ elif choice.startswith("11."):
             st.warning("⚠️ దయచేసి ఏదైనా వీడియో టాపిక్ లేదా టైటిల్ రాయండి మిత్రమా.")
             
 
-# 12. సెట్టింగ్‌లు (Settings)
+# 12. సెట్టింగ్స్ (Settings)
 elif choice.startswith("12."):
-    st.subheader("⚙️ యాప్ సెట్టింగ్‌లు (Settings)")
+    st.subheader("⚙️ యాప్ సెట్టింగ్స్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, మీ అవసరానికి తగినట్లుగా యాప్ సెట్టింగ్స్‌ని ఇక్కడ మార్చుకోండి.")
     
-    # డార్క్ మోడ్ లేదా థీమ్ సెట్టింగ్
-    theme = st.radio("థీమ్ ఎంచుకోండి:", ["Light", "Dark"], horizontal=True)
+    # 1. థీమ్ లేదా డిమ్ సెట్టింగ్
+    st.markdown("### 🎨 థీమ్ ఎంపిక (Theme Settings)")
+    theme = st.radio("యాప్ లుక్ ఎంచుకోండి:", ["Light", "Dark"], horizontal=True, key="theme_radio")
     
-    # API కీ సెట్టింగ్
-    st.markdown("### 🔑 API సెట్టింగ్స్")
-    api_input = st.text_input("మీ జెమినీ API కీ ని ఇక్కడ ఎంటర్ చేయండి:", type="password")
+    # 2. API కీ సెట్టింగ్
+    st.markdown("### 🔑 API కీ సెట్టింగ్ (Gemini API Key)")
+    st.write("ప్రస్తుత యాప్‌లో వాడే API కీని మార్చాలనుకుంటే ఇక్కడ ఎంటర్ చేయండి:")
+    api_input = st.text_input("కొత్త జెమినీ API కీని ఇక్కడ ఎంటర్ చేయండి:", type="password", key="settings_api_input")
     
-    # ఇతర అడ్వాన్స్‌డ్ ఆప్షన్స్
-    st.markdown("### 🛠️ అడ్వాన్స్‌డ్ ఆప్షన్స్")
-    notifications = st.toggle("నోటిఫికేషన్లు ఆన్ చేయి")
+    # 3. ఇతర అడ్వాన్స్డ్ ఆప్షన్స్
+    st.markdown("### 🔔 అడ్వాన్స్డ్ ఆప్షన్స్ (Advanced Settings)")
+    notifications = st.toggle("నోటిఫికేషన్స్ ఆన్ చేయి (Enable Notifications)", value=True, key="notif_toggle")
+    sound_effects = st.toggle("సౌండ్ ఎఫెక్ట్స్ (Sound Effects)", value=False, key="sound_toggle")
     
-    if st.button("💾 సెట్టింగ్‌లు సేవ్ చేయి"):
+    # సేవ్ బటన్
+    st.markdown("---")
+    if st.button("💾 సెట్టింగ్స్ సేవ్ చేయൂ", key="save_settings_btn"):
         if api_input:
             st.session_state.api_key = api_input
-            st.success("✅ మీ సెట్టింగ్‌లు విజయవంతంగా సేవ్ చేయబడ్డాయి! ఇప్పుడు AI ఫీచర్లు యాక్టివ్ అవుతాయి.")
+            st.success("✨ మీ సెట్టింగ్స్ విజయవంతంగా సేవ్ చేయబడ్డాయి!")
         else:
-            st.warning("⚠️ దయచేసి API కీ ఇవ్వండి మిత్రమా!")
+            st.success("✨ మీ డిఫాల్ట్ సెట్టింగ్స్ విజయవంతంగా అప్‌డేట్ అయ్యాయి మిత్రమా!")
     
 # 13. సహాయం & ఫీడ్‌బ్యాక్ (Help & Feedback)
 elif choice.startswith("13."):
