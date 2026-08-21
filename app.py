@@ -2,7 +2,7 @@ import streamlit as st
 import os
 from gtts import gTTS
 from PIL import Image
-
+import PyPDF2
 # పేజ్ సెటప్ (ఆశీర్వాదం AI పేరుతో)
 st.set_page_config(
     page_title="ఆశీర్వాదం AI (Aservad AI)",
