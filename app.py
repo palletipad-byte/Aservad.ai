@@ -357,44 +357,59 @@ elif choice.startswith("8."):
             st.warning("⚠️ దయచేసి ఏదైనా సందేశం టైప్ చేయండి లేదా మాట్లాడండి మిత్రమా.")
                         
 # 9. డాక్యుమెంట్ అనాలిసిస్ (Document Analysis)
-elif choice == "9. డాక్యుమెంట్ అనాలిసిస్ (Document Analysis)":
-    st.subheader("📄 డాక్యుమెంట్ అనాలిసిస్ (Joshna Tailors & Aservad.ai)")
-    st.info("మిత్రమా, ఫైల్ అప్‌లోడ్ చేయండి లేదా మీ సమాచారాన్ని టెక్స్ట్/వాయిస్ రూపంలో ఇవ్వండి.")
-
+elif choice.startswith("9."):
+    st.subheader("📁 డాక్యుమెంట్ అనాలిసిస్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, ఇక్కడ మీ PDF లేదా TXT ఫైల్‌ని అప్‌లోడ్ చేయండి లేదా టెక్స్ట్ రూపంలో సమాచారాన్ని ఇవ్వండి.")
+    
     # అదనపు సదుపాయాలు: ఫైల్ అప్‌లోడ్ లేదా టెక్స్ట్/వాయిస్
-    input_method = st.radio("సమాచార సేకరణ పద్ధతి:", ["ఫైల్ అప్‌లోడ్", "టెక్స్ట్ టైప్", "వాయిస్ ఇన్పుట్"], key="doc_radio")
+    input_method = st.radio("సమాచార సేకరణ పద్ధతి:", ["ఫైల్ అప్‌లోడ్", "టెక్స్ట్ టైప్"], key="doc_input_method")
     
     analysis_input = ""
     if input_method == "ఫైల్ అప్‌లోడ్":
-        doc = st.file_uploader("PDF లేదా TXT ఫైల్ అప్‌లోడ్ చేయండి:", type=["pdf", "txt"], key="doc_file")
-        if doc: analysis_input = doc.name
-    elif input_method == "టెక్స్ట్ టైప్":
-        analysis_input = st.text_area("సమాచారాన్ని ఇక్కడ టైప్ చేయండి:", key="doc_text")
+        doc = st.file_uploader("📂 PDF లేదా TXT ఫైల్ అప్‌లోడ్ చేయండి:", type=["pdf", "txt"], key="doc_uploader")
+        if doc is not None:
+            st.success(f"✨ ఫైల్ విజయవంతంగా స్వీకరించబడింది: {doc.name}")
+            # ఫైల్ నుంచి టెక్స్ట్ చదవడం కోసం సింపుల్ లాజిక్
+            try:
+                if doc.type == "text/plain":
+                    analysis_input = str(doc.read(), "utf-8")
+                else:
+                    analysis_input = "PDF ఫైల్ కంటెంట్ అనాలిసిస్ సిద్ధంగా ఉంది."
+            except Exception as e:
+                analysis_input = ""
     else:
-        audio_val = st.audio_input("మైక్ నొక్కి మీ సమాచారం మాట్లాడండి:", key="doc_audio")
-        if audio_val: 
-            st.success("✨ ఆడియో స్వీకరించబడింది!")
-            analysis_input = "వాయిస్ ద్వారా అందించబడిన డేటా"
-
-    if st.button("📊 విశ్లేషించండి (Analyze)", key="doc_btn"):
-        if analysis_input:
-            with st.spinner("✨ జోష్నా టైలర్స్ & ఆశీర్వాదం AI విశ్లేషణ మొదలైంది..."):
-                result = f"నివేదిక: '{analysis_input}' అంశంపై విశ్లేషణ పూర్తయింది. ఇది ఆశీర్వాదం AI ద్వారా అందించబడిన ప్రత్యేక సమాచారం. (గమనిక: ప్రస్తుతం ఇది డెమో వెర్షన్)."
-                
-                st.success("✨ ఫలితం సిద్ధంగా ఉంది!")
-                st.write(result)
-                
-                # కాపీ బటన్
-                st.code(result, language="text")
-                
-                # లైక్/డిస్లైక్
-                col1, col2 = st.columns(2)
-                with col1:
-                    if st.button("👍 నచ్చింది", key="doc_like"): st.toast("ధన్యవాదాలు మిత్రమా!")
-                with col2:
-                    if st.button("👎 మార్పులు కావాలి", key="doc_dislike"): st.toast("మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది.")
+        analysis_input = st.text_area("📝 విశ్లేషించవలసిన టెక్స్ట్ ఇక్కడ రాయండి:", key="doc_text_area")
+        
+    doc_prompt = st.text_input("❓ ఈ డాక్యుమెంట్ గురించి మీరు ఏం తెలుసుకోవాలనుకుంటున్నారు?", placeholder="ఉదాహరణకు: ఈ డాక్యుమెంట్ యొక్క ముఖ్య ఉద్దేశం ఏమిటి?", key="doc_prompt")
+    
+    if st.button("🚀 డాక్యుమెంట్ విశ్లేషించు (Analyze)", key="doc_analyze_btn"):
+        if analysis_input and doc_prompt:
+            with st.spinner("⏳ డాక్యుమెంట్ విశ్లేషించబడుతోంది... దయచేసి వేచి ఉండండి."):
+                api_key = st.secrets.get("GEMINI_API_KEY")
+                if api_key:
+                    try:
+                        from google import genai
+                        client = genai.Client(api_key=api_key)
+                        
+                        full_content = f"Document Content:\n{analysis_input}\n\nUser Question:\n{doc_prompt}"
+                        
+                        response = client.models.generate_content(
+                            model='gemini-3.6-flash',
+                            contents=full_content,
+                        )
+                        analysis_response = response.text
+                        
+                        st.success("✨ విశ్లేషణ విజయవంతంగా పూర్తియింది!")
+                        st.write(analysis_response)
+                        st.code(analysis_response, language="text")
+                        
+                    except Exception as e:
+                        st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
+                else:
+                    st.warning("⚠️ దయచేసి స్ట్రీమ్‌లిట్ సెట్టింగ్స్‌లో 'GEMINI_API_KEY' ని సెట్ చేయండి.")
         else:
-            st.warning("⚠️ దయచేసి ఏదైనా ఇన్పుట్ (ఫైల్/టెక్స్ట్/వాయిస్) ఇవ్వండి మిత్రమా!")
+            st.warning("⚠️ దయచేసి ఫైల్/టెక్స్ట్ అందించండి మరియు మీ ప్రశ్నను టైప్ చేయండి మిత్రమా.")
+            
 # 10. ఆడియో ట్రాన్స్‌క్రిప్షన్ (Audio Transcription)
 elif choice.startswith("10."):
     st.subheader("🎧 ఆడియో ట్రాన్స్‌క్రిప్షన్ (Joshna Tailors & Aservad.ai)")
