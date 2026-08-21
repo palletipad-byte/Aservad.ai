@@ -170,66 +170,48 @@ elif choice == "4. AI ఇమేజ్ జనరేటర్ (Image Generator)":
                 st.balloons()
         else:
             st.warning("⚠️ దయచేసి బొమ్మ గురించిన వివరణ రాయండి.")
-# 5. AI టెక్స్ట్ సమరైజర్ & డైనమిక్ భావాల టూల్ (Gemini AI Powered)
+# 5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer)
 elif choice.startswith("5."):
-    st.subheader("🎙️ 5. AI టెక్స్ట్ సమరైజర్ & డైనమిక్ భావాల టూల్")
-    st.info("ఇక్కడ మీరు ఏ టెక్స్ట్, సైన్స్, సముద్రం లేదా వేరే అంశం ఇచ్చినా AI స్వయంగా దాని సారాంశాన్ని విశ్లేషించి ఇస్తుంది.")
-    
-    input_text = st.text_area("మీ టెక్స్ట్ లేదా వ్యాసం ఇక్కడ పేస్ట్ చేయండి:", height=180, key="ai_summarizer_text")
-    
-    col1, col2, col3 = st.columns(3)
-    with col1:
-        process_btn = st.button("🚀 AI విశ్లేషణ", key="ai_process_btn")
-    with col2:
-        audio_btn = st.button("🔊 ఆడియో", key="ai_audio_btn")
-    with col3:
-        clear_btn = st.button("🧹 క్లియర్", key="ai_clear_btn")
-        
-    if clear_btn:
-        st.rerun()
-        
-    if process_btn or audio_btn:
-        if input_text.strip() == "":
-            st.warning("⚠️ దయచేసి ముందుగా టెక్స్ట్ ఇవ్వండి!")
-            st.stop()
-            
-        with st.spinner("🤖 AI సారాంశాన్ని విశ్లేషిస్తోంది, వేచి ఉండండి..."):
-            try:
-                import google.generativeai as genai
-                
-                # Streamlit secrets నుండి API Key తీసుకోవడం
-                api_key = st.secrets["GEMINI_API_KEY"]
-                genai.configure(api_key=api_key)
-                
-                # Gemini మోడల్ ఇనిషియలైజ్ చేయడం
-                model = genai.GenerativeModel('gemini-1.5-flash')
-                
-                # AI కి ప్రాంప్ట్ పంపడం (మీరు చెప్పిన కోడ్ భాగం ఇదే)
-                prompt = f"ఈ క్రింది టెక్స్ట్ ని చదివి, దీని ముఖ్య ఉద్దేశం ఏంటి మరియు దీని సమగ్ర సారాంశం / భావం ఏంటి అని తెలుగులో స్పష్టంగా, అందంగా వివరించండి:\n\n{input_text}"
-                response = model.generate_content(prompt)
-                
-                st.session_state.ai_summary_result = response.text
-                
-            except Exception as e:
-                st.error(f"సాంకేతిక లోపం లేదా API Key సమస్య: {e}")
-                st.stop()
+    st.subheader("📝 AI టెక్స్ట్ సమ్మరైజర్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, పెద్ద పెద్ద వ్యాసాలు లేదా టెక్స్ట్‌ని ఇక్కడ పేస్ట్ చేయండి, ఏఐ దాన్ని క్లుప్తంగా ముఖ్యమైన పాయింట్లుగా సమ్మరీ చేస్తుంది.")
 
-    # రిజల్ట్ స్క్రీన్ పై చూపించడం
-    if "ai_summary_result" in st.session_state:
-        st.success("✨ AI విశ్లేషణ విజయవంతం!")
-        st.markdown("### 💡 AI సమగ్ర భావం & సారాంశం:")
-        st.markdown(st.session_state.ai_summary_result)
-        
-        if audio_btn:
-            try:
-                from gtts import gTTS
-                tts = gTTS(text=st.session_state.ai_summary_result, lang='te', slow=False)
-                tts.save("ai_audio.mp3")
-                st.audio("ai_audio.mp3", format='audio/mp3')
-                st.success("🎧 ఆడియో సిద్ధమైంది!")
-            except Exception as e:
-                st.info(f"ఆడియో గమనిక: {e}")
-                
+    summarizer_text = st.text_area("సమ్మరీ చేయవలసిన పెద్ద టెక్స్ట్ లేదా ఆర్టికల్ ఇక్కడ రాయండి:", key="summary_text_box")
+    
+    summary_style = st.selectbox("సమ్మరీ ఏ విధంగా రావాలి?", [
+        "ముఖ్యమైన పాయింట్లు (Bullet Points)", 
+        "చిన్న పేరాగ్రాఫ్ (Short Paragraph)", 
+        "బిజినెస్ సమ్మరీ (Business Summary)"
+    ])
+
+    if st.button("🚀 సమ్మరీ చేయండి (Generate Summary)", key="summarize_btn"):
+        if summarizer_text.strip():
+            with st.spinner("✨ టెక్స్ట్ విశ్లేషించబడుతోంది... దయచేసి వేచి ఉండండి."):
+                try:
+                    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+                    
+                    prompt = f"""
+                    You are an expert content summarizer. Please analyze the following text and provide a concise summary in the style of '{summary_style}'. Keep it clear and useful for a business or general context:
+                    
+                    Text:
+                    {summarizer_text}
+                    """
+                    
+                    response = client.models.generate_content(
+                        model='gemini-3.6-flash',
+                        contents=prompt
+                    )
+                    
+                    summary_result = response.text
+                    st.success("✨ సమ్మరీ విజయవంతంగా తయారైంది!")
+                    st.markdown("---")
+                    st.markdown(summary_result)
+                    st.code(summary_result, language="text")
+                    
+                except Exception as e:
+                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
+        else:
+            st.warning("⚠️ దయచేసి సమ్మరీ చేయడానికి కొంత టెక్స్ట్ ఇవ్వండి మిత్రమా!")
+            
 # 6. భాషా అనువాదం (Multi-Language Translation)
 elif choice.startswith("6."):
     st.subheader("🌐 AI భాషా అనువాదం (Multi-Language Translation)")
