@@ -81,17 +81,16 @@ elif choice.startswith("2."):
                     while maintaining realistic lighting, skin tone, angles, and ultra-HD quality.
                     """
                     
-                    response = client.models.generate_content(
+                                        response = client.models.generate_content(
                         model='gemini-2.5-flash',
                         contents=[
                             prompt,
-                            types.Part.from_bytes(data=source_bytes, mime_type=source_file.type),
-                            types.Part.from_bytes(data=target_bytes, mime_type=target_file.type),
+                            source_bytes,
+                            target_bytes
                         ],
-                        config=types.GenerateContentConfig(
-                            response_modalities=["TEXT", "IMAGE"],
-                        ),
-                    )
+                        config={'response_modalities': ["TEXT", "IMAGE"]}
+)
+                    
                     
                     st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది మిత్రమా!")
                     
