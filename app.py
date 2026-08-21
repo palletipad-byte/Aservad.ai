@@ -542,27 +542,53 @@ elif choice.startswith("13."):
         else:
             st.warning("⚠️ దయచేసి మీ పేరు మరియు సలహాని ఖచ్చితంగా నింపండి మిత్రమా!")
     
-# 14. AI వీడియో & టాకింగ్ అవతార్ టూల్స్
-elif choice == "14. AI వీడియో & టాకింగ్ అవతార్ టూల్స్":
-    st.subheader("🎬 AI వీడియో మేకర్ & టాకింగ్ అవతార్")
+# 14. AI వీడియో & టాకింగ్ అవతార్ టూల్
+elif choice.startswith("14."):
+    st.subheader("🗣️ AI వీడియో & టాకింగ్ అవతార్ టూల్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, ఒక ఫోటోను అప్‌లోడ్ చేసి, దానికి వాయిస్ లేదా స్క్రిప్ట్ జోడించి మాట్లాడే AI అవతార్ వీడియోను సృష్టించండి.")
     
-    st.markdown("### 🎥 వీడియో జనరేషన్:")
-    col1, col2 = st.columns(2)
-    with col1:
-        if st.button("🚀 Kling AI (వీడియో)"):
-            st.markdown("[👉 Kling AI ఓపెన్ చేయి](https://klingai.com)", unsafe_allow_html=True)
-    with col2:
-        if st.button("🚀 Luma Dream Machine"):
-            st.markdown("[👉 Luma AI ఓపెన్ చేయి](https://lumalabs.ai/dream-machine)", unsafe_allow_html=True)
-            
-    st.markdown("---")
-    st.markdown("### 🗣️ టాకింగ్ అవతార్ (AI టాకింగ్ ఫోటో):")
-    st.write("మీ ఫోటోకు ప్రాణం పోసి, మాటలు చెప్పించండి (D-ID/HeyGen).")
-    if st.button("🚀 D-ID (Talking Photo) ఓపెన్ చేయి"):
-        st.markdown("[👉 D-ID ఓపెన్ చేయి](https://www.d-id.com)", unsafe_allow_html=True)
-
-    st.success("💡 మీరు ఎంచుకున్న టూల్ ఓపెన్ అవుతుంది, అక్కడ మీ క్రియేషన్స్ పూర్తి చేయండి!")
+    avatar_name = st.text_input("అవతార్ పేరు లేదా ప్రాజెక్ట్ పేరు రాయండి (ఉదా: Tailoring Promo Avatar):", "")
+    avatar_image = st.file_uploader("అవతార్ కోసం ఒక ఫోటోను అప్‌లోడ్ చేయండి (JPG/PNG):", type=["jpg", "png", "jpeg"])
+    avatar_script = st.text_area("ఈ అవతార్ ఏం మాట్లాడాలో స్క్రిప్ట్ లేదా టెక్స్ట్ ఇక్కడ రాయండి:", "")
     
+    if avatar_image:
+        st.image(avatar_image, caption="అప్‌లోడ్ చేసిన అవతార్ ఫోటో", width=250)
+        
+    if st.button("🎥 టాకింగ్ అవతార్ వీడియో జనరేట్ చేయండి", key="gen_avatar_btn"):
+        if avatar_name and avatar_image and avatar_script:
+            with st.spinner("✨ AI అవతార్ వీడియోను తయారు చేస్తోంది... వేచి ఉండండి మిత్రమా!"):
+                try:
+                    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+                    
+                    # జెమినీ ఏఐ ద్వారా అవతార్‌కు తగిన లిప్ సింక్ & డైలాగ్ ప్లాన్ తయారు చేయడం
+                    prompt = f"""
+                    You are an advanced AI video and talking avatar generator assistant.
+                    Avatar Name: {avatar_name}
+                    Script to Speak: {avatar_script}
+                    
+                    Please generate a structured breakdown for creating this talking avatar video, including:
+                    1. Emotional tone and expression of the avatar.
+                    2. Voice modulation cues (pitch, speed, pause points).
+                    3. Background and visual enhancements for a professional tailoring/business look.
+                    """
+                    
+                    response = client.models.generate_content(
+                        model='gemini-3.6-flash',
+                        contents=prompt
+                    )
+                    
+                    st.success("✨ AI టాకింగ్ అవతార్ ప్లాన్ విజయవంతంగా తయారైంది!")
+                    st.markdown("---")
+                    st.markdown(response.text)
+                    st.code(response.text, language="markdown")
+                    
+                    st.balloons()
+                    
+                except Exception as e:
+                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
+        else:
+            st.warning("⚠️ దయచేసి పేరు, ఫోటో మరియు స్క్రిప్ట్ అన్నీ నింపండి మిత్రమా.")
+                
 # 15. సోషల్ మీడియా & వాట్సాప్ మార్కెటింగ్ జనరేటర్
 elif choice == "15. సోషల్ మీడియా & వాట్సాప్ మార్కెటింగ్ జనరేటర్":
     st.subheader("📱 సోషల్ మీడియా & వాట్సాప్ మార్కెటింగ్ టూల్")
