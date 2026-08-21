@@ -51,34 +51,70 @@ if choice.startswith("1."):
     with col3:
         st.metric(label="సర్వర్ స్థితి (Server Status)", value="Online 🟢")
 
-# 2. ఫేస్ స్వాప్ (Face Swap)
+# 2. ఫేస్ స్వాప్ (Advanced AI Face Swap)
 elif choice.startswith("2."):
-    st.subheader("🔄 AI ఫేస్ స్వాప్ టూల్ (Joshna Tailors & Aservad.ai)")
-    st.info("మిత్రమా, మీ సోర్స్ (ముఖం) మరియు టార్గెట్ (ఫోటో) అప్‌డేట్ చేసి ఫేస్ స్వాప్ చేయండి.")
+    st.subheader("👥 AI అడ్వాన్స్‌డ్ ఫేస్ స్వాప్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, ఇక్కడ సోర్స్ ఇమేజ్ (ఎవరి ముఖం కావాలో) మరియు టార్గెట్ ఇమేజ్ (ఎవరి శరీరం/బ్యాక్‌గ్రౌండ్ పైకి మార్చాలో) అప్‌లోడ్ చేయండి. ఏఐ దాన్ని అద్భుతంగా బ్లెండ్ చేసి ఇస్తుంది!")
 
     col1, col2 = st.columns(2)
     with col1:
-        source_file = st.file_uploader("సోర్స్ ఫోటోని అప్‌డేట్ చేయండి (ముఖం కోసం):", type=["jpg", "jpeg", "png"], key="source_img")
-        if source_file:
-            st.image(source_file, caption="సెలెక్ట్ చేసిన సోర్స్ ఫోటో", use_container_width=True)
-
+        source_file = st.file_uploader("1. సోర్స్ ఫేస్ ఇమేజ్ (Source Face):", type=["jpg", "jpeg", "png"], key="face_source")
     with col2:
-        target_file = st.file_uploader("టార్గెట్ ఫోటోని అప్‌డేట్ చేయండి:", type=["jpg", "jpeg", "png"], key="target_img")
-        if target_file:
-            st.image(target_file, caption="సెలెక్ట్ చేసిన టార్గెట్ ఫోటో", use_container_width=True)
+        target_file = st.file_uploader("2. టార్గెట్ ఇమేజ్ (Target Image):", type=["jpg", "jpeg", "png"], key="face_target")
 
-    if st.button("🚀 ఫేస్ స్వాప్ ప్రారంభించండి", key="swap_btn"):
+    if source_file and target_file:
+        st.image([source_file, target_file], caption=["Source Face", "Target Image"], width=250)
+
+    if st.button("🚀 ఫేస్ స్వాప్ చేయండి (Process Face Swap)", key="face_swap_btn"):
         if source_file and target_file:
-            with st.spinner("✨ ఫేస్ స్వాప్ జరుగుతోంది... దయచేసి వేచి ఉండండి మిత్రమా."):
-                # విజయవంతమైన ప్రాసెసింగ్ కోసం సిమ్యులేషన్ మరియు టార్గెట్ ఫోటోను ప్రదర్శించడం
-                st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది! ముఖం మార్చబడింది.")
-                
-                # భవిష్యత్తులో రియల్ API కనెక్ట్ చేయడానికి ఇది పర్ఫెక్ట్ బేస్
-                st.image(target_file, caption="ఫేస్ స్వాప్ ఫలితం (AI Processed)", use_container_width=True)
-                st.balloons()
+            with st.spinner("✨ ఫేస్ స్వాప్ ప్రాసెస్ జరుగుతోంది... దయచేసి వేచి ఉండండి మిత్రమా!"):
+                try:
+                    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+                    
+                    # ఇమేజ్‌లను రీడ్ చేయడం
+                    source_bytes = source_file.getvalue()
+                    target_bytes = target_file.getvalue()
+                    
+                    prompt = """
+                    Perform a high-quality face swap or face blending based on these two images. 
+                    Take the face from the first image (Source Face) and seamlessly blend it onto the person in the second image (Target Image) 
+                    while maintaining realistic lighting, skin tone, angles, and ultra-HD quality.
+                    """
+                    
+                    response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=[
+                            prompt,
+                            types.Part.from_bytes(data=source_bytes, mime_type=source_file.type),
+                            types.Part.from_bytes(data=target_bytes, mime_type=target_file.type),
+                        ],
+                        config=types.GenerateContentConfig(
+                            response_modalities=["TEXT", "IMAGE"],
+                        ),
+                    )
+                    
+                    st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది మిత్రమా!")
+                    
+                    image_found = False
+                    if response.candidates:
+                        for part in response.candidates[0].content.parts:
+                            if part.inline_data is not None:
+                                swapped_image = Image.open(BytesIO(part.inline_data.data))
+                                st.image(swapped_image, caption="Face Swapped by Joshna & Aservad AI", use_column_width=True)
+                                image_found = True
+                    
+                    if not image_found:
+                        # ఒకవేళ ఇమేజ్ నేరుగా రాకపోతే టెక్స్ట్ రెస్పాన్స్ చూపించుటకు
+                        for part in response.candidates[0].content.parts:
+                            if part.text:
+                                st.write(part.text)
+                        st.warning("⚠️ ఇమేజ్ ప్రాసెసింగ్‌లో చిన్న మినహాయింపు ఉంది, దయచేసి మరో ఫోటోతో ప్రయత్నించండి.")
+                        
+                except Exception as e:
+                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
-            st.warning("⚠️ దయచేసి సోర్స్ మరియు టార్గెట్ రెండు ఫోటోలను అప్‌లోడ్ చేయండి మిత్రమా!")
-            
+            st.warning("⚠️ దయచేసి రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
+                
 # 3. వాయిస్ క్లోనింగ్ / ఆడియో స్టూడియో (అప్‌డేటెడ్ విత్ వాయిస్ టైప్ & మైక్)
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో స్టూడియో")
