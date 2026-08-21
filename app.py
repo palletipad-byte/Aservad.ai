@@ -542,53 +542,62 @@ elif choice.startswith("13."):
         else:
             st.warning("⚠️ దయచేసి మీ పేరు మరియు సలహాని ఖచ్చితంగా నింపండి మిత్రమా!")
     
-# 14. AI వీడియో & టాకింగ్ అవతార్ టూల్
+# 14. అడ్వాన్స్డ్ టాకింగ్ అవతార్ & మల్టిపుల్ ఫోటో టూల్
 elif choice.startswith("14."):
-    st.subheader("🗣️ AI వీడియో & టాకింగ్ అవతార్ టూల్ (Joshna Tailors & Aservad.ai)")
-    st.info("మిత్రమా, ఒక ఫోటోను అప్‌లోడ్ చేసి, దానికి వాయిస్ లేదా స్క్రిప్ట్ జోడించి మాట్లాడే AI అవతార్ వీడియోను సృష్టించండి.")
+    st.subheader("🗣️ అడ్వాన్స్డ్ టాకింగ్ అవతార్ & 3D వ్యూ టూల్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, ఫ్రంట్, బ్యాక్ మరియు సైడ్ ఫోటోలను అప్‌లోడ్ చేసి, మీ వాయిస్ స్క్రిప్ట్‌తో అవతార్ వీడియో ప్లాన్ తయారు చేసుకోండి.")
     
-    avatar_name = st.text_input("అవతార్ పేరు లేదా ప్రాజెక్ట్ పేరు రాయండి (ఉదా: Tailoring Promo Avatar):", "")
-    avatar_image = st.file_uploader("అవతార్ కోసం ఒక ఫోటోను అప్‌లోడ్ చేయండి (JPG/PNG):", type=["jpg", "png", "jpeg"])
-    avatar_script = st.text_area("ఈ అవతార్ ఏం మాట్లాడాలో స్క్రిప్ట్ లేదా టెక్స్ట్ ఇక్కడ రాయండి:", "")
+    avatar_name = st.text_input("అవతార్ / ప్రాజెక్ట్ పేరు రాయండి:", "Joshna Tailoring Avatar")
     
-    if avatar_image:
-        st.image(avatar_image, caption="అప్‌లోడ్ చేసిన అవతార్ ఫోటో", width=250)
+    # మల్టిపుల్ ఫోటోలు అప్‌లోడ్ చేసే ఆప్షన్
+    st.markdown("### 📸 ఫోటోలు అప్‌లోడ్ చేయండి (Multiple Angles)")
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        front_img = st.file_uploader("ఫ్రంట్ వ్యూ (Front View)", type=["jpg", "png", "jpeg"], key="front")
+    with col2:
+        side_img = st.file_uploader("సైడ్ వ్యూ (Side View)", type=["jpg", "png", "jpeg"], key="side")
+    with col3:
+        back_img = st.file_uploader("బ్యాక్ వ్యూ (Back View)", type=["jpg", "png", "jpeg"], key="back")
         
-    if st.button("🎥 టాకింగ్ అవతార్ వీడియో జనరేట్ చేయండి", key="gen_avatar_btn"):
-        if avatar_name and avatar_image and avatar_script:
-            with st.spinner("✨ AI అవతార్ వీడియోను తయారు చేస్తోంది... వేచి ఉండండి మిత్రమా!"):
+    # ఫోటోల ప్రివ్యూ చూపించడం
+    if front_img:
+        st.image(front_img, caption="ఫ్రంట్ వ్యూ ఫోటో", width=200)
+        
+    avatar_script = st.text_area("అవతార్ ఏం మాట్లాడాలో వాయిస్ స్క్రిప్ట్ లేదా స్టోరీ రాయండి:", "నమస్తే అండి! మన జ్యోత్స్న టెయిలర్స్ లో అన్ని రకాల డిజైనర్ బ్లౌజెస్ లభించును.")
+    
+    if st.button("🎬 అడ్వాన్స్డ్ అవతార్ వీడియో ప్లాన్ జనరేట్ చేయండి", key="adv_avatar_btn"):
+        if avatar_script:
+            with st.spinner("✨ మల్టిపుల్ ఫోటోలు మరియు వాయిస్ స్క్రిప్ట్‌ని విశ్లేషిస్తోంది..."):
                 try:
                     client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
                     
-                    # జెమినీ ఏఐ ద్వారా అవతార్‌కు తగిన లిప్ సింక్ & డైలాగ్ ప్లాన్ తయారు చేయడం
                     prompt = f"""
-                    You are an advanced AI video and talking avatar generator assistant.
-                    Avatar Name: {avatar_name}
-                    Script to Speak: {avatar_script}
+                    You are an expert AI avatar animation and multi-angle 3D modeling director.
+                    Project Name: {avatar_name}
+                    Script/Story to Speak: {avatar_script}
+                    Images Provided: Front, Side, and Back views of the person/design.
                     
-                    Please generate a structured breakdown for creating this talking avatar video, including:
-                    1. Emotional tone and expression of the avatar.
-                    2. Voice modulation cues (pitch, speed, pause points).
-                    3. Background and visual enhancements for a professional tailoring/business look.
+                    Please generate a comprehensive execution blueprint for creating a realistic talking avatar video:
+                    1. 3D Face & Body alignment mapping based on multi-angle views.
+                    2. Lip-sync timing and facial expression keyframes for the given script.
+                    3. Voice modulation, pacing, and emotional tone matching the tailoring promotional theme.
                     """
                     
                     response = client.models.generate_content(
-                        model='gemini-3.6-flash',
+                        model='gemini-2.5-flash',
                         contents=prompt
                     )
                     
-                    st.success("✨ AI టాకింగ్ అవతార్ ప్లాన్ విజయవంతంగా తయారైంది!")
+                    st.success("✨ అడ్వాన్స్డ్ టాకింగ్ అవతార్ బ్లూప్రింట్ విజయవంతంగా తయారైంది!")
                     st.markdown("---")
                     st.markdown(response.text)
-                    st.code(response.text, language="markdown")
-                    
                     st.balloons()
                     
                 except Exception as e:
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
-            st.warning("⚠️ దయచేసి పేరు, ఫోటో మరియు స్క్రిప్ట్ అన్నీ నింపండి మిత్రమా.")
-        
+            st.warning("⚠️ దయచేసి స్క్రిప్ట్ వివరాలు నింపండి మిత్రమా.")
+                
 # 15. సోషల్ మీడియా & వాట్సాప్ మార్కెటింగ్ జనరేటర్
 elif choice == "15. సోషల్ మీడియా & వాట్సాప్ మార్కెటింగ్ జనరేటర్":
     st.subheader("📱 సోషల్ మీడియా & వాట్సాప్ మార్కెటింగ్ టూల్")
