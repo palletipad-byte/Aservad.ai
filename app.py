@@ -64,7 +64,7 @@ elif choice.startswith("2."):
     with col1:
         source_file = st.file_uploader("1. సోర్స్ ఫేస్ ఇమేజ్ (Source Face):", type=["jpg", "jpeg", "png"], key="face_source")
     with col2:
-        target_file = st.file_uploader("2. టార్గెట్ ఇమేజ్ (Target Image):", type=["jpg", "jpeg", "png"], key="face_target")
+        target_file = st.file_uploader("2. టార్గెต์ ఇమేజ్ (Target Image):", type=["jpg", "jpeg", "png"], key="face_target")
 
     if source_file and target_file:
         st.image([source_file, target_file], caption=["Source Face", "Target Image"], width=250)
@@ -75,19 +75,14 @@ elif choice.startswith("2."):
                 try:
                     client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
                     
-                    # ఇమేజ్‌లను రీడ్ చేయడం
-                    source_bytes = source_file.getvalue()
-                    target_bytes = target_file.getvalue()
-                    
-                    prompt = """
-                    Perform a high-quality face swap or face blending based on these two images. 
-                    Take the face from the first image (Source Face) and seamlessly blend it onto the person in the second image (Target Image) 
-                    while maintaining realistic lighting, skin tone, angles, and ultra-HD quality.
-                    """
-                    
-                                        # PIL తో ఇమేజ్‌లను ఓపెన్ చేయడం
+                    # PIL తో ఇమేజ్‌లను నేరుగా ఓపెన్ చేయడం
                     source_img = Image.open(source_file)
                     target_img = Image.open(target_file)
+                    
+                    prompt = """
+                    Take the face from the source image and swap it onto the person in the target image. 
+                    Ensure the skin tone, lighting, and facial features are blended naturally to look real.
+                    """
                     
                     response = client.models.generate_content(
                         model='gemini-2.5-flash',
@@ -97,7 +92,6 @@ elif choice.startswith("2."):
                             target_img
                         ]
                     )
-                    
                     
                     st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది మిత్రమా!")
                     
@@ -119,7 +113,7 @@ elif choice.startswith("2."):
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
             st.warning("⚠️ దయచేసి రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
-                    
+            
 # 3. వాయిస్ క్లోనింగ్ / ఆడియో స్టూడియో (అప్‌డేటెడ్ విత్ వాయిస్ టైప్ & మైక్)
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో స్టూడియో")
