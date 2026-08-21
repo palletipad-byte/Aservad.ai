@@ -81,7 +81,7 @@ elif choice.startswith("2."):
                     while maintaining realistic lighting, skin tone, angles, and ultra-HD quality.
                     """
                     
-                                        response = client.models.generate_content(
+                    response = client.models.generate_content(
                         model='gemini-2.5-flash',
                         contents=[
                             prompt,
@@ -89,8 +89,7 @@ elif choice.startswith("2."):
                             target_bytes
                         ],
                         config={'response_modalities': ["TEXT", "IMAGE"]}
-)
-                    
+                    )
                     
                     st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది మిత్రమా!")
                     
@@ -103,7 +102,6 @@ elif choice.startswith("2."):
                                 image_found = True
                     
                     if not image_found:
-                        # ఒకవేళ ఇమేజ్ నేరుగా రాకపోతే టెక్స్ట్ రెస్పాన్స్ చూపించుటకు
                         for part in response.candidates[0].content.parts:
                             if part.text:
                                 st.write(part.text)
@@ -113,7 +111,7 @@ elif choice.startswith("2."):
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
             st.warning("⚠️ దయచేసి రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
-                
+                    
 # 3. వాయిస్ క్లోనింగ్ / ఆడియో స్టూడియో (అప్‌డేటెడ్ విత్ వాయిస్ టైప్ & మైక్)
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో స్టూడియో")
