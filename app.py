@@ -305,13 +305,13 @@ elif choice.startswith("7."):
         else:
             st.warning("⚠️ దయచేసి ఏదైనా కోడింగ్ ప్రశ్న ఇవ్వండి మిత్రమా.")
             
-# 8. చాట్‌బోట్ సపోర్ట్ (AI Chatbot)
+# 8. చాట్‌బాట్ సపోర్ట్ (AI Chatbot)
 elif choice.startswith("8."):
-    st.subheader("💬 AI చాట్‌బోట్ సపోర్ట్ (Joshna Tailors & Aservad.ai)")
-    st.info("మిత్రమా, ఇక్కడ మీరు ఏ ప్రశ్న అడిగినా మన AI చాట్‌బోట్ తక్షణమే రియల్ టైమ్ సమాధానం ఇస్తుంది.")
-
-    # చాట్ ఇన్పుట్ కోసం పద్ధతి
-    chatbot_input_type = st.radio("ఇన్పుట్ పద్ధతిని ఎంచుకోండి:", ["టెక్స్ట్ టైప్ చేయండి", "మైక్ ద్వారా మాట్లాడండి"], key="chatbot_radio")
+    st.subheader("💬 AI చాట్‌బాట్ సపోర్ట్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, ఇక్కడ మీరు ఏ ప్రశ్న అడిగినా మన AI చాట్‌బాట్ క్షణంలో రియల్ టైమ్ సమాధానం ఇస్తుంది.")
+    
+    # చాట్ ఇన్‌పుట్ కోసం పద్ధతి
+    chatbot_input_type = st.radio("ఇన్‌పుట్ పద్ధతి ఎంచుకోండి:", ["టెక్స్ట్ టైప్ చేయండి", "మైక్ ద్వారా మాట్లాడండి"], key="chat_method_radio")
     
     chat_msg = ""
     if chatbot_input_type == "టెక్స్ట్ టైప్ చేయండి":
@@ -321,36 +321,40 @@ elif choice.startswith("8."):
             key="chatbot_box"
         )
     else:
-        audio_val = st.audio_input("మైక్ నొక్కి మీ ప్రశ్న మాట్లాడండి:", key="chatbot_audio")
+        audio_val = st.audio_input("🎤 మైక్ నొక్కి మీ ప్రశ్న మాట్లాడండి:", key="chatbot_audio_input")
         if audio_val:
-            st.success("✨ ఆడియో విజయవంతವಾಗಿ స్వీకరించబడింది!")
-            chat_msg = "ఆశీర్వాదం AI మరియు జోష్నా టైలర్స్ విశేషాలు ఏమిటి?"
-
+            st.success("✨ ఆడియో విజయవంతంగా స్వీకరించబడింది!")
+            chat_msg = "ఆశీర్వాదం AI మరియు జ్యోత్స్న టెయిలర్స్ విశేషాలు ఏమిటి?"
+            
     if st.button("🚀 సందేశం పంపు (Send Message)", key="chatbot_btn"):
         if chat_msg.strip():
-            with st.spinner("✨ చాట్‌బోట్ ఆలోచిస్తోంది... దయచేసి వేచి ఉండండి."):
-                # చాట్‌బోట్ రెస్పాన్స్ లాజిక్
-                if "హాయ్" in chat_msg.lower() or "hello" in chat_msg.lower():
-                    bot_response = "నమస్తే మిత్రమా! నేను ఆశీర్వాదం AI చాట్‌బోట్‌ని. జోష్నా టైలర్స్ సహకారంతో మీకు సేవ చేయడానికి సిద్ధంగా ఉన్నాను. ఎలా సహాయం చేయగలను?"
+            with st.spinner("⏳ చాట్‌బాట్ ఆలోచిస్తోంది... దయచేసి వేచి ఉండండి."):
+                api_key = st.secrets.get("GEMINI_API_KEY")
+                
+                if api_key:
+                    try:
+                        from google import genai
+                        client = genai.Client(api_key=api_key)
+                        
+                        # జెమినీ ఏఐ ద్వారా రియల్ టైమ్ రెస్పాన్స్ తెప్పించడం
+                        response = client.models.generate_content(
+                            model='gemini-3.6-flash',
+                            contents=chat_msg,
+                        )
+                        bot_response = response.text
+                        
+                        st.success("✨ విజయవంతంగా సమాధానం ఇవ్వబడింది!")
+                        st.write(bot_response)
+                        
+                        # కాపీ చేసుకోవడానికి కోడ్/టెక్స్ట్ బ్లాక్
+                        st.code(bot_response, language="text")
+                        
+                    except Exception as e:
+                        st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
                 else:
-                    bot_response = f"ఆశీర్వాదం AI నుండి సమాధానం: మీరు అడి간ిన ప్రశ్నకు ('{chat_msg}') తగిన రియల్-టైమ్ సహాయం అందించబడింది. జోష్నా టైలర్స్ 2953."
-
-                st.success("✨ విజయవంతంగా సమాధానం ఇవ్వబడింది!")
-                st.write(bot_response)
-                
-                # కాపీ చేసుకోవడానికి కోడ్ బ్లాక్
-                st.code(bot_response, language="text")
-                
-                # ఫీడ్‌బ్యాక్ మరియు లైక్/డిస్లైక్ ఆప్షన్స్
-                col_like, col_dislike = st.columns(2)
-                with col_like:
-                    if st.button("👍 నచ్చింది (Like)", key="chatbot_like"):
-                        st.toast("ధన్యవాదాలు మిత్రమా, మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది!")
-                with col_dislike:
-                    if st.button("👎 మార్పులు కావాలి (Dislike)", key="chatbot_dislike"):
-                        st.toast("మీ అభిప్రాయం నమోదు చేయబడింది.")
+                    st.warning("⚠️ దయచేసి స్ట్రీమ్‌లిట్ సెట్టింగ్స్‌లో 'GEMINI_API_KEY' ని సెట్ చేయండి.")
         else:
-            st.warning("⚠️ దయచేసి ఏదైనా సందేశం టైప్ చేయండి లేదా మాట్లాడండి మిత్రమా!")
+            st.warning("⚠️ దయచేసి ఏదైనా సందేశం టైప్ చేయండి లేదా మాట్లాడండి మిత్రమా.")
                         
 # 9. డాక్యుమెంట్ అనాలిసిస్ (Document Analysis)
 elif choice == "9. డాక్యుమెంట్ అనాలిసిస్ (Document Analysis)":
