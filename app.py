@@ -177,10 +177,12 @@ elif choice.startswith("4."):
                     response = client.models.generate_content(
                         model='gemini-2.5-flash-image',
                         contents=smart_prompt,
-                        config=types.GenerateContentConfig(
-                            response_modalities=["TEXT", "IMAGE"],
-                        ),
-                    )
+                                            response = client.models.generate_content(
+                        model='gemini-2.5-flash-image',
+                        contents=smart_prompt,
+                        config={'response_modalities': ["TEXT", "IMAGE"]}
+                                            )
+                        
                     
                     st.success("✨ ఇమేజ్ విజయవంతంగా తయారైంది మిత్రమా!")
                     
