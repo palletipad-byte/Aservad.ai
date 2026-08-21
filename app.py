@@ -113,43 +113,42 @@ elif choice.startswith("2."):
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
             st.warning("⚠️ దయచేసి రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
-            
-# 3. వాయిస్ క్లోనింగ్ / ఆడియో స్టూడియో (అప్‌డేటెడ్ విత్ వాయిస్ టైప్ & మైక్)
+# 3. వాయిస్ క్లోనింగ్ / ఆడియో స్టూడియో (అప్డేటెడ్ విత్ వాయిస్ టైప్ & మైక్)
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో స్టూడియో")
-    st.write("మిత్రమా, ఇక్కడ మీరు మీ వాయిస్ రికార్డ్ చేసి లేదా అప్లోడ్ చేసి, టెక్స్ట్ ద్వారా ఆడియోను జనరేట్ చేయవచ్చు.")
+    st.write("మిత్రమా, ఇక్కడ మీరు మీ వాయిస్ రికార్డ్ చేసి లేదా అప్‌లోడ్ చేసి, టెక్స్ట్ ద్వారా ఆడియోను జనరేట్ చేయవచ్చు!")
 
     if "audio_file" not in st.session_state:
         st.session_state.audio_file = None
 
-    st.markdown("### 1. ఆడియో సాంపుల్ ఇవ్వండి (మొబైల్ మైక్ లేదా ఫైల్)")
-    recorded_audio = st.audio_input("ఇక్కడే మీ మైక్ నొక్కి మాట్లాడండి / రికార్డ్ చేయండి")
-    uploaded_file = st.file_uploader("లేదా మీ ఫోన్ నుండి ఆడియో ఫైల్ (MP3/WAV) అప్లోడ్ చేయండి", type=["mp3", "wav", "m4a"])
+    st.markdown("### 1. ఆడియో సాంపుల్ అప్‌లోడ్ చేయండి (మైಕ್ರోఫోన్ లేదా ఫైల్)")
+    recorded_audio = st.audio_input("ఇక్కడ మీ మైక్ నొక్కి మాట్లాడండి / రికార్డ్ చేయండి")
+    uploaded_file = st.file_uploader("లేదా మీ ఫోన్ నుండి ఆడియో ఫైల్ (MP3/WAV) అప్‌లోడ్ చేయండి", type=["mp3", "wav"])
 
     if recorded_audio is not None:
         st.session_state.audio_file = recorded_audio
-        st.success("✨ మీ లైవ్ వాయిస్ విజయవంతంగా రికార్డ్ చేయబడింది!")
+        st.success("✨ మీ మైక్ రికార్డింగ్ విజయవంతంగా రికార్డ్ చేయబడింది!")
     elif uploaded_file is not None:
         st.session_state.audio_file = uploaded_file
-        st.success("📁 మీ ఆడియో ఫైల్ విజయవంతంగా అప్లోడ్ చేయబడింది!")
+        st.success("✨ మీ ఆడియో ఫైల్ విజయవంతంగా అప్‌లోడ్ చేయబడింది!")
 
     # 2. వాయిస్ టైప్ సెలెక్షన్ (Male, Female, Kids, etc.)
-    st.markdown("### 2. వాయిస్ రకాన్ని ఎంచుకోండి (Voice Type)")
+    st.markdown("### 2. వాయిస్ రనాన్ని ఎంచుకోండి (Voice Type)")
     voice_type = st.selectbox(
-        "మాట్లాడే గొంతు రకాన్ని ఎంచుకోండి:",
+        "మట్లాడే గొంతు రకాన్ని ఎంచుకోండి:",
         [
-            "పురుషుడు (Male Voice)", 
-            "స్త్రీ (Female Voice)", 
-            "కిడ్స్ / పిల్లలు (Kids Voice)", 
-            "బాలుడు (Boy Voice)", 
+            "పురుషుడు (Male Voice)",
+            "స్త్రీ (Female Voice)",
+            "కిడ్స్ / పిల్లలు (Kids Voice)",
+            "బాలుడు (Boy Voice)",
             "బాలిక (Girl Voice)"
         ]
     )
 
-    st.markdown("### 3. మీరు మాట్లాడించాలనుకుంటున్న టెక్స్ట్ రాయండి")
+    st.markdown("### 3. మీరు మాట్లాడాలనుకుంటున్న టెక్స్ట్ రాయండి")
     user_text = st.text_area(
-        "క్లోన్ చేయవలసిన టెక్స్ట్ ని ఇక్కడ టైప్ చేయండి:", 
-        value="జ్యోష్న టైలర్స్ - ఆశీర్వాదం", 
+        "క్లోన్ చేయవలసిన టెక్స్ట్ ని ఇక్కడ టైప్ చేయండి:",
+        value="ఆశీర్వాదం వాయిస్ - ఆశీర్వాదం.",
         key="voice_text_area"
     )
 
@@ -159,31 +158,33 @@ elif choice.startswith("3."):
         elif st.session_state.audio_file is None:
             st.warning("⚠️ దయచేసి ముందుగా పైన ఆడియో రికార్డ్ చేయండి లేదా ఫైల్ అప్‌లోడ్ చేయండి!")
         else:
-            with st.spinner(f"✨ {voice_type} లో ఆడియో తయారవుతోంది, కొద్దిగా వేచి ఉండండి..."):
+            with st.spinner(f"✨ {voice_type} లో ఆడియో తయారవుతోంది, కొద్దిగా వేచి ఉండండి మిత్రమా..."):
                 try:
                     tts = gTTS(text=user_text, lang='te', slow=False)
                     output_audio_path = "aservadam_ai_voice.mp3"
                     tts.save(output_audio_path)
                     
                     st.session_state.generated_audio = output_audio_path
-                    st.success(f"🎉 {voice_type} ఆడియో విజయవంతంగా తయారైంది!")
+                    st.success(f"✨ {voice_type} ఆడియో విజయవంతವಾಗಿ తయారైంది మిత్రమా!")
                 except Exception as e:
-                    st.error(f"లోపం ఏర్పడింది: {e}")
+                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
 
     # ఆడియో తయారైన తర్వాత కనిపించే ప్లేయర్ మరియు డౌన్‌లోడ్ బటన్
-    if "generated_audio" in st.session_state and os.path.exists(st.session_state.generated_audio):
-        st.markdown("### 🎧 మీ తయారైన ఆడియో వినండి & డౌన్లోడ్ చేసుకోండి")
-        st.audio(st.session_state.generated_audio, format="audio/mp3")
-        
-        with open(st.session_state.generated_audio, "rb") as file:
-            st.download_button(
-                label="📥 ఆడియో ఫైల్ డౌన్లోడ్ చేసుకోండి",
-                data=file,
-                file_name="aservadam_ai_voice.mp3",
-                mime="audio/mp3",
-                key="download_voice_btn"
-            )
-            
+    if "generated_audio" in st.session_state and st.session_state.generated_audio:
+        audio_path = st.session_state.generated_audio
+        if os.path.exists(audio_path):
+            st.markdown("### 🎧 మీ తయారైన ఆడియో వినండి & డౌన్‌లోడ్ చేసుకోండి")
+            st.audio(audio_path, format="audio/mp3")
+
+            with open(audio_path, "rb") as file:
+                st.download_button(
+                    label="📥 ఆడియో ఫైల్ డౌన్‌లోడ్ చేసుకోండి",
+                    data=file,
+                    file_name="aservadam_ai_voice.mp3",
+                    mime="audio/mp3",
+                    key="download_voice_btn"
+        )
+                
 # 4. AI ఇమేజ్ జనరేటర్ (Smart Auto-Enhance Image Generator)
 elif choice.startswith("4."):
     st.subheader("🎨 AI అడ్వాన్స్‌డ్ ఇమేజ్ జనరేటర్ (Joshna Tailors & Aservad.ai)")
