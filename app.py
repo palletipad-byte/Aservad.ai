@@ -398,41 +398,48 @@ elif choice.startswith("9."):
         else:
             st.warning("⚠️ ఫైల్/టెక్స్ట్ మరియు ప్రశ్న రెండూ అవసరం.")
             
-# 10. ఆడియో ట్రాన్స్‌క్రిప్షన్ (Audio Transcription)
+# 10. ఆడియో ట్రాన్స్క్రిప్షన్ (Audio Transcription)
 elif choice.startswith("10."):
-    st.subheader("🎧 ఆడియో ట్రాన్స్‌క్రిప్షన్ (Joshna Tailors & Aservad.ai)")
-    st.info("మిత్రమా, ఆడియో ఫైల్ అప్‌లోడ్ చేయండి లేదా లైవ్ రికార్డింగ్ చేసి దానిని టెక్స్ట్‌గా మార్చుకోండి.")
-
-    # ఇన్పుట్ పద్ధతి
-    audio_method = st.radio("ఇన్పుట్ పద్ధతి:", ["ఫైల్ అప్‌లోడ్ (MP3/WAV)", "లైవ్ రికార్డింగ్ (మైక్)"], key="trans_radio")
+    st.subheader("🎙️ ఆడియో ట్రాన్స్క్రిప్షన్ (Joshna Tailors & Aservad.ai)")
+    st.info("మిత్రమా, ఆడియో ఫైల్ అప్‌లోడ్ చేయండి లేదా లైవ్ రికార్డింగ్ చేయండి, దాన్ని AI టెక్స్ట్ రూపంలోకి మారుస్తుంది.")
     
-    audio_data = None
+    audio_method = st.radio("ఇన్‌పుట్ పద్ధతి:", ["ఫైల్ అప్‌లోడ్ (MP3/WAV)", "లైవ్ రికార్డింగ్ (మైక్)"], key="audio_input_method")
+    
+    audio_file = None
     if audio_method == "ఫైల్ అప్‌లోడ్ (MP3/WAV)":
-        audio_data = st.file_uploader("ఆడియో ఫైల్ ఎంచుకోండి:", type=["mp3", "wav", "m4a"], key="audio_file")
+        audio_file = st.file_uploader("📂 ఆడియో ఫైల్ ఎంచుకోండి:", type=["mp3", "wav", "m4a"], key="audio_uploader")
     else:
-        audio_data = st.audio_input("మైక్ నొక్కి మాట్లాడండి:", key="audio_mic")
-
-    if st.button("✍️ టెక్స్ట్‌గా మార్చు (Transcribe)", key="trans_btn"):
-        if audio_data:
-            with st.spinner("✨ ఆడియోను టెక్స్ట్‌గా మారుస్తున్నాము... వేచి ఉండండి మిత్రమా."):
-                # డెమో లాజిక్ - ఇది భవిష్యత్తులో Whisper API తో కనెక్ట్ అవుతుంది
-                transcription = f"ట్రాన్స్‌క్రిప్షన్ ఫలితం: '{audio_data.name if hasattr(audio_data, 'name') else 'లైవ్ ఆడియో'}' విజయవంతంగా టెక్స్ట్‌గా మార్చబడింది. జోష్నా టైలర్స్ & ఆశీర్వాదం AI సపోర్ట్."
-                
-                st.success("✨ ట్రాన్స్‌క్రిప్షన్ పూర్తయింది!")
-                st.write(transcription)
-                
-                # కాపీ బటన్
-                st.code(transcription, language="text")
-                
-                # లైక్/డిస్లైక్
-                col1, col2 = st.columns(2)
-                with col1:
-                    if st.button("👍 నచ్చింది", key="trans_like"): st.toast("ధన్యవాదాలు మిత్రమా!")
-                with col2:
-                    if st.button("👎 మార్పులు కావాలి", key="trans_dislike"): st.toast("మీ ఫీడ్‌బ్యాక్ స్వీకరించబడింది.")
-        else:
-            st.warning("⚠️ దయచేసి ఆడియో ఫైల్ అప్‌లోడ్ చేయండి లేదా రికార్డ్ చేయండి మిత్రమా!")
-            
+        audio_file = st.audio_input("🎙️ మైక్ నొక్కి మాట్లాడండి:", key="audio_mic")
+        
+    if audio_file is not None:
+        st.audio(audio_file)
+        if st.button("🚀 టెక్స్ట్ గా మార్చు (Transcribe)", key="trans_btn"):
+            with st.spinner("✨ ఆడియోను టెక్స్ట్‌గా మారుస్తున్నాము... వేచి ఉండండి మిత్రమా!"):
+                try:
+                    # టెంపరరీగా ఫైల్ సేవ్ చేసి జెమినీకి పంపడం
+                    import tempfile
+                    with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as tmp_file:
+                        tmp_file.write(audio_file.read())
+                        tmp_path = tmp_file.name
+                    
+                    # జెమినీ ఏఐ ద్వారా ఆడియోను అప్‌లోడ్ చేసి ట్రాన్స్క్రిప్ట్ చేయించడం
+                    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+                    uploaded_audio = client.files.upload(file=tmp_path)
+                    
+                    response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=[uploaded_audio, "Listen to this audio carefully and provide a complete and accurate transcription of the spoken words. (If it's in Telugu, reply in Telugu text)."]
+                    )
+                    
+                    st.success("✨ ట్రాన్స్క్రిప్షన్ పూర్తయింది!")
+                    st.write(response.text)
+                    
+                    # కాపీ బటన్ కోసం
+                    st.code(response.text, language="text")
+                    
+                except Exception as e:
+                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
+                    
 
 # 11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్
 elif choice == "11. వీడియో క్రియేటర్ (Video Creator)":
