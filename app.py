@@ -85,15 +85,19 @@ elif choice.startswith("2."):
                     while maintaining realistic lighting, skin tone, angles, and ultra-HD quality.
                     """
                     
+                                        # PIL తో ఇమేజ్‌లను ఓపెన్ చేయడం
+                    source_img = Image.open(source_file)
+                    target_img = Image.open(target_file)
+                    
                     response = client.models.generate_content(
                         model='gemini-2.5-flash',
                         contents=[
                             prompt,
-                            source_bytes,
-                            target_bytes
-                        ],
-                        config={'response_modalities': ["TEXT", "IMAGE"]}
+                            source_img,
+                            target_img
+                        ]
                     )
+                    
                     
                     st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది మిత్రమా!")
                     
