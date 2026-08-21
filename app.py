@@ -233,37 +233,32 @@ elif choice.startswith("5."):
 # 6. భాషా అనువాదం (Multi-Language Translation)
 elif choice.startswith("6."):
     st.subheader("🌐 AI భాషా అనువాదం (Multi-Language Translation)")
-    st.info("మిత్రమా, ఇక్కడ మీరు టెక్స్ట్ టైప్ చేసి లేదా మైక్ ద్వారా మాట్లాడి వేరే భాషలోకి అనువదించుకోవచ్చు.")
+    st.info("మిత్రమా, ఇక్కడ మీరు టెక్స్ట్ టైప్ చేసి వేరే భాషలోకి అనువదించుకోవచ్చు.")
 
-    translation_input_type = st.radio("ఇన్పుట్ పద్ధతిని ఎంచుకోండి:", ["టెక్స్ట్ టైప్ చేయండి", "మైక్ ద్వారా మాట్లాడండి"])
-    
-    source_text = ""
-    if translation_input_type == "టెక్స్ట్ టైప్ చేయండి":
-        source_text = st.text_area("అనువదించవలసిన టెక్స్ట్ ఇక్కడ రాయండి:", key="trans_text")
-    else:
-        audio_val = st.audio_input("మైక్ నొక్కి మాట్లాడండి:")
-        if audio_val:
-            st.success("✨ ఆడియో విజయవంతంగా స్వీకరించబడింది! దయచేసి పైన ఉన్న 'అనువదించండి' బటన్ నొక్కండి.")
-            # గమనిక: ఇక్కడ ఆడియోని టెక్స్ట్ కి మార్చడానికి పైన ఉన్న జనరేటివ్ ఏఐ మోడల్ వాడుకోవచ్చు
-            source_text = "ఆడియో ఇన్‌పుట్ అందుబాటులో ఉంది"
-
+    source_text = st.text_area("అనువదించవలసిన టెక్స్ట్ ఇక్కడ రాయండి:", key="trans_text_box")
     target_lang = st.selectbox("ఏ భాషలోకి మార్చాలి?", ["Telugu", "English", "Hindi", "Tamil", "Kannada", "Malayalam"])
 
-    if st.button("🚀 అనువదించండి (Translate)", key="translate_btn"):
+    if st.button("🚀 అనువదించండి (Translate)", key="translate_btn_new"):
         if source_text.strip():
-            with st.spinner("✨ అనువాదం జరుగుతోంది..."):
-                prompt = f"Translate the following text into {target_lang}: {source_text}"
-                response = client.models.generate_content(
-                    model='gemini-3.6-flash',
-                    contents=prompt
-                )
-                translated_result = response.text
-                
-                st.success("✨ అనువాదం విజయవంతంగా పూర్తయింది!")
-                st.write(translated_result)
-                st.code(translated_result, language="text")
+            with st.spinner("✨ అనువాదం జరుగుతోంది... దయచేసి వేచి ఉండండి."):
+                try:
+                    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+                    prompt = f"Translate the following text accurately into {target_lang}: {source_text}"
+                    
+                    response = client.models.generate_content(
+                        model='gemini-3.6-flash',
+                        contents=prompt
+                    )
+                    
+                    translated_result = response.text
+                    st.success("✨ అనువాదం విజయవంతంగా పూర్తయింది!")
+                    st.write(translated_result)
+                    st.code(translated_result, language="text")
+                    
+                except Exception as e:
+                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
-            st.warning("⚠️ దయచేసి అనువదించడానికి టెక్స్ట్ ఇవ్వండి లేదా మాట్లాడండి మిత్రమా!")
+            st.warning("⚠️ దయచేసి అనువదించడానికి టెక్స్ట్ ఇవ్వండి మిత్రమా!")
             
 # 7. కోడింగ్ అసిస్టెంట్ (Coding Assistant)
 elif choice.startswith("7."):
