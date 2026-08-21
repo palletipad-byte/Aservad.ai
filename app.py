@@ -439,35 +439,48 @@ elif choice.startswith("10."):
                     
 
 # 11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్
-elif choice == "11. వీడియో క్రియేటర్ (Video Creator)":
-    st.subheader("🎥 AI వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్")
-    st.info("మీ YouTube లేదా Instagram రీల్స్ కోసం పవర్‌ఫుల్ వీడియో స్క్రిప్ట్‌లను సృష్టించండి.")
+elif choice.startswith("11."):
+    st.subheader("🎥 AI వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్ (Joshna Tailors & Aservad.ai)")
+    st.info("మీ YouTube, Instagram రీల్స్ లేదా Facebook కోసం శక్తివంతమైన మరియు ఆకర్షణీయమైన వీడియో స్క్రిప్ట్‌లను AI ద్వారా సృష్టించండి.")
     
-    v_topic = st.text_input("మీ వీడియో టాపిక్ లేదా టైటిల్ రాయండి (ఉదా: Tailoring Shop Marketing):", "")
+    v_topic = st.text_input("మీ వీడియో టాపిక్ లేదా టైటిల్ రాయండి (ఉదా: Tailoring Shop Marketing Ideas):", "")
     v_platform = st.selectbox("ప్లాట్‌ఫారమ్ ఎంచుకోండి:", ["YouTube Long Video", "Instagram Reel / Shorts", "Facebook Video"])
     
-    if st.button("🎬 వీడియో స్క్రిప్ట్ జనరేట్ చేయండి"):
+    if st.button("🎬 AI స్క్రిప్ట్ జనరేట్ చేయండి", key="gen_script_btn"):
         if v_topic:
-            with st.spinner("✨ ప్రొఫెషనల్ వీడియో స్క్రిప్ట్ తయారవుతోంది..."):
-                st.success(f" '{v_topic}' కోసం {v_platform} స్క్రిప్ట్ విజయవంతంగా తయారైంది!")
-                
-                st.markdown("---")
-                st.markdown(f"### 📋 టైటిల్: {v_topic} ({v_platform})")
-                
-                st.markdown("#### 1. 🎬 ఇంట్రో (Hook & Introduction - 0 to 10s):")
-                st.write(f"👉 **డైలాగ్/విజువల్:** \"మీరు కూడా ఒక అద్భుతమైన {v_topic} గురించి వెతుకుతున్నారా? అయితే ఈ వీడియో మీకోసమే! చివరి వరకు చూడండి.\"")
-                
-                st.markdown("#### 2. 🔥 మెయిನ್ కంటెంట్ (Core Content):")
-                st.write(f"- **పాయింట్ 1:** {v_topic} యొక్క ముఖ్యమైన లాభాలు మరియు ప్రత్యేకతలు.")
-                st.write(f"- **పాయింట్ 2:** కస్టమర్లను ఆకట్టుకునే సులభమైన పద్ధతులు మరియు చిట్కాలు.")
-                st.write(f"- **పాయింట్ 3:** తక్కువ ఖర్చుతో ఎక్కువ గుర్తింపు ఎలా తెచ్చుకోవాలి?")
-                
-                st.markdown("#### 3. 🎯 కాల్ టు యాక్షన్ (Outro / CTA):")
-                st.write("👉 **డైలాగ్:** \"ఈ వీడియో మీకు నచ్చితే లైక్ చేయండి, మీ అభిప్రాయాన్ని కామెంట్ చేయండి మరియు మన ఛానెల్‌ని సబ్స్క్రైబ్ చేయడం మర్చిపోకండి!\"")
-                
-                st.balloons()
+            with st.spinner("✨ ప్రొఫెషనల్ వీడియో స్క్రిప్ట్ తయారవుతోంది... వేచి ఉండండి మిత్రమా!"):
+                try:
+                    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+                    
+                    prompt = f"""
+                    You are a professional video scriptwriter and content creator.
+                    Create an engaging video script for the platform: {v_platform}.
+                    The topic of the video is: {v_topic}.
+                    
+                    Please structure the script clearly with:
+                    1. Catchy Hook & Introduction (0-10s)
+                    2. Core Content / Main Points (Step-by-step or value delivery)
+                    3. Call to Action (CTA / Outro)
+                    
+                    Write the response in Telugu or engaging English as appropriate, keeping it professional, energetic, and engaging for viewers.
+                    """
+                    
+                    response = client.models.generate_content(
+                        model='gemini-3.6-flash',
+                        contents=prompt
+                    )
+                    
+                    st.success("✨ వీడియో స్క్రిప్ట్ విజయవంతంగా తయారైంది!")
+                    st.markdown("---")
+                    st.markdown(response.text)
+                    st.code(response.text, language="markdown")
+                    
+                    st.balloons()
+                    
+                except Exception as e:
+                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
-            st.warning("⚠️ దయచేసి ఏదైనా వీడియో టాపిక్ లేదా టైటిల్ రాయండి.")
+            st.warning("⚠️ దయచేసి ఏదైనా వీడియో టాపిక్ లేదా టైటిల్ రాయండి మిత్రమా.")
             
 
 # 12. సెట్టింగ్‌లు (Settings)
