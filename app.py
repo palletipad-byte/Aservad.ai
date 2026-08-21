@@ -3,7 +3,11 @@ import os
 from gtts import gTTS
 from PIL import Image
 import PyPDF2
+import io
+from io import BytesIO
 from google import genai
+from google.genai import types 
+
 
 # పేజ్ సెటప్ (ఆశీర్వాదం AI పేరుతో)
 st.set_page_config(
