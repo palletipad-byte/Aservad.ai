@@ -120,7 +120,7 @@ elif choice.startswith("3."):
 
         # Streamlit Secrets నుండి API Key తీసుకోవడం, Voice ID నేరుగా ఇవ్వడం
     api_key = st.secrets.get("ELEVENLABS_API_KEY")
-    voice_id = "21m00Tcm4TlvDq8ikWAM"
+    voice_id = "pNInz6obpgDQGcFmaJgB"
     
     # యూజర్ టెక్స్ట్ బాక్స్
     user_text = st.text_area("🗣️ మీరు మాట్లాడించాలనుకుంటున్న టెక్స్ట్ ఇక్కడ రాయండి:", placeholder="హాయ్ మిత్రమా, ఎలా ఉన్నారు?")
@@ -133,7 +133,7 @@ elif choice.startswith("3."):
             st.warning("దయచేసి కొంచెం టెక్స్ట్ ఎంటర్ చేయండి!")
         else:
             with st.spinner("🎙️ వాయిస్ తయారవుతోంది, దయచేసి వేచి ఉండండి..."):
-                url = f"https://api.elevenlabs.io/v1/text-to-speech/21m00Tcm4TlvDq8ikWAM"
+                url = f"https://api.elevenlabs.io/v1/text-to-speech/pNInz6obpgDQGcFmaJgB"
                 headers = {
                     "Accept": "audio/mpeg",
                     "Content-Type": "application/json",
