@@ -118,10 +118,10 @@ elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్")
     st.markdown("మీరు టైప్ చేసిన టెక్స్ట్ అద్భుతమైన AI వాయిస్‌గా మారుతుంది!")
 
-    # Streamlit Secrets నుండి API Key మరియు Voice ID రెండింటినీ ఆటోమేటిక్‌గా తీసుకోవడం
+        # Streamlit Secrets నుండి API Key తీసుకోవడం, Voice ID నేరుగా ఇవ్వడం
     api_key = st.secrets.get("ELEVENLABS_API_KEY")
-    voice_id = st.secrets.get("VOICE_ID")
-
+    voice_id = "Rwqd9wksd18jej9ZWfbo"
+    
     # యూజర్ టెక్స్ట్ బాక్స్
     user_text = st.text_area("🗣️ మీరు మాట్లాడించాలనుకుంటున్న టెక్స్ట్ ఇక్కడ రాయండి:", placeholder="హాయ్ మిత్రమా, ఎలా ఉన్నారు?")
 
