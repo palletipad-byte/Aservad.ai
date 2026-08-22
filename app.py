@@ -8,7 +8,42 @@ from io import BytesIO
 from google import genai
 from google.genai import types 
 import requests
+# --- 🔐 లాగిన్ & క్రెడిట్స్ సిస్టమ్ (Login & Credits) ---
+if "logged_in" not in st.session_state:
+    st.session_state.logged_in = False
+if "username" not in st.session_state:
+    st.session_state.username = ""
+if "credits" not in st.session_state:
+    st.session_state.credits = 10  # కొత్త యూజర్‌కి ఉచితంగా 10 క్రెడిట్స్
 
+# సైడ్‌బార్‌లో లాగిన్ మరియు క్రెడిట్స్ మేనేజ్‌మెంట్
+st.sidebar.markdown("---")
+st.sidebar.subheader("🔐 యూజర్ లాగిన్ & వాలెట్ (Aservad.ai)")
+
+if not st.session_state.logged_in:
+    st.sidebar.info("మిత్రమా, మీ అకౌంట్‌తో లాగిన్ అవ్వండి!")
+    user_input_name = st.sidebar.text_input("మీ పేరు లేదా ఈమెయిల్:", key="login_user_input")
+    
+    if st.sidebar.button("🚀 లాగిన్ అవ్వండి (Login)", key="login_btn"):
+        if user_input_name.strip():
+            st.session_state.logged_in = True
+            st.session_state.username = user_input_name
+            st.session_state.credits = 10  
+            st.sidebar.success(f"స్వాగతం మిత్రమా, {user_input_name}!")
+            st.rerun()
+        else:
+            st.sidebar.warning("⚠️ దయచేసి మీ పేరు ఎంటర్ చేయండి!")
+else:
+    st.sidebar.success(f"👤 యూజర్: **{st.session_state.username}**")
+    st.sidebar.metric(label="💎 మీ మిగిలిన క్రెడిట్స్ (Credits)", value=f"{st.session_state.credits} / 10")
+    
+    if st.sidebar.button("🚪 లాగౌట్ (Logout)", key="logout_btn"):
+        st.session_state.logged_in = False
+        st.session_state.username = ""
+        st.session_state.credits = 0
+        st.sidebar.info("మీరు విజయవంతంగా లాగౌట్ అయ్యారు మిత్రమా.")
+        st.rerun()
+        
 # పేజ్ సెటప్ (ఆశీర్వాదం AI పేరుతో)
 st.set_page_config(
     page_title="ఆశీర్వాదం AI (Aservad AI)",
