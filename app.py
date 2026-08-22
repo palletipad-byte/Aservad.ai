@@ -133,7 +133,7 @@ elif choice.startswith("3."):
             st.warning("దయచేసి కొంచెం టెక్స్ట్ ఎంటర్ చేయండి!")
         else:
             with st.spinner("🎙️ వాయిస్ తయారవుతోంది, దయచేసి వేచి ఉండండి..."):
-            url = f"https://api.elevenlabs.io/v1/text-to-speech/C255J6WmHnrQWjIu6Rg"
+                url = f"https://api.elevenlabs.io/v1/text-to-speech/C255J6WmHnrQWjIu6Rg"
             headers = {
                 "Accept": "audio/mpeg",
                 "Content-Type": "application/json",
