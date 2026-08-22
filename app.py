@@ -120,7 +120,7 @@ elif choice.startswith("3."):
 
         # Streamlit Secrets నుండి API Key తీసుకోవడం, Voice ID నేరుగా ఇవ్వడం
     api_key = st.secrets.get("ELEVENLABS_API_KEY")
-    voice_id = "Rwqd9wksd18jej9ZWfbo"
+    voice_id = "C2S5J6WvmHnrQWjUu6Rg"
     
     # యూజర్ టెక్స్ట్ బాక్స్
     user_text = st.text_area("🗣️ మీరు మాట్లాడించాలనుకుంటున్న టెక్స్ట్ ఇక్కడ రాయండి:", placeholder="హాయ్ మిత్రమా, ఎలా ఉన్నారు?")
