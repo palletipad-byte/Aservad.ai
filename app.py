@@ -113,77 +113,59 @@ elif choice.startswith("2."):
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
             st.warning("⚠️ దయచేసి రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
-# 3. వాయిస్ క్లోనింగ్ / ఆడియో స్టూడియో (అప్డేటెడ్ విత్ వాయిస్ టైప్ & మైక్)
+# 3. AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్
 elif choice.startswith("3."):
-    st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో స్టూడియో")
-    st.write("మిత్రమా, ఇక్కడ మీరు మీ వాయిస్ రికార్డ్ చేసి లేదా అప్‌లోడ్ చేసి, టెక్స్ట్ ద్వారా ఆడియోను జనరేట్ చేయవచ్చు!")
+    st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్")
+    st.markdown("మీరు టైప్ చేసిన టెక్స్ట్ అద్భుతమైన AI వాయిస్‌గా మారుతుంది!")
 
-    if "audio_file" not in st.session_state:
-        st.session_state.audio_file = None
+    # Streamlit Secrets నుండి API Key మరియు Voice ID రెండింటినీ ఆటోమేటిక్‌గా తీసుకోవడం
+    api_key = st.secrets.get("ELEVENLABS_API_KEY")
+    voice_id = st.secrets.get("VOICE_ID")
 
-    st.markdown("### 1. ఆడియో సాంపుల్ అప్‌లోడ్ చేయండి (మైಕ್ರోఫోన్ లేదా ఫైల్)")
-    recorded_audio = st.audio_input("ఇక్కడ మీ మైక్ నొక్కి మాట్లాడండి / రికార్డ్ చేయండి")
-    uploaded_file = st.file_uploader("లేదా మీ ఫోన్ నుండి ఆడియో ఫైల్ (MP3/WAV) అప్‌లోడ్ చేయండి", type=["mp3", "wav"])
+    # యూజర్ టెక్స్ట్ బాక్స్
+    user_text = st.text_area("🗣️ మీరు మాట్లాడించాలనుకుంటున్న టెక్స్ట్ ఇక్కడ రాయండి:", placeholder="హాయ్ మిత్రమా, ఎలా ఉన్నారు?")
 
-    if recorded_audio is not None:
-        st.session_state.audio_file = recorded_audio
-        st.success("✨ మీ మైక్ రికార్డింగ్ విజయవంతంగా రికార్డ్ చేయబడింది!")
-    elif uploaded_file is not None:
-        st.session_state.audio_file = uploaded_file
-        st.success("✨ మీ ఆడియో ఫైల్ విజయవంతంగా అప్‌లోడ్ చేయబడింది!")
-
-    # 2. వాయిస్ టైప్ సెలెక్షన్ (Male, Female, Kids, etc.)
-    st.markdown("### 2. వాయిస్ రనాన్ని ఎంచుకోండి (Voice Type)")
-    voice_type = st.selectbox(
-        "మట్లాడే గొంతు రకాన్ని ఎంచుకోండి:",
-        [
-            "పురుషుడు (Male Voice)",
-            "స్త్రీ (Female Voice)",
-            "కిడ్స్ / పిల్లలు (Kids Voice)",
-            "బాలుడు (Boy Voice)",
-            "బాలిక (Girl Voice)"
-        ]
-    )
-
-    st.markdown("### 3. మీరు మాట్లాడాలనుకుంటున్న టెక్స్ట్ రాయండి")
-    user_text = st.text_area(
-        "క్లోన్ చేయవలసిన టెక్స్ట్ ని ఇక్కడ టైప్ చేయండి:",
-        value="ఆశీర్వాదం వాయిస్ - ఆశీర్వాదం.",
-        key="voice_text_area"
-    )
-
-    if st.button("🚀 వాయిస్ క్లోనింగ్ & ఆడియో జనరేట్ చేయి", key="gen_voice_btn"):
-        if user_text.strip() == "":
-            st.warning("⚠️ దయచేసి కొంచెం టెక్స్ట్ రాయండి మిత్రమా!")
-        elif st.session_state.audio_file is None:
-            st.warning("⚠️ దయచేసి ముందుగా పైన ఆడియో రికార్డ్ చేయండి లేదా ఫైల్ అప్‌లోడ్ చేయండి!")
+    # వాయిస్ జనరేషన్ బటన్
+    if st.button("🚀 వాయిస్ జనరేట్ చేయి", type="primary"):
+        if not api_key or not voice_id:
+            st.error("దయచేసి Streamlit సెక్రెట్స్‌లో API Key మరియు Voice ID సరిగ్గా ఉన్నాయో లేదో చెక్ చేయండి మిత్రమా!")
+        elif not user_text.strip():
+            st.warning("దయచేసి కొంచెం టెక్స్ట్ ఎంటర్ చేయండి!")
         else:
-            with st.spinner(f"✨ {voice_type} లో ఆడియో తయారవుతోంది, కొద్దిగా వేచి ఉండండి మిత్రమా..."):
+            with st.spinner("⏳ వాయిస్ తయారవుతోంది, దయచేసి వేచి ఉండండి..."):
+                url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+                headers = {
+                    "Accept": "audio/mpeg",
+                    "Content-Type": "application/json",
+                    "xi-api-key": api_key
+                }
+                data = {
+                    "text": user_text,
+                    "model_id": "eleven_multilingual_v2",
+                    "voice_settings": {
+                        "stability": 0.5,
+                        "similarity_boost": 0.75
+                    }
+                }
+                
                 try:
-                    tts = gTTS(text=user_text, lang='te', slow=False)
-                    output_audio_path = "aservadam_ai_voice.mp3"
-                    tts.save(output_audio_path)
+                    response = requests.post(url, json=data, headers=headers)
                     
-                    st.session_state.generated_audio = output_audio_path
-                    st.success(f"✨ {voice_type} ఆడియో విజయవంతವಾಗಿ తయారైంది మిత్రమా!")
+                    if response.status_code == 200:
+                        st.success("🎉 వాయిస్ విజయవంతంగా తయారైంది!")
+                        st.audio(response.content, format="audio/mp3")
+                        st.download_button(
+                            label="📥 ఆడియోను డౌన్‌లోడ్ చేసుకోండి",
+                            data=response.content,
+                            file_name="ai_voice_output.mp3",
+                            mime="audio/mp3"
+                        )
+                    else:
+                        st.error(f"ఏదో లోపం సంభవించింది మిత్రమా! ఎర్రర్ కోడ్: {response.status_code}")
+                        st.text(response.text)
                 except Exception as e:
-                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
-
-    # ఆడియో తయారైన తర్వాత కనిపించే ప్లేయర్ మరియు డౌన్‌లోడ్ బటన్
-    if "generated_audio" in st.session_state and st.session_state.generated_audio:
-        audio_path = st.session_state.generated_audio
-        if os.path.exists(audio_path):
-            st.markdown("### 🎧 మీ తయారైన ఆడియో వినండి & డౌన్‌లోడ్ చేసుకోండి")
-            st.audio(audio_path, format="audio/mp3")
-
-            with open(audio_path, "rb") as file:
-                st.download_button(
-                    label="📥 ఆడియో ఫైల్ డౌన్‌లోడ్ చేసుకోండి",
-                    data=file,
-                    file_name="aservadam_ai_voice.mp3",
-                    mime="audio/mp3",
-                    key="download_voice_btn"
-        )
+                    st.error(f"కనెక్షన్ ఎర్రర్ వచ్చింది: {e}")
+    
                 
 # 4. AI ఇమేజ్ జనరేటర్ (Smart Auto-Enhance Image Generator)
 elif choice.startswith("4."):
