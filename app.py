@@ -221,7 +221,7 @@ elif choice.startswith("4."):
                 try:
                     import requests
                     
-                    API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
+                    API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
                     hf_token = st.secrets["HUGGINGFACE_TOKEN"]
                     headers = {"Authorization": f"Bearer {hf_token}"}
                     
