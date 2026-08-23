@@ -218,12 +218,10 @@ elif choice.startswith("4."):
     if st.button("🚀 ఇమేజ్ సృష్టించండి (Generate Image)", key="gen_img_btn"):
         if user_img_prompt.strip():
             with st.spinner("⏳ అద్భుతమైన డిజైన్‌ను రూపం ఇస్తున్నాం... దయచేసి వేచి ఉండండి"):
-                        try:
-            import requests
+                try:
+                    import requests
 
-            # Hugging Face ఉచిత ఇన్‌ఫరెన్స్
             API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
-            
             hf_token = st.secrets["HUGGINGFACE_TOKEN"]
             headers = {"Authorization": f"Bearer {hf_token}"}
             
