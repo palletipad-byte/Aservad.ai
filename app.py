@@ -224,7 +224,8 @@ elif choice.startswith("4."):
                     # Hugging Face ఉచిత ఎండ్పాయింట్
                     API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
                     
-                    hf_token = "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"
+                    hf_token = st.secrets["HUGGINGFACE_TOKEN"]
+                    
                     headers = {"Authorization": f"Bearer {hf_token}"}
                     
                     payload = {
