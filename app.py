@@ -63,45 +63,53 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- 🌿 ఆశీర్వాదం AI - పర్ఫెక్ట్ లైట్ థీమ్ & క్లియర్ UI స్టైలింగ్ ---
+# --- 🌿 ఆశీర్వాదం AI - కళ్ళకి సురక్షితమైన సాఫ్ట్ పేపర్ లైట్ UI స్టైలింగ్ ---
 st.markdown("""
 <style>
-    /* ప్రధాన పేజీ తెల్లటి బ్యాక్‌గ్రౌండ్ మరియు నల్లటి అక్షరాలు */
+    /* కళ్ళకి ఎలాంటి స్ట్రెయిన్ ఇవ్వని సాఫ్ట్ ఐవరీ / పేపర్ క్రీమ్ బ్యాక్‌గ్రౌండ్ */
     .stApp {
-        background-color: #ffffff !important;
-        color: #111827 !important;
+        background-color: #fbfbfa !important;
+        color: #1e293b !important;
     }
     
-    /* సైడ్‌బార్‌కు లైట్ గ్రే బ్యాక్‌గ్రౌండ్ */
+    /* సైడ్‌బార్‌కు కంటికి ప్రశాంతమైన సాఫ్ట్ గ్రే-క్రీమ్ షేడ్ */
     [data-testid="stSidebar"] {
         background-color: #f1f5f9 !important;
-        border-right: 1px solid #e2e8f0;
+        border-right: 1px solid #cbd5e1;
     }
     
-    /* అన్ని హెడ్డింగ్‌లు, టైటిల్స్ మరియు టెక్స్ట్ స్పష్టంగా కనిపించడానికి */
+    /* అన్ని హెడ్డింగ్‌లు, టైటిల్స్ మరియు టెక్స్ట్ ముదురు రంగులో స్పష్టంగా కనిపించడానికి */
     h1, h2, h3, h4, h5, h6, span, p, label, div {
-        color: #111827 !important;
+        color: #1e293b !important;
     }
     
-    /* సైడ్‌బార్‌లో ఉన్న టెక్స్ట్ కూడా నల్లగా కనిపಿಸಲು */
+    /* సైడ్‌బార్‌లో ఉన్న టెక్స్ట్ కూడా స్పష్టంగా కనిపಿಸಲು */
     [data-testid="stSidebar"] span, [data-testid="stSidebar"] p, [data-testid="stSidebar"] label {
-        color: #111827 !important;
+        color: #1e293b !important;
     }
     
-    /* బటన్స్ రాయల్ లుక్ */
+    /* టెక్స్ట్ ఇన్‌పుట్ మరియు సెలెక్షన్ బాక్సులు (బాక్సులు విడిగా స్పష్టంగా కనిపించడానికి) */
+    .stTextInput>div>div>input, .stTextArea>div>div>textarea, .stSelectbox div[data-baseweb="select"] {
+        background-color: #ffffff !important;
+        color: #1e293b !important;
+        border: 1.5px solid #94a3b8 !important;
+        border-radius: 8px;
+    }
+    
+    /* బటన్లు కళ్ళకి హాయినిచ్చే సాఫ్ట్ బ్లూ షేడ్‌లో */
     .stButton>button {
-        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
         color: white !important;
-        border-radius: 10px;
-        font-weight: bold;
+        border-radius: 8px;
+        font-weight: 600;
         border: none;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
     }
     .stButton>button:hover {
-        background: linear-gradient(135deg, #1d4ed8, #1e40af);
+        background: linear-gradient(135deg, #0369a1 0%, #075985 100%);
     }
 </style>
 """, unsafe_allow_html=True)
-
 
 
 
