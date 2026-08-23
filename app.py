@@ -217,14 +217,18 @@ elif choice.startswith("4."):
     
     if st.button("🚀 ఇమేజ్ సృష్టించండి (Generate Image)", key="gen_img_btn"):
         if user_img_prompt.strip():
-            with st.spinner("⏳ అద్భుతమైన డిజైన్‌ను రూపం ఇస్తున్నాం... దయచేసి వేచి ఉండండి"):
-                        try:
-            import requests
-            API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
-            hf_token = st.secrets["HUGGINGFACE_TOKEN"]
-            headers = {"Authorization": f"Bearer {hf_token}"}
-            
-                    # కనెక్షన్ టైమ్‌అవుట్ జోడించడం ద్వారా ఎర్రర్ రాకుండా ఉంటుంది
+            with st.spinner("⏳ అద్భుతమైన డిజైన్‌ను రూపం ఇస్తున్నాం... దయచేసి వేచి ఉండండి."):
+                try:
+                    import requests
+                    
+                    API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
+                    hf_token = st.secrets["HUGGINGFACE_TOKEN"]
+                    headers = {"Authorization": f"Bearer {hf_token}"}
+                    
+                    payload = {
+                        "inputs": user_img_prompt + ", ultra-detailed, high quality, 8k resolution",
+                    }
+                    
                     response = requests.post(API_URL, headers=headers, json=payload, timeout=30)
                     
                     if response.status_code == 200:
@@ -238,7 +242,7 @@ elif choice.startswith("4."):
                         st.warning(f"⚠️ మోడల్ రెస్పాండ్ అవ్వడానికి కొంచెం సమయం పడుతుంది. మరోసారి ప్రయత్నించండి! వివరాలు: {response.text}")
                         
                 except requests.exceptions.Timeout:
-                    st.error("⚠️ సర్వర్ రెస్పాండ్ అవ్వడానికి ఎక్కువ సమయం పట్టింది. దయచేసి మళ్లీ ప్రయత్నించండి మిత్రమా!")
+                    st.error("⚠️ సర్వర్ రెస్పాండ్ అవ్వడానికి ఎక్కువ సమయం పట్టింది. దయచేసి మళ్ళీ ప్రయత్నించండి మిత్రమా!")
                 except Exception as e:
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
