@@ -63,16 +63,16 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- 🌿 ఆశీర్వాదం AI - కళ్ళకి సురక్షితమైన సాఫ్ట్ పేపర్ లైట్ UI స్టైలింగ్ ---
+# --- 🌿 ఆశీర్వాదం AI - పర్ఫెక్ట్ లైట్ థీమ్ UI స్టైలింగ్ ---
 st.markdown("""
 <style>
-    /* కళ్ళకి ఎలాంటి స్ట్రెయిన్ ఇవ్వని సాఫ్ట్ ఐవరీ / పేపర్ క్రీమ్ బ్యాక్‌గ్రౌండ్ */
+    /* కళ్ళకి ఎలాంటి స్ట్రెయిన్ ఇవ్వని సాఫ్ట్ పేపర్ క్రీమ్ బ్యాక్‌గ్రౌండ్ */
     .stApp {
         background-color: #fbfbfa !important;
         color: #1e293b !important;
     }
     
-    /* సైడ్‌బార్‌కు కంటికి ప్రశాంతమైన సాఫ్ట్ గ్రే-క్రీమ్ షేడ్ */
+    /* సైడ్‌బార్‌కు కంటికి ప్రశాంతమైన లైట్ గ్రే షేడ్ */
     [data-testid="stSidebar"] {
         background-color: #f1f5f9 !important;
         border-right: 1px solid #cbd5e1;
@@ -88,7 +88,7 @@ st.markdown("""
         color: #1e293b !important;
     }
     
-    /* టెక్స్ట్ ఇన్‌పుట్ మరియు సెలెక్షన్ బాక్సులు (బాక్సులు విడిగా స్పష్టంగా కనిపించడానికి) */
+    /* టెక్స్ట్ ఇన్‌పుట్ మరియు సెలెక్షన్ బాక్సులు క్లియర్‌గా ఉండేలా */
     .stTextInput>div>div>input, .stTextArea>div>div>textarea, .stSelectbox div[data-baseweb="select"] {
         background-color: #ffffff !important;
         color: #1e293b !important;
@@ -111,50 +111,6 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-
-
-# --- ✨ ఆశీర్వాదం AI - అల్ట్రా మ్యాజికల్ & రాయల్ UI స్టైలింగ్ ---
-st.markdown("""
-<style>
-    .stApp {
-        background: radial-gradient(circle at top center, #1e1b4b, #0f172a, #030712);
-        color: #f8fafc;
-        font-family: 'Inter', sans-serif;
-    }
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #090d16 0%, #111827 100%);
-        border-right: 1px solid rgba(99, 102, 241, 0.2);
-    }
-    .stButton>button {
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
-        color: white;
-        border-radius: 12px;
-        padding: 0.65rem 1.4rem;
-        font-weight: 700;
-        letter-spacing: 0.5px;
-        border: none;
-        box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .stButton>button:hover {
-        background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
-        box-shadow: 0 0 25px rgba(236, 72, 153, 0.7);
-        transform: translateY(-3px) scale(1.02);
-    }
-    .stTextInput>div>div>input, .stTextArea>div>div>textarea {
-        background-color: rgba(15, 23, 42, 0.8);
-        color: #f8fafc;
-        border: 1px solid rgba(99, 102, 241, 0.3);
-        border-radius: 10px;
-    }
-    .stSuccess, .stInfo, .stWarning, .stError {
-        background: rgba(30, 41, 59, 0.7);
-        backdrop-filter: blur(10px);
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
-    }
-</style>
-""", unsafe_allow_html=True)
 
 # గ్లోబల్ లాంగ్వేజ్ సెలెక్షన్
 selected_lang = st.selectbox("🌐 భాషను ఎంచుకోండి / Choose Language", [
