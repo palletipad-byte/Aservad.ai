@@ -221,16 +221,16 @@ elif choice.startswith("4."):
                 try:
                     import requests
                     
-                    # Hugging Face ఉచిత ఎండ్పాయింట్
-                    API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
-                    
-                    hf_token = st.secrets["HUGGINGFACE_TOKEN"]
-                    
-                    headers = {"Authorization": f"Bearer {hf_token}"}
-                    
-                    payload = {
-                        "inputs": user_img_prompt + ", ultra-detailed, high quality, 8k resolution"
-                    }
+                    # Hugging Face ఉచిత ఇన్‌ఫరెన్స్
+API_URL = "https://router.huggingface.co/hf-inference/models/black-forest-labs/FLUX.1-schnell"
+
+hf_token = st.secrets["HUGGINGFACE_TOKEN"]
+headers = {"Authorization": f"Bearer {hf_token}"}
+
+payload = {
+    "inputs": user_img_prompt + ", ultra-detailed, high quality, 8k resolution",
+}
+
                     
                     # కనెక్షన్ టైమ్‌అవుట్ జోడించడం ద్వారా ఎర్రర్ రాకుండా ఉంటుంది
                     response = requests.post(API_URL, headers=headers, json=payload, timeout=30)
