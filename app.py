@@ -63,48 +63,70 @@ st.set_page_config(
     layout="wide"
 )
 
-# --- ✨ ఆశీర్వాదం AI - అల్ట్రా మ్యాజికల్ & రాయల్ UI స్టైలింగ్ ---
+# --- 🌿 ఆశీర్వాదం AI - కళ్ళకి హాయినిచ్చే సాఫ్ట్ లైట్ UI స్టైలింగ్ ---
 st.markdown("""
 <style>
+    /* కళ్ళకి ఇబ్బంది లేని సాఫ్ట్ క్రీమ్ / ఆఫ్-వైట్ బ్యాక్‌గ్రౌండ్ & డార్క్ టెక్స్ట్ */
     .stApp {
-        background: radial-gradient(circle at top center, #1e1b4b, #0f172a, #030712);
-        color: #f8fafc;
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        color: #0f172a;
         font-family: 'Inter', sans-serif;
     }
-    [data-testid="stSidebar"] {
-        background: linear-gradient(180deg, #090d16 0%, #111827 100%);
-        border-right: 1px solid rgba(99, 102, 241, 0.2);
+    
+    /* హెడ్డింగ్‌లు మరియు సాధారణ టెక్స్ట్ స్పష్టంగా కనిపించడానికి */
+    h1, h2, h3, h4, h5, h6, p, span, label {
+        color: #0f172a !important;
     }
+    
+    /* సైడ్‌బార్‌కు ప్రశాంతమైన లైట్ గ్రే / సాఫ్ట్ లుక్ */
+    [data-testid="stSidebar"] {
+        background: linear-gradient(180deg, #e2e8f0 0%, #cbd5e1 100%);
+        border-right: 1px solid #94a3b8;
+    }
+    [data-testid="stSidebar"] * {
+        color: #0f172a !important;
+    }
+    
+    /* అట్రాక్టివ్ మరియు కళ్ళకి నప్పే బటన్స్ */
     .stButton>button {
-        background: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
-        color: white;
-        border-radius: 12px;
-        padding: 0.65rem 1.4rem;
+        background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+        color: white !important;
+        border-radius: 10px;
+        padding: 0.6rem 1.2rem;
         font-weight: 700;
-        letter-spacing: 0.5px;
         border: none;
-        box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
-        transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2);
+        transition: all 0.3s ease;
     }
     .stButton>button:hover {
-        background: linear-gradient(135deg, #818cf8 0%, #c084fc 50%, #f472b6 100%);
-        box-shadow: 0 0 25px rgba(236, 72, 153, 0.7);
-        transform: translateY(-3px) scale(1.02);
+        background: linear-gradient(135deg, #1d4ed8 0%, #1e40af 100%);
+        box-shadow: 0 6px 15px rgba(29, 78, 216, 0.4);
+        transform: translateY(-2px);
     }
+    
+    /* టెక్స్ట్ ఏరియా మరియు ఇన్‌పుట్ బాక్సులు */
     .stTextInput>div>div>input, .stTextArea>div>div>textarea {
-        background-color: rgba(15, 23, 42, 0.8);
-        color: #f8fafc;
-        border: 1px solid rgba(99, 102, 241, 0.3);
+        background-color: #ffffff;
+        color: #0f172a;
+        border: 1px solid #cbd5e1;
         border-radius: 10px;
     }
+    .stTextInput>div>div>input:focus, .stTextArea>div>div>textarea:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+    }
+    
+    /* సక్సెస్, ఇన్ఫో బాక్సులు క్లియర్‌గా ఉండేలా */
     .stSuccess, .stInfo, .stWarning, .stError {
-        background: rgba(30, 41, 59, 0.7);
-        backdrop-filter: blur(10px);
-        border-radius: 12px;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: #ffffff;
+        border-radius: 10px;
+        border: 1px solid #cbd5e1;
+        color: #0f172a !important;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
     }
 </style>
 """, unsafe_allow_html=True)
+
 
 
 
