@@ -9,38 +9,50 @@ from google import genai
 from google.genai import types 
 import requests
 
-# --- 🔐 జీమెయిల్ లాగిన్ & క్రెడిట్స్ సిస్టమ్ ---
+# --- 🔐 సెక్యూర్ జీమెయిల్ లాగిన్ & క్రెడిట్స్ సిస్టమ్ (Aservad.ai) ---
+import time
+
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "username" not in st.session_state:
     st.session_state.username = ""
 if "credits" not in st.session_state:
-    st.session_state.credits = 10  # కొత్త యూజర్‌కి ఉచితంగా 10 క్రెడిట్స్
+    st.session_state.credits = 3  # కొత్త యూజర్‌కి ఉచితంగా 3 క్రెడిట్స్
+if "last_reset_time" not in st.session_state:
+    st.session_state.last_reset_time = time.time()
+
+# ప్రతి 24 గంటలకు (86400 సెకన్లు) క్రెడిట్స్ ఆటోమేటిక్‌గా 3 కి రీసెట్ అయ్యేలా సెక్యూరి티 లాజిక్
+current_time = time.time()
+if current_time - st.session_state.last_reset_time > 86400:
+    st.session_state.credits = 3
+    st.session_state.last_reset_time = current_time
 
 st.sidebar.markdown("---")
-st.sidebar.subheader("🔐 జీమెయిల్ లాగిన్ & వాలెట్ (Aservad.ai)")
+st.sidebar.subheader("🔐 సెక్యూర్ లాగిన్ & వాలెట్ (Aservad.ai)")
 
 if not st.session_state.logged_in:
-    st.sidebar.info("మిత్రమా, మీ జీమెయిల్ తో లాగిన్ అవ్వండి!")
+    st.sidebar.info("మిత్రమా, మీ ఒరిజినల్ జీమెయిల్ మరియు పాస్‌వర్డ్ ఇవ్వండి!")
     user_email = st.sidebar.text_input("మీ జీమెయిల్ (Gmail):", placeholder="example@gmail.com", key="login_email_input")
+    user_password = st.sidebar.text_input("పాస్‌వర్డ్ (Password):", type="password", placeholder="••••••••", key="login_pass_input")
     
     if st.sidebar.button("🚀 లాగిన్ అవ్వండి (Login)", key="login_btn"):
-        if user_email.strip().endswith("@gmail.com"):
+        # సెక్యూరిటీ చెక్: సరైన @gmail.com మరియు కనీసం 6 అక్షరాల పాస్‌వర్డ్ ఉండాలి
+        if user_email.strip().endswith("@gmail.com") and len(user_password.strip()) >= 6:
             st.session_state.logged_in = True
             st.session_state.username = user_email
-            st.session_state.credits = 10  
             st.sidebar.success(f"స్వాగతం మిత్రమా!")
             st.rerun()
         else:
-            st.sidebar.warning("⚠️ దయచేసి సరైన @gmail.com ఐడీని ఎంటర్ చేయండి మిత్రమా!")
+            st.sidebar.warning("⚠️ దయచేసి సరైన @gmail.com మరియు కనీసం 6 అక్షరాల పాస్‌వర్డ్‌ని ఎంటర్ చేయండి మిత్రమా!")
 else:
     st.sidebar.success(f"👤 యూజర్: **{st.session_state.username}**")
-    st.sidebar.metric(label="💎 మీ మిగిలిన క్రెడిట్స్ (Credits)", value=f"{st.session_state.credits} / 10")
+    st.sidebar.metric(label="💎 మీ మిగిలిన క్రెడిట్స్ (Credits)", value=f"{st.session_state.credits} / 3")
+    st.sidebar.caption("⏰ ప్రతి 24 గంటలకు క్రెడిట్స్ రీసెట్ అవుతాయి.")
     
     if st.sidebar.button("🚪 లాగౌట్ (Logout)", key="logout_btn"):
         st.session_state.logged_in = False
         st.session_state.username = ""
-        st.session_state.credits = 0
+        st.session_state.credits = 3
         st.sidebar.info("మీరు విజయవంతంగా లాగౌట్ అయ్యారు మిత్రమా.")
         st.rerun()
         
