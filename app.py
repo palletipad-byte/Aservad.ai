@@ -285,10 +285,10 @@ elif choice.startswith("4."):
                     from PIL import Image
                     from io import BytesIO
 
-                    encoded_prompt = urllib.parse.quote(user_img_prompt + ", photorealistic, 8k resolution, highly detailed")
-                    img_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}"
-                    
+                                        prompt_text = urllib.parse.quote(user_img_prompt)
+                    img_url = f"https://image.pollinations.ai/prompt/{prompt_text}"
                     response = requests.get(img_url)
+                    
                     if response.status_code == 200:
                         image = Image.open(BytesIO(response.content))
                         st.success("✨ ఇమేజ్ విజయవంతంగా తయారైంది మిత్రమా!")
