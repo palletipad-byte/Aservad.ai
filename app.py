@@ -269,11 +269,11 @@ elif choice.startswith("3."):
 # 4. AI అడ్వాన్స్‌డ్ ఇమేజ్ జనరేటర్ (Aservad.ai Ultra-HD FLUX Engine)
 elif choice.startswith("4."):
     st.subheader("🎨 AI అల్ట్రా-హెచ్‌డీ ఇమేజ్ జనరేటర్ (Joshna Tailors & Aservad.ai)")
-    st.info("మిత్రమా, ఇక్కడ మీకు కావలసిన డిజైన్, ఫ్యాషన్ లుక్ లేదా ఫోటో వివరాలను రాయండి. అత్యంత అద్భుతమైన అల్ట్రా-హెచ్‌డీ (8K) ఇమేజ్‌ని సృష్టిస్తుంది!")
+    st.info("మిత్రమా, ఇక్కడ మీకు కావలసిన డిజైన్, ఫ్యాషన్ లుక్ లేదా ఫోటో వివరాలను రాయండి. మీరు ఏది రాస్తే దాన్ని అద్భుతమైన అల్ట్రా-హెచ్‌డీ (8K) ఇమేజ్‌గా సృష్టిస్తుంది!")
     
     user_img_prompt = st.text_area(
         "మీకు కావలసిన డిజైన్ లేదా ఇమేజ్ వివరాలు ఇక్కడ రాయండి:",
-        placeholder="ఉదాహరణకు: Beautiful modern bridal design with embroidery..."
+        placeholder="ఉదాహరణకు: Four glamorous actresses standing together in a palace..."
     )
     
     if st.button("🚀 ఇమేజ్ సృష్టించండి (Generate Image)", key="gen_img_btn"):
@@ -285,14 +285,14 @@ elif choice.startswith("4."):
                     from PIL import Image
                     from io import BytesIO
 
-                    # పవర్‌ఫుల్ ప్రాంప్ట్ ఆప్టిమైజేషన్
-                    full_prompt = user_img_prompt + ", ultra-realistic portrait, photorealistic, 8k resolution, cinematic lighting, highly detailed, masterpiece quality"
+                    # యూజర్ ఇచ్చిన ప్రాంప్ట్‌ని మాత్రమే తీసుకొని హై-క్వాలిటీ ఆప్టిమైజేషన్ చేయడం
+                    full_prompt = user_img_prompt + ", ultra-high detailed photorealistic photo, studio quality, 8k resolution, masterpiece, realistic skin texture, cinematic lighting"
                     encoded_prompt = urllib.parse.quote(full_prompt)
                     
                     # FLUX Ultra-HD Engine Direct API
                     img_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=1024&model=flux&nologo=true"
                     
-                    response = requests.get(img_url, timeout=30)
+                    response = requests.get(img_url, timeout=60)
                     if response.status_code == 200:
                         image = Image.open(BytesIO(response.content))
                         st.success("✨ ఇమేజ్ విజయవంతంగా తయారైంది మిత్రమా!")
@@ -303,7 +303,7 @@ elif choice.startswith("4."):
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
             st.warning("⚠️ దయచేసి మీకు కావలసిన డిజైన్ వివరాలు ఇక్కడ రాయండి మిత్రమా!")
-        
+            
 # 5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer)
 elif choice.startswith("5."):
     st.subheader("📝 AI టెక్స్ట్ సమ్మరైజర్ (Joshna Tailors & Aservad.ai)")
