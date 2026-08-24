@@ -265,7 +265,6 @@ elif choice.startswith("3."):
                 except Exception as e:
                     st.error(f"కనెక్షన్ ఎర్రర్ వచ్చింది: {e}")
     
-                
 # 4. AI అడ్వాన్స్‌డ్ ఇమేజ్ జనరేటర్ (Aservad.ai Ultra-HD Real Photo Engine)
 elif choice.startswith("4."):
     st.subheader("🎨 AI అల్ట్రా-హెచ్‌డీ ఇమేజ్ జనరేటర్ (Joshna Tailors & Aservad.ai)")
