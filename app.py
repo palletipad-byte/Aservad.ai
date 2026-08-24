@@ -284,13 +284,13 @@ elif choice.startswith("4."):
                     from io import BytesIO
                     from PIL import Image
                     
-                    API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
+                                        API_URL = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-xl-base-1.0"
                     hf_token = st.secrets["HUGGINGFACE_TOKEN"]
                     headers = {"Authorization": f"Bearer {hf_token}"}
                     
                     payload = {"inputs": user_img_prompt + ", ultra-detailed, high quality, 8k resolution"}
                     response = requests.post(API_URL, headers=headers, json=payload)
-                    
+
                     if response.status_code == 200:
                         image = Image.open(BytesIO(response.content))
                         st.success("✨ ఇమేజ్ విజయవంతంగా తయారైంది మిత్రమా!")
