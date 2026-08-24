@@ -287,8 +287,8 @@ elif choice.startswith("4."):
                     
                     # FLUX.1-dev మోడల్ ఉపయోగించి ఇమేజ్ జనరేట్ చేయడం
                     image = client.text_to_image(
-                        prompt=user_img_prompt + ", ultra-detailed, high quality, 8k resolution",
-                        model="black-forest-labs/FLUX.1-dev"
+    prompt=user_img_prompt + ", ultra-detailed, high quality, 8k resolution",
+    model="stabilityai/stable-diffusion-xl-base-1.0"
                     )
                     
                     st.success("✨ ఇమేజ్ విజయవంతంగా తయారైంది మిత్రమా!")
