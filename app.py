@@ -276,7 +276,7 @@ elif choice.startswith("4."):
         placeholder="ఉదాహరణకు: Four glamorous actresses standing together in a palace..."
     )
     
-        if st.button("🚀 ఇమేజ్ సృష్టించండి (Generate Image)", key="gen_img_btn"):
+            if st.button("🚀 ఇమేజ్ సృష్టించండి (Generate Image)", key="gen_img_btn"):
         if user_img_prompt.strip():
             with st.spinner("⏳ అద్భుతమైన డిజైన్‌ను రూపం ఇస్తున్నాం... దయచేసి వేచి ఉండండి."):
                 try:
@@ -285,10 +285,10 @@ elif choice.startswith("4."):
                     from PIL import Image
                     from io import BytesIO
 
-                                        prompt_text = urllib.parse.quote(user_img_prompt)
+                    prompt_text = urllib.parse.quote(user_img_prompt)
                     img_url = f"https://image.pollinations.ai/prompt/{prompt_text}"
                     response = requests.get(img_url)
-                    
+
                     if response.status_code == 200:
                         image = Image.open(BytesIO(response.content))
                         st.success("✨ ఇమేజ్ విజయవంతంగా తయారైంది మిత్రమా!")
@@ -299,7 +299,7 @@ elif choice.startswith("4."):
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
             st.warning("⚠️ దయచేసి మీకు కావలసిన డిజైన్ వివరాలు ఇక్కడ రాయండి మిత్రమా!")
-            
+                        
 # 5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer)
 elif choice.startswith("5."):
     st.subheader("📝 AI టెక్స్ట్ సమ్మరైజర్ (Joshna Tailors & Aservad.ai)")
