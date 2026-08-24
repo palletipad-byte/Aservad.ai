@@ -275,8 +275,7 @@ elif choice.startswith("4."):
         "మీకు కావలసిన డిజైన్ లేదా ఇమేజ్ వివరాలు ఇక్కడ రాయండి:",
         placeholder="ఉదాహరణకు: Four glamorous actresses standing together in a palace..."
     )
-    
-            if st.button("🚀 ఇమేజ్ సృష్టించండి (Generate Image)", key="gen_img_btn"):
+    if st.button("🚀 ఇమేజ్ సృష్టించండి (Generate Image)", key="gen_img_btn"):
         if user_img_prompt.strip():
             with st.spinner("⏳ అద్భుతమైన డిజైన్‌ను రూపం ఇస్తున్నాం... దయచేసి వేచి ఉండండి."):
                 try:
