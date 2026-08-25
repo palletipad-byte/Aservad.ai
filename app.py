@@ -164,7 +164,7 @@ elif choice.startswith("2."):
     if source_file and target_file:
         st.image([source_file, target_file], caption=["Source Face", "Target Image"], width=250)
 
-    if st.button("🚀 ఫేస్ స్వాప్ చేయండి (Process Face Swap)", key="face_swap_btn"):
+        if st.button("🚀 ఫేస్ స్వాప్ చేయండి (Process Face Swap)", key="face_swap_btn"):
         if source_file and target_file:
             with st.spinner("✨ Replicate AI ద్వారా ఫేస్ స్వాప్ ప్రాసెస్ జరుగుతోంది... దయచేసి వేచి ఉండండి మిత్రమా!"):
                 try:
@@ -179,17 +179,16 @@ elif choice.startswith("2."):
                         st.secrets["REPLICATE_API_TOKEN"]
                     )
 
-                    # అత్యంత నమ్మకమైన మరియు స్టేబుల్ అయిన లేటెస్ట్ ఫేస్ స్వాప్ మోడల్
+                    # లేటెస్ట్ వర్కింగ్ ఫేస్ స్వాప్ మోడల్
                     output = replicate.run(
-                        "cjwbw/face-swap:473d9d2cb7c77726f95e927efb9560f47c944131cb1a1be822fe1ec652e79601",
+                        "lucataco/faceswap:9a44537431181fefb624b64a506d997d8e8749d031bfec6ff36a28109bb4f944",
                         input={
-                            "source_image": source_file,
+                            "swap_image": source_file,
                             "target_image": target_file
                         }
                     )
                     
                     if output:
-                        # అవుట్‌పుట్ లింక్ నుండి ఇమేజ్‌ని డౌన్‌లోడ్ చేసి చూపించడం
                         response = requests.get(output)
                         swapped_image = Image.open(io.BytesIO(response.content))
                         
@@ -202,7 +201,7 @@ elif choice.startswith("2."):
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}\n(దయచేసి మీ Streamlit Secrets లో 'REPLICATE_API_TOKEN' సరిగ్గా ఉందో లేదో చెక్ చేయండి మిత్రమా!)")
         else:
             st.warning("⚠️ దయచేసి రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
-            
+                                       
 # 3. AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్")
