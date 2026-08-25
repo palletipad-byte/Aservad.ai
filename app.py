@@ -175,7 +175,6 @@ elif choice.startswith("2."):
 
                     os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 
-                    # నమ్మకమైన లేటెస్ట్ ఫేస్ స్వాప్ ఎండ్‌పాయింట్
                     output = replicate.run(
                         "thefaceswap/face-swap:9a44537431181fefb624b64a506d997d8e8749d031bfec6ff36a28109bb4f944",
                         input={
