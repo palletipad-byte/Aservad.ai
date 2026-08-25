@@ -193,9 +193,7 @@ elif choice.startswith("2."):
 
                 except Exception as e:
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}\n(దయచేసి మీ Streamlit Secrets లో టోకెన్ సరిగ్గా ఉందో లేదో చెక్ చేయండి!)")
-    
-        st.warning("⚠️ దయచేసి ముందుగా రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
-        
+                    
 # 3. AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్")
