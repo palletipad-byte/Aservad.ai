@@ -175,13 +175,15 @@ elif choice.startswith("2."):
 
                     os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 
+                                        # అత్యంత స్టేబుల్ అయిన లేటెస్ట్ InsightFace స్వాప్ మోడల్
                     output = replicate.run(
-                        "thefaceswap/face-swap:9a44537431181fefb624b64a506d997d8e8749d031bfec6ff36a28109bb4f944",
+                        "lucataco/faceswap:9a44537431181fefb624b64a506d997d8e8749d031bfec6ff36a28109bb4f944",
                         input={
-                            "swap_image": source_file,
-                            "target_image": target_file
+                            "target_image": target_file,
+                            "swap_image": source_file
                         }
                     )
+                    
                     
                     if output:
                         response = requests.get(output)
