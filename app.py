@@ -177,7 +177,7 @@ elif choice.startswith("2."):
 
                                         # అత్యంత స్టేబుల్ అయిన లేటెస్ట్ InsightFace స్వాప్ మోడల్
                                         # లేటెస్ట్ వర్కింగ్ ఫేస్ స్వాప్ మోడల్
-                                        output = replicate.run(
+                    output = replicate.run(
                         "ezioruan/inswapper:iv2",
                         input={
                             "input_image": target_file,
