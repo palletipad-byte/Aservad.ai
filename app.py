@@ -174,7 +174,7 @@ elif choice.startswith("2."):
                     import io
                     import requests
 
-                    # Streamlit Secrets నుండి Replicate API టోకెన్ సెట్ చేయడం
+                                        # Streamlit Secrets నుండి Replicate API టోకెన్ సెట్ చేయడం
                     os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 
                     # అత్యంత నమ్మకమైన మరియు స్టేబుల్ అయిన లేటెస్ట్ ఫేస్ స్వాప్ మోడల్
@@ -185,6 +185,7 @@ elif choice.startswith("2."):
                             "target_image": target_file
                         }
                     )
+                    
                     
                     if output:
                         # అవుట్‌పుట్ లింక్ నుండి ఇమేజ్‌ని డౌన్‌లోడ్ చేసి చూపించడం
@@ -264,7 +265,7 @@ elif choice.startswith("4."):
     
     user_img_prompt = st.text_area(
         "మీకు కావలసిన డిజైన్ లేదా ఇమేజ్ వివరాలు ఇక్కడ రాయండి:",
-        placeholder="ఉదాహరణకు: A professional ultra-realistic portrait of Nayanthara in a traditional silk saree..."
+        placeholder="ఉదాహరణకు: A professional ultra-realistic portrait of joshna tailors in a traditional gent's and ladies..."
     )
     
     if st.button("🚀 ఇమేజ్ సృష్టించండి (Generate Image)", key="gen_img_btn"):
