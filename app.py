@@ -150,10 +150,10 @@ if choice.startswith("1."):
         st.metric(label="ఈరోజు యాక్టివిటీ (Activity Today)", value="5,800+")
     with col3:
         st.metric(label="సర్వర్ స్థితి (Server Status)", value="Online 🟢")
-# 2. ఫేస్ స్వాప్ (Advanced AI Face Swap - Latest Pro Engine)
+# 2. ఫేస్ స్వాప్ (Advanced AI Face Swap)
 elif choice.startswith("2."):
     st.subheader("👥 AI అడ్వాన్స్‌డ్ ఫేస్ స్వాప్ (Joshna Tailors & Aservad.ai)")
-    st.info("మిత్రమా, సోర్స్ ఇమేజ్ (ముఖం) మరియు టార్గెట్ ఇమేజ్ (శరీరం) అప్‌లోడ్ చేయండి. ఇది Replicate ఏఐ ద్వారా పర్ఫెక్ట్ ఫేస్ స్వాప్ చేసిస్తుంది!")
+    st.info("మిత్రమా, సోర్స్ ఇమేజ్ (ముఖం) మరియు టార్గెట్ ఇమేజ్ (శరీరం) అప్‌లోడ్ చేయండి.")
 
     col1, col2 = st.columns(2)
     with col1:
@@ -165,8 +165,7 @@ elif choice.startswith("2."):
         st.image([source_file, target_file], caption=["Source Face", "Target Image"], width=250)
 
         if st.button("🚀 ఫేస్ స్వాప్ చేయండి (Process Face Swap)", key="face_swap_btn"):
-        
-            with st.spinner("✨ Replicate AI ద్వారా ఫేస్ స్వాప్ ప్రాసెస్ జరుగుతోంది... దయచేసి వేచి ఉండండి మిత్రమా!"):
+            with st.spinner("✨ AI ద్వారా ఫేస్ స్వాప్ ప్రాసెస్ జరుగుతోంది... దయచేసి వేచి ఉండండి మిత్రమా!"):
                 try:
                     import replicate
                     import os
@@ -174,14 +173,11 @@ elif choice.startswith("2."):
                     import io
                     import requests
 
-                    # Streamlit Secrets నుండి Replicate API టోకెన్ సెట్ చేయడం
-                    os.environ["REPLICATE_API_TOKEN"] = (
-                        st.secrets["REPLICATE_API_TOKEN"]
-                    )
+                    os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 
-                    # లేటెస్ట్ వర్కింగ్ ఫేస్ స్వాప్ మోడల్
+                    # నమ్మకమైన లేటెస్ట్ ఫేస్ స్వాప్ ఎండ్‌పాయింట్
                     output = replicate.run(
-                        "lucataco/faceswap:9a44537431181fefb624b64a506d997d8e8749d031bfec6ff36a28109bb4f944",
+                        "thefaceswap/face-swap:9a44537431181fefb624b64a506d997d8e8749d031bfec6ff36a28109bb4f944",
                         input={
                             "swap_image": source_file,
                             "target_image": target_file
@@ -191,17 +187,16 @@ elif choice.startswith("2."):
                     if output:
                         response = requests.get(output)
                         swapped_image = Image.open(io.BytesIO(response.content))
-                        
                         st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది మిత్రమా!")
-                        st.image(swapped_image, caption="Face Swapped by Replicate & Aservad.ai", use_container_width=True)
+                        st.image(swapped_image, caption="Face Swapped Successfully", use_container_width=True)
                     else:
-                        st.warning("⚠️ ఫేస్ స్వాప్ ప్రాసెస్‌లో చిన్న లోపం, దయచేసి మరో ఫోటోతో ప్రయత్నించండి మిత్రమా!")
+                        st.warning("⚠️ ప్రాసెస్‌లో చిన్న లోపం జరిగింది, మరో ఫోటోతో ప్రయత్నించండి.")
 
                 except Exception as e:
-                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}\n(దయచేసి మీ Streamlit Secrets లో 'REPLICATE_API_TOKEN' సరిగ్గా ఉందో లేదో చెక్ చేయండి మిత్రమా!)")
-        else:
-            st.warning("⚠️ దయచేసి రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
-                                       
+                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}\n(దయచేసి మీ Streamlit Secrets లో టోకెన్ సరిగ్గా ఉందో లేదో చెక్ చేయండి!)")
+    else:
+        st.warning("⚠️ దయచేసి ముందుగా రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
+        
 # 3. AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్")
