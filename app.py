@@ -175,9 +175,9 @@ elif choice.startswith("2."):
 
                     os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 
-                    # ప్రస్తుతం స్టేబుల్‌గా ఉన్న వేరే ఫేస్ స్వాప్ మోడల్
+                                        # అత్యంత స్టేబులైన లేటెస్ట్ ఫేస్ స్వాప్ మోడల్
                     output = replicate.run(
-                        "fofr/face-swap:486ed7d9c66914a51e60f27917f694e9f9c73e0a29486c9f28fc2142d7159f81",
+                        "catacolabs/face-swap:4e0b0453d5a5ac4362b66d73f4784a0c84144360e6538c6439e6a9f635f12e84",
                         input={
                             "source_image": source_file,
                             "target_image": target_file
