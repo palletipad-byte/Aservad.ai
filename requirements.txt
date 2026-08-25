@@ -7,5 +7,5 @@ numpy
 pillow
 replicate
 gtts
-
 PyPDF2
+replicate
