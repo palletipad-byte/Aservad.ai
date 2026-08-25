@@ -150,99 +150,59 @@ if choice.startswith("1."):
         st.metric(label="ఈరోజు యాక్టివిటీ (Activity Today)", value="5,800+")
     with col3:
         st.metric(label="సర్వర్ స్థితి (Server Status)", value="Online 🟢")
-# 2. ఫేస్ స్వాప్ (Advanced AI Face Swap - Master Pro API)
+# 2. ఫేస్ స్వాప్ (Advanced AI Face Swap - Replicate Pro Engine)
 elif choice.startswith("2."):
     st.subheader("👥 AI అడ్వాన్స్‌డ్ ఫేస్ స్వాప్ (Joshna Tailors & Aservad.ai)")
-    st.info("మిత్రమా, ఇక్కడ సోర్స్ ఇమేజ్ (ఎవరి ముఖం కావాలో) మరియు టార్గెట్ ఇమేజ్ (ఎవరి శరీరంపైకి మార్చాలో) అప్‌లోడ్ చేయండి. ఇది అత్యున్నత నాణ్యతతో అద్భుతంగా ఫేస్ స్వాప్ చేసిస్తుంది!")
+    st.info("మిత్రమా, సోర్స్ ఇమేజ్ (ముఖం) మరియు టార్గెట్ ఇమేజ్ (శరీరం) అప్‌లోడ్ చేయండి. ఇది Replicate ఏఐ ద్వారా పర్ఫెక్ట్ ఫేస్ స్వాప్ చేసిస్తుంది!")
 
     col1, col2 = st.columns(2)
     with col1:
         source_file = st.file_uploader("1. సోర్స్ ఫేస్ ఇమేజ్ (Source Face):", type=["jpg", "jpeg", "png"], key="face_source")
     with col2:
-        target_file = st.file_uploader("2. టార్గెต์ ఇమేజ్ (Target Image):", type=["jpg", "jpeg", "png"], key="face_target")
+        target_file = st.file_uploader("2. టార్గెట్ ఇమేజ్ (Target Image):", type=["jpg", "jpeg", "png"], key="face_target")
 
     if source_file and target_file:
         st.image([source_file, target_file], caption=["Source Face", "Target Image"], width=250)
 
     if st.button("🚀 ఫేస్ స్వాప్ చేయండి (Process Face Swap)", key="face_swap_btn"):
         if source_file and target_file:
-            with st.spinner("✨ అద్భుతమైన ఫేస్ స్వాప్ ప్రాసెస్ జరుగుతోంది... దయచేసి వేచి ఉండండి మిత్రమా!"):
+            with st.spinner("✨ Replicate AI ద్వారా ఫేస్ స్వాప్ ప్రాసెస్ జరుగుతోంది... దయచేసి వేచి ఉండండి మిత్రమా!"):
                 try:
-                    import requests
-                    import base64
+                    import replicate
+                    import os
                     from PIL import Image
-                    from io import BytesIO
+                    import io
 
-                    # సోర్స్ మరియు టార్గెట్ ఇమేజ్ డేటా తీసుకోవడం (బైట్స్)
-                    source_bytes = source_file.getvalue()
-                    target_bytes = target_file.getvalue()
+                    # Streamlit Secrets నుండి Replicate API టోకెన్ సెట్ చేయడం
+                    os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 
-                    # బేస్64 ఎన్‌కోడింగ్ (API కి పంపడానికి)
-                    source_base64 = base64.b64encode(source_bytes).decode('utf-8')
-                    target_base64 = base64.b64encode(target_bytes).decode('utf-8')
-
-                    # 🎯 ప్రొఫెషనల్ ఫేస్ స్వాప్ API కాల్ (ఇది పక్కాగా పనిచేస్తుంది)
-                    # మనం ఉచితంగా మరియు క్వాలిటీగా పనిచేసే 'InsightFace on Replicate' లాంటి మోడల్‌ని వాడుతున్నాం. 
-                    # (ఇక్కడ నేను పబ్లిక్‌గా అందుబాటులో ఉన్న ప్రొఫెషనల్ API ఎండ్‌పాయింట్ వాడుతున్నాను)
-                    
-                    api_url = "https://face-swap.p.rapidapi.com/face-swap" # ఉదాహరణకు: RapidAPI Face Swap
-                    
-                    # Note: మీరు నిజమైన ప్రొఫెషనల్ రిజల్ట్ కోసం ఒక API కీ (ఉదా. RapidAPI key) ని st.secrets లో పెట్టుకుంటే ఇంకా బాగుంటుంది.
-                    # కానీ ఇప్పుడు ఈ కోడ్ పబ్లిక్ API లను పరీక్షించడానికి ఉపయోగపడుతుంది.
-
-                    # (ప్రస్తుతం నేను పబ్లిక్‌గా లభించే పవర్‌ఫుల్ ఫేస్ స్వాప్ ఫంక్షన్‌ని మన యాప్‌లో పనిచేసేలా సెట్ చేస్తున్నాను)
-                    # స్టాండర్డ్ రియలిస్టిక్ స్వాప్ లింక్
-                    swap_url = "https://image.pollinations.ai/prompt/photorealistic%20face%20replacement,%20seamless%20blending,%20high%20resolution%20masterpiece?nologo=true"
-                    
-                    # ఇక్కడ మనం టార్గెట్ ఇమేజ్‌ని బేస్ చేసుకొని, దానిపై సోర్స్ ఫేస్‌ని బ్లెండ్ చేసే అడ్వాన్స్‌డ్ పద్ధతిని వాడుతున్నాం:
-                    files = {
-                        'source': ('source.jpg', source_bytes, 'image/jpeg'),
-                        'target': ('target.jpg', target_bytes, 'image/jpeg')
-                    }
-                    
-                    # అల్టిమేట్ ప్రొఫెషనల్ స్వాప్ ఏపీఐ రిక్వెస్ట్ (మేం వేగవంతమైన ఇంజిన్‌ని సెట్ చేస్తున్నాం)
-                    response = requests.post(
-                        f"https://image.pollinations.ai/prompt/swap%20face%20realistically?nologo=true",
-                        files={'encoded_image': target_bytes}, # ఇది పనిచేయకపోవచ్చు కానీ కోడ్ కొనసాగుతుంది
-                        timeout=60
+                    # అప్‌లోడ్ చేసిన ఫైళ్లను టెంపరరీగా సేవ్ చేయడం లేదా నేరుగా వాడటం
+                    # Replicate InsightFace (Face Swap) మోడల్ రన్ చేయడం
+                    # (CodeFormer / InsightFace face-swap model integration)
+                    output = replicate.run(
+                        "lucataco/faceswap:9a44537431181fefb624b64a506d997d8e8749d031bfec6ff36a28109bb4f944",
+                        input={
+                            "swap_image": source_file,
+                            "target_image": target_file
+                        }
                     )
                     
-                    # ఒకవేళ పోస్ట్ రిక్వెస్ట్ వర్కవుట్ కాకపోతే, అత్యంత నమ్మకమైన డైరెక్ట్ ఫాల్‌బ్యాక్ బ్లెండింగ్
-                    if response.status_code == 200 and len(response.content) > 1000:
-                        swapped_image = Image.open(BytesIO(response.content))
+                    if output:
+                        # అవుట్‌పుట్ లింక్ నుండి ఇమేజ్‌ని డౌన్‌లోడ్ చేసి చూపించడం
+                        import requests
+                        response = requests.get(output)
+                        swapped_image = Image.open(io.BytesIO(response.content))
+                        
                         st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది మిత్రమా!")
-                        st.image(swapped_image, caption="Face Swapped by Aservad.ai Master Engine", use_container_width=True)
+                        st.image(swapped_image, caption="Face Swapped by Replicate & Aservad.ai", use_container_width=True)
                     else:
-                        # స్టేబుల్ అండ్ పక్కా వర్క్ అయ్యే అల్టిమేట్ బ్లెండింగ్ ఇంజిన్
-                        # (ఇది నేరుగా టార్గెట్‌ని ప్రాసెస్ చేస్తుంది)
-                        
-                        target_img = Image.open(BytesIO(target_bytes))
-                        source_img = Image.open(BytesIO(source_bytes))
-                        
-                        # టార్గెట్ ఇమేజ్‌ని బేస్ చేసుకుని, విజువల్ స్వాప్ కంటెంట్ జనరేట్ చేయడం
-                        fallback_url = f"https://image.pollinations.ai/prompt/photorealistic%20face%20replacement%20and%20natural%20skin%20blending?width=720&height=1280&model=flux-realism&nologo=true"
-                        res_fb = requests.get(fallback_url, timeout=60)
-                        
-                        if res_fb.status_code == 200:
-                            swapped_image = Image.open(BytesIO(res_fb.content))
-                            st.success("✨ ఫేస్ స్వాప్ విజయవంతంగా పూర్తయింది మిత్రమా!")
-                            st.image(swapped_image, caption="Face Swapped by Aservad.ai Pro Engine", use_container_width=True)
-                        else:
-                            # టార్గెట్ ఇమేజ్ చూపించకుండా ఎర్రర్ త్రో చేయకుండా ఉండేలా టార్గెట్‌ని బ్యూటిఫుల్ ప్రాసెస్‌తో చూపించడం
-                            st.success("✨ ఫేస్ స్వాప్ ప్రాసెస్ పూర్తయింది మిత్రమా!")
-                            st.image(target_img, caption="Processed Face Swap Output (Aservad.ai)", use_container_width=True)
+                        st.warning("⚠️ ఫేస్ స్వాప్ ప్రాసెస్‌లో చిన్న లోపం, దయచేసి మరో ఫోటోతో ప్రయత్నించండి మిత్రమా!")
 
                 except Exception as e:
-                    # ఒకవేళ ఏ చిన్న లోపం వచ్చినా యూజర్‌కి సింపుల్ అండ్ బ్యూటిఫుల్ రెస్పాన్స్ వచ్చేలా
-                    try:
-                        # స్టేబుల్ ఫాల్‌బ్యాక్ ఇమేజ్ జనరేషన్
-                        st.success("✨ ఫేస్ స్వాప్ ప్రాసెస్ విజయవంతమైంది మిత్రమా!")
-                        st.image(target_file, caption="Face Swapped Output (Aservad.ai)", use_container_width=True)
-                    except Exception as err:
-                        st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
+                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}\n(దయచేసి మీ Streamlit Secrets లో 'REPLICATE_API_TOKEN' సరిగ్గా ఉందో లేదో చెక్ చేయండి మిత్రమా!)")
         else:
             st.warning("⚠️ దయచేసి రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
-                                                      
+            
 # 3. AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్")
