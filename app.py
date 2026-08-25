@@ -161,7 +161,7 @@ elif choice.startswith("2."):
     with col2:
         target_file = st.file_uploader("2. టార్గెట్ ఇమేజ్ (Target Image):", type=["jpg", "jpeg", "png"], key="face_target")
 
-        if source_file is not None and target_file is not None:
+            if source_file is not None and target_file is not None:
         st.image([source_file, target_file], caption=["Source Face", "Target Image"], width=250)
 
         if st.button("🚀 ఫేస్ స్వాప్ చేయండి (Process Face Swap)", key="face_swap_btn"):
@@ -195,7 +195,7 @@ elif choice.startswith("2."):
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
     else:
         st.warning("⚠️ మిత్రమా, దయచేసి సోర్స్ మరియు టార్గెట్ రెండు ఫోటోలను అప్‌లోడ్ చేయండి!")
-                     
+                    
 # 3. AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్")
