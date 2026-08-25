@@ -165,7 +165,7 @@ elif choice.startswith("2."):
         st.image([source_file, target_file], caption=["Source Face", "Target Image"], width=250)
 
         if st.button("🚀 ఫేస్ స్వాప్ చేయండి (Process Face Swap)", key="face_swap_btn"):
-        if source_file and target_file:
+        
             with st.spinner("✨ Replicate AI ద్వారా ఫేస్ స్వాప్ ప్రాసెస్ జరుగుతోంది... దయచేసి వేచి ఉండండి మిత్రమా!"):
                 try:
                     import replicate
