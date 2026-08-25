@@ -175,19 +175,14 @@ elif choice.startswith("2."):
 
                     os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 
-                                        # అత్యంత స్టేబుల్ అయిన లేటెస్ట్ InsightFace స్వాప్ మోడల్
-                                        # లేటెస్ట్ వర్కింగ్ ఫేస్ స్వాప్ మోడల్
+                    # ప్రస్తుతం స్టేబుల్‌గా ఉన్న వేరే ఫేస్ స్వాప్ మోడల్
                     output = replicate.run(
-                        "ezioruan/inswapper:iv2",
+                        "fofr/face-swap:486ed7d9c66914a51e60f27917f694e9f9c73e0a29486c9f28fc2142d7159f81",
                         input={
-                            "input_image": target_file,
-                            "weight": 1,
-                            "face_index": 0
+                            "source_image": source_file,
+                            "target_image": target_file
                         }
-)
-                    
-                    
-                    
+                    )
                     
                     if output:
                         response = requests.get(output)
@@ -199,6 +194,8 @@ elif choice.startswith("2."):
 
                 except Exception as e:
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}\n(దయచేసి మీ Streamlit Secrets లో టోకెన్ సరిగ్గా ఉందో లేదో చెక్ చేయండి!)")
+    else:
+        st.warning("⚠️ దయచేసి ముందుగా రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
                     
 # 3. AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్
 elif choice.startswith("3."):
