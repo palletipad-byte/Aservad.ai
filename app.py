@@ -161,7 +161,7 @@ elif choice.startswith("2."):
     with col2:
         target_file = st.file_uploader("2. టార్గెట్ ఇమేజ్ (Target Image):", type=["jpg", "jpeg", "png"], key="face_target")
 
-    if source_file and target_file:
+        if source_file is not None and target_file is not None:
         st.image([source_file, target_file], caption=["Source Face", "Target Image"], width=250)
 
         if st.button("🚀 ఫేస్ స్వాప్ చేయండి (Process Face Swap)", key="face_swap_btn"):
@@ -175,7 +175,6 @@ elif choice.startswith("2."):
 
                     os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 
-                                        # అత్యంత స్టేబులైన లేటెస్ట్ ఫేస్ స్వాప్ మోడల్
                     output = replicate.run(
                         "catacolabs/face-swap:4e0b0453d5a5ac4362b66d73f4784a0c84144360e6538c6439e6a9f635f12e84",
                         input={
@@ -193,10 +192,10 @@ elif choice.startswith("2."):
                         st.warning("⚠️ ప్రాసెస్‌లో చిన్న లోపం జరిగింది, మరో ఫోటోతో ప్రయత్నించండి.")
 
                 except Exception as e:
-                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}\n(దయచేసి మీ Streamlit Secrets లో టోకెన్ సరిగ్గా ఉందో లేదో చెక్ చేయండి!)")
+                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
     else:
-        st.warning("⚠️ దయచేసి ముందుగా రెండు ఇమేజ్‌లను (సోర్స్ మరియు టార్గెట్) అప్‌లోడ్ చేయండి మిత్రమా!")
-                    
+        st.warning("⚠️ మిత్రమా, దయచేసి సోర్స్ మరియు టార్గెట్ రెండు ఫోటోలను అప్‌లోడ్ చేయండి!")
+                     
 # 3. AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్
 elif choice.startswith("3."):
     st.subheader("🎙️ AI వాయిస్ క్లోనింగ్ & ఆడియో జనరేటర్")
