@@ -150,7 +150,7 @@ if choice.startswith("1."):
         st.metric(label="ఈరోజు యాక్టివిటీ (Activity Today)", value="5,800+")
     with col3:
         st.metric(label="సర్వర్ స్థితి (Server Status)", value="Online 🟢")
-# 2. ఫేస్ స్వాప్ (Advanced AI Face Swap - Replicate Pro Engine)
+# 2. ఫేస్ స్వాప్ (Advanced AI Face Swap - Latest Pro Engine)
 elif choice.startswith("2."):
     st.subheader("👥 AI అడ్వాన్స్‌డ్ ఫేస్ స్వాప్ (Joshna Tailors & Aservad.ai)")
     st.info("మిత్రమా, సోర్స్ ఇమేజ్ (ముఖం) మరియు టార్గెట్ ఇమేజ్ (శరీరం) అప్‌లోడ్ చేయండి. ఇది Replicate ఏఐ ద్వారా పర్ఫెక్ట్ ఫేస్ స్వాప్ చేసిస్తుంది!")
@@ -172,24 +172,22 @@ elif choice.startswith("2."):
                     import os
                     from PIL import Image
                     import io
+                    import requests
 
                     # Streamlit Secrets నుండి Replicate API టోకెన్ సెట్ చేయడం
                     os.environ["REPLICATE_API_TOKEN"] = st.secrets["REPLICATE_API_TOKEN"]
 
-                    # అప్‌లోడ్ చేసిన ఫైళ్లను టెంపరరీగా సేవ్ చేయడం లేదా నేరుగా వాడటం
-                    # Replicate InsightFace (Face Swap) మోడల్ రన్ చేయడం
-                    # (CodeFormer / InsightFace face-swap model integration)
+                    # అత్యంత నమ్మకమైన మరియు స్టేబుల్ అయిన లేటెస్ట్ ఫేస్ స్వాప్ మోడల్
                     output = replicate.run(
-                        "lucataco/faceswap:9a44537431181fefb624b64a506d997d8e8749d031bfec6ff36a28109bb4f944",
+                        "cjwbw/face-swap:473d9d2cb7c77726f95e927efb9560f47c944131cb1a1be822fe1ec652e79601",
                         input={
-                            "swap_image": source_file,
+                            "source_image": source_file,
                             "target_image": target_file
                         }
                     )
                     
                     if output:
                         # అవుట్‌పుట్ లింక్ నుండి ఇమేజ్‌ని డౌన్‌లోడ్ చేసి చూపించడం
-                        import requests
                         response = requests.get(output)
                         swapped_image = Image.open(io.BytesIO(response.content))
                         
