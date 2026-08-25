@@ -167,28 +167,26 @@ elif choice.startswith("2."):
     if st.button("🚀 ఫేస్ స్వాప్ చేయండి (Process Face Swap)", key="face_swap_btn"):
         if source_file and target_file:
             with st.spinner("✨ Replicate AI ద్వారా ఫేస్ స్వాప్ ప్రాసెస్ జరుగుతోంది... దయచేసి వేచి ఉండండి మిత్రమా!"):
-                                    try:
-                        import replicate
-                        import os
-                        from PIL import Image
-                        import io
-                        import requests
+                try:
+                    import replicate
+                    import os
+                    from PIL import Image
+                    import io
+                    import requests
 
-                        # Streamlit Secrets నుండి Replicate API టోకెన్ సెట్ చేయడం
-                        os.environ["REPLICATE_API_TOKEN"] = (
-                            st.secrets["REPLICATE_API_TOKEN"]
-                        )
+                    # Streamlit Secrets నుండి Replicate API టోకెన్ సెట్ చేయడం
+                    os.environ["REPLICATE_API_TOKEN"] = (
+                        st.secrets["REPLICATE_API_TOKEN"]
+                    )
 
-                        # అత్యంత నమ్మకమైన మరియు స్టేబుల్ అయిన లేటెస్ట్ ఫేస్ స్వాప్ మోడల్
-                        output = replicate.run(
-                            "cjwbw/face-swap:473d9d2cb7c77726f95e927efb9560f47c944131cb1a1be822fe1ec652e79601",
-                            input={
-                                "source_image": source_file,
-                                "target_image": target_file
-                            }
-    )
-                 
-                    
+                    # అత్యంత నమ్మకమైన మరియు స్టేబుల్ అయిన లేటెస్ట్ ఫేస్ స్వాప్ మోడల్
+                    output = replicate.run(
+                        "cjwbw/face-swap:473d9d2cb7c77726f95e927efb9560f47c944131cb1a1be822fe1ec652e79601",
+                        input={
+                            "source_image": source_file,
+                            "target_image": target_file
+                        }
+                    )
                     
                     if output:
                         # అవుట్‌పుట్ లింక్ నుండి ఇమేజ్‌ని డౌన్‌లోడ్ చేసి చూపించడం
