@@ -331,7 +331,7 @@ elif choice.startswith("5."):
         else:
             st.warning("⚠️ మిత్రమా, దయచేసి సమ్మరీ చేయడానికి కొంత టెక్స్ట్ ఇవ్వండి!")
             
-# 6. భాషా అనువాదం (Multi-Language Translation)
+# 6. భాషా అనువాదం (Multi-Language Translation - Optimized)
 elif choice.startswith("6."):
     st.subheader("🌐 AI భాషా అనువాదం (Multi-Language Translation)")
     st.info("మిత్రమా, ఇక్కడ మీరు టెక్స్ట్ టైప్ చేసి వేరే భాషలోకి అనువదించుకోవచ్చు.")
@@ -344,23 +344,40 @@ elif choice.startswith("6."):
             with st.spinner("✨ అనువాదం జరుగుతోంది... దయచేసి వేచి ఉండండి."):
                 try:
                     client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
-                    prompt = f"Translate the following text accurately into {target_lang}: {source_text}"
+                    
+                    # మరింత ప్రొఫెషనల్ మరియు పర్ఫెక్ట్ ప్రాంప్ట్
+                    prompt = f"""
+                    You are an expert multi-language translator working for 'Aservad.ai'. 
+                    Translate the following text accurately, naturally, and contextually into {target_lang}. 
+                    Provide ONLY the translated text. Do not add any conversational filler, introductory phrases (like 'Here is the translation'), or extra explanations.
+                    
+                    Text to translate:
+                    {source_text}
+                    """
                     
                     response = client.models.generate_content(
                         model='gemini-3.6-flash',
                         contents=prompt
                     )
                     
-                    translated_result = response.text
+                    translated_result = response.text.strip()
                     st.success("✨ అనువాదం విజయవంతంగా పూర్తయింది!")
+                    st.markdown("---")
                     st.write(translated_result)
-                    st.code(translated_result, language="text")
+                    
+                    # డౌన్‌లోడ్ చేసుకునే సౌలభ్యం కూడా ఇద్దాం
+                    st.download_button(
+                        label="💾 అనువాదాన్ని డౌన్‌లోడ్ చేసుకోండి (Download Translation)",
+                        data=translated_result,
+                        file_name=f"aservad_ai_translation_{target_lang.lower()}.txt",
+                        mime="text/plain"
+                    )
                     
                 except Exception as e:
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
             st.warning("⚠️ దయచేసి అనువదించడానికి టెక్స్ట్ ఇవ్వండి మిత్రమా!")
-            
+                    
 # 7. కోడింగ్ అసిస్టెంట్ (Coding Assistant)
 elif choice.startswith("7."):
     st.subheader("💻 AI కోడింగ్ అసిస్టెంట్ (Joshna Tailors & Aservad.ai)")
