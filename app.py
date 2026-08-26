@@ -553,9 +553,9 @@ elif choice.startswith("10."):
                     client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
                     uploaded_audio = client.files.upload(file=tmp_path)
                     
-                    response = client.models.generate_content(
+                                        response = client.models.generate_content(
                         model='gemini-3.6-flash',
-                        contents=[uploaded_audio, "Listen to this audio carefully and provide a complete and accurate transcription of the spoken words. (If it is in Telugu, reply in Telugu text)."]
+                        contents=[uploaded_audio, "Listen to this audio very carefully. This is in Telugu language. Provide an exact, word-for-word transcription of the Telugu spoken words without guessing or hallucinating."]
                     )
                     
                     st.success("✨ Transcription completed!")
