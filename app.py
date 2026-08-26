@@ -566,36 +566,38 @@ elif choice.startswith("10."):
                     st.error(f"⚠️ Error: {e}")
                     
 
-# 11. AI వీడియో క్రియేటర్ & జెనరేటర్
+# 11. AI ఇమేజ్-టు-వీడియో జెనరేటర్
 elif choice.startswith("11."):
-    st.subheader("🎥 AI Video Generator (Aservad.ai)")
-    st.info("Enter your topic or script, and the AI will generate a video for you!")
+    st.subheader("🎥 AI Photo-to-Video Generator (Aservad.ai)")
+    st.info("మీ ఫోటోను అప్‌లోడ్ చేయండి, AI దాన్ని రియలిస్టిక్ వీడియోగా మారుస్తుంది!")
     
-    v_prompt = st.text_area("✍️ వీడియో కోసం టాపిక్ లేదా స్క్రిప్ట్ రాయండి:", key="video_gen_prompt")
-    v_style = st.selectbox("🎨 వీడియో స్టైల్ ఎంచుకోండి:", ["Cinematic", "Animated 3D", "Realistic Avatar", "Social Media Reel"])
+    # ఫోటో అప్లోడ్ చేయడానికి ఆప్షన్
+    uploaded_photo = st.file_uploader("🖼️ మీ ఫోటోను ఇక్కడ అప్‌లోడ్ చేయండి (JPG/PNG):", type=["jpg", "jpeg", "png"])
     
-    if st.button("🚀 వీడియోని క్రియేట్ చేయి", key="gen_video_btn"):
-        if v_prompt:
-            with st.spinner("✨ వీడియో తయారవుతోంది... దయచేసి వేచి ఉండండి (కొంత సమయం పట్టవచ్చు)!"):
+    v_prompt = st.text_area("✍️ వీడియో ఎలా కదలాలి లేదా మారాలి అని వివరించండి (Prompt):", key="img_to_vid_prompt")
+    
+    if uploaded_photo is not None:
+        st.image(uploaded_photo, caption="అప్‌లోడ్ చేసిన ఫోటో", width=250)
+    
+    if st.button("🚀 వీడియోని క్రియేట్ చేయి", key="gen_photo_video_btn"):
+        if uploaded_photo and v_prompt:
+            with st.spinner("✨ మీ ఫోటో నుండి వీడియో తయారవుతోంది... దయచేసి వేచి ఉండండి!"):
                 try:
-                    # ఇక్కడ మనం HeyGen లేదా Runway API కి రిక్వెస్ట్ పంపుతాం
-                    # ఉదాహరణకు API కీ సెట్టింగ్:
-                    api_key = st.secrets.get("VIDEO_API_KEY", "")
-                    
-                    if not api_key:
-                        st.warning("⚠️ వీడియో ఏపీఐ కీ (API Key) కాన్ఫిగర్ చేయబడలేదు. దయచేసి secrets లో సెట్ చేయండి.")
+                    # ఇక్కడ మనం ఇమేజ్ మరియు ప్రాంప్ట్‌ని ఏపీఐకి పంపుతాము
+                    # ఉదాహరణకు వీడియో జనరేషన్ టూల్ కాల్:
+                    result = video_generation.generate_video_from_inputs(
+                        prompt=v_prompt,
+                        image_references=[uploaded_photo.name]
+                    )
+                    if result and result.videos:
+                        st.success("🎉 మీ రియలిస్టిక్ వీడియో విజయవంతంగా తయారైంది!")
                     else:
-                        # API కాల్ లాజిక్ ఇక్కడ రాసుకోవచ్చు
-                        # (ఉదాహరణ కోడ్ స్ట్రక్చర్)
-                        st.success("🎉 మీ వీడియో విజయవంతంగా తయారైంది!")
-                        st.video("https://www.w3schools.com/html/mov_bbb.mp4") # ఉదాహరణ వీడియో ప్రివ్యూ
-                        
+                        st.error("Can't generate your video. Try another prompt.")
                 except Exception as e:
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
-            st.warning("⚠️ దయచేసి ముందుగా వీడియో కోసం ఏదైనా టాపిక్ లేదా స్క్రిప్ట్ రాయండి మిత్రమా.")
+            st.warning("⚠️ దయచేసి ఫోటోను అప్‌లోడ్ చేసి, ప్రాంప్ట్ కూడా రాయండి మిత్రమా.")
             
-
 # 12. సెట్టింగ్స్ (Settings)
 elif choice.startswith("12."):
     st.subheader("⚙️ యాప్ సెట్టింగ్స్ (Joshna Tailors & Aservad.ai)")
