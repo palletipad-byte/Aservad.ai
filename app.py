@@ -727,10 +727,10 @@ elif choice == "15. సోషల్ మీడియా & వాట్సాప�
         else:
             st.warning("⚠️ దయచేసి వివరాలను పూర్తిగా నింపండి.")
     
-# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Text/Image-to-Video Studio)
+# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Text/Image-to-Video with Audio & Copy)
 elif choice.startswith("16."):
     st.subheader("🎬 AI వీడియో & యానిమేషన్ స్టూడియో (Aservad.ai)")
-    st.info("మిత్రమా, ఇక్కడ మీరు టెక్స్ట్ ప్రాంప్ట్ లేదా ఇమేజ్ ఇచ్చి ప్రొఫెషనల్ AI వీడియో స్క్రిప్ట్ మరియు కంటెంట్ కంట్రోల్ చేసుకోవచ్చు.")
+    st.info("మిత్రమా, ఇక్కడ మీరు టెక్స్ట్ లేదా ఇమేజ్ ఇచ్చి స్క్రిప్ట్ తయారు చేసుకోవచ్చు, వినవచ్చు మరియు కాపీ చేసుకోవచ్చు.")
 
     vid_tab1, vid_tab2 = st.tabs(["📝 టెక్స్ట్-టు-వీడియో ప్రాంప్ట్", "🖼️ ఇమేజ్-to-వీడియో యానిమేషన్"])
     
@@ -751,7 +751,6 @@ elif choice.startswith("16."):
         if v_image_file:
             st.image(v_image_file, caption="మీ అప్‌లోడ్ చేసిన ఇమేజ్", use_container_width=True)
 
-    # ఆప్షన్స్
     v_style = st.selectbox("వీడియో స్టైల్ / థీమ్:", ["సినేమాటిక్ (Cinematic)", "3D యానిమేషన్ (3D Render)", "యానిమే Anime", "డాక్యుమెంటరీ (Documentary)"], key="v_style_box")
     v_duration = st.slider("వీడియో వ్యవధి (సెకన్లలో):", min_value=3, max_value=15, value=5, key="v_duration_slider")
 
@@ -763,14 +762,13 @@ elif choice.startswith("16."):
                 try:
                     client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
                     
-                    # టైమ్‌లైన్ & స్క్రిప్ట్ జనరేషన్ ప్రాంప్ట్
                     full_prompt = f"""
                     You are an expert AI video director and prompt engineer for 'Aservad.ai'.
                     Create a detailed, professional {v_duration}-second timeline-based video generation script and storyboard for the following prompt, maintaining a '{v_style}' style:
                     
                     Prompt: {active_prompt}
                     
-                    Break it down into timestamps (e.g., 00:00 - 00:02, etc.) with precise visual cues, camera movements, and prompt optimizations for advanced video models like Google Veo or Imagen.
+                    Break it down into timestamps with precise visual cues and camera movements for advanced video models like Google Flow, Runway, or Sora.
                     """
                     
                     response = client.models.generate_content(
@@ -783,11 +781,24 @@ elif choice.startswith("16."):
                     st.success("✨ వీడియో స్టోరీబోర్డ్ & టైమ్‌లైన్ విజయవంతంగా తయారైంది మిత్రమా!")
                     st.markdown("---")
                     
-                    # టైమ్‌లైన్ లేఅవుట్
-                    st.markdown("### ⏱️ వీడియో ఉత్పత్తి టైమ్‌లైన్ (Execution Timeline)")
+                    # టైమ్‌లైన్ లేఅవుట్ & స్క్రిప్ట్ ప్రదర్శన
+                    st.markdown("### ⏱️ వీడియో ఉత్పత్తి టైమ్‌లైన్ & స్క్రిప్ట్")
                     st.write(video_script_result)
                     
-                    # డౌన్‌లోడ్ బటన్
+                    # 🔊 ఆడియో రూపంలో వినడానికి (Text-to-Speech Audio Playback)
+                    try:
+                        from gtts import gTTS
+                        import io
+                        tts = gTTS(text=video_script_result[:500], lang='en') # మొదటి 500 అక్షరాలను ఆడియోగా మార్చవచ్చు
+                        audio_bytes = io.BytesIO()
+                        tts.write_to_fp(audio_bytes)
+                        audio_bytes.seek(0)
+                        st.markdown("### 🔊 ఆడియో రూపంలో వినండి (Audio Narration)")
+                        st.audio(audio_bytes, format='audio/mp3')
+                    except Exception as audio_err:
+                        st.info(f"ఆడియో జనరేషన్ గమనిక: {audio_err}")
+
+                    # డౌన్‌లోడ్ మరియు కాపీ ఆప్షన్స్
                     st.download_button(
                         label="💾 వీడియో మానిఫెస్ట్ / స్క్రిప్ట్ డౌన్‌లోడ్ చేసుకోండి",
                         data=video_script_result,
@@ -799,4 +810,4 @@ elif choice.startswith("16."):
                     st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
         else:
             st.warning("⚠️ మిత్రమా, దయచేసి టెక్స్ట్ ప్రాంప్ట్ ఇవ్వండి లేదా ఇమేజ్ అప్‌లోడ్ చేయండి!")
-                       
+                        
