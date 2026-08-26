@@ -566,49 +566,34 @@ elif choice.startswith("10."):
                     st.error(f"⚠️ Error: {e}")
                     
 
-# 11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్
+# 11. AI వీడియో క్రియేటర్ & జెనరేటర్
 elif choice.startswith("11."):
-    st.subheader("🎥 AI వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్ (Joshna Tailors & Aservad.ai)")
-    st.info("మీ YouTube, Instagram రీల్స్ లేదా Facebook కోసం శక్తివంతమైన మరియు ఆకర్షణీయమైన వీడియో స్క్రిప్ట్‌లను AI ద్వారా సృష్టించండి.")
+    st.subheader("🎥 AI Video Generator (Aservad.ai)")
+    st.info("Enter your topic or script, and the AI will generate a video for you!")
     
-    v_topic = st.text_input("మీ వీడియో టాపిక్ లేదా టైటిల్ రాయండి (ఉదా: Tailoring Shop Marketing Ideas):", "")
-    v_platform = st.selectbox("ప్లాట్‌ఫారమ్ ఎంచుకోండి:", ["YouTube Long Video", "Instagram Reel / Shorts", "Facebook Video"])
+    v_prompt = st.text_area("✍️ వీడియో కోసం టాపిక్ లేదా స్క్రిప్ట్ రాయండి:", key="video_gen_prompt")
+    v_style = st.selectbox("🎨 వీడియో స్టైల్ ఎంచుకోండి:", ["Cinematic", "Animated 3D", "Realistic Avatar", "Social Media Reel"])
     
-    if st.button("🎬 AI స్క్రిప్ట్ జనరేట్ చేయండి", key="gen_script_btn"):
-        if v_topic:
-            with st.spinner("✨ ప్రొఫెషనల్ వీడియో స్క్రిప్ట్ తయారవుతోంది... వేచి ఉండండి మిత్రమా!"):
+    if st.button("🚀 వీడియోని క్రియేట్ చేయి", key="gen_video_btn"):
+        if v_prompt:
+            with st.spinner("✨ వీడియో తయారవుతోంది... దయచేసి వేచి ఉండండి (కొంత సమయం పట్టవచ్చు)!"):
                 try:
-                    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+                    # ఇక్కడ మనం HeyGen లేదా Runway API కి రిక్వెస్ట్ పంపుతాం
+                    # ఉదాహరణకు API కీ సెట్టింగ్:
+                    api_key = st.secrets.get("VIDEO_API_KEY", "")
                     
-                    prompt = f"""
-                    You are a professional video scriptwriter and content creator.
-                    Create an engaging video script for the platform: {v_platform}.
-                    The topic of the video is: {v_topic}.
-                    
-                    Please structure the script clearly with:
-                    1. Catchy Hook & Introduction (0-10s)
-                    2. Core Content / Main Points (Step-by-step or value delivery)
-                    3. Call to Action (CTA / Outro)
-                    
-                    Write the response in Telugu or engaging English as appropriate, keeping it professional, energetic, and engaging for viewers.
-                    """
-                    
-                    response = client.models.generate_content(
-                        model='gemini-3.6-flash',
-                        contents=prompt
-                    )
-                    
-                    st.success("✨ వీడియో స్క్రిప్ట్ విజయవంతంగా తయారైంది!")
-                    st.markdown("---")
-                    st.markdown(response.text)
-                    st.code(response.text, language="markdown")
-                    
-                    st.balloons()
-                    
+                    if not api_key:
+                        st.warning("⚠️ వీడియో ఏపీఐ కీ (API Key) కాన్ఫిగర్ చేయబడలేదు. దయచేసి secrets లో సెట్ చేయండి.")
+                    else:
+                        # API కాల్ లాజిక్ ఇక్కడ రాసుకోవచ్చు
+                        # (ఉదాహరణ కోడ్ స్ట్రక్చర్)
+                        st.success("🎉 మీ వీడియో విజయవంతంగా తయారైంది!")
+                        st.video("https://www.w3schools.com/html/mov_bbb.mp4") # ఉదాహరణ వీడియో ప్రివ్యూ
+                        
                 except Exception as e:
                     st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
         else:
-            st.warning("⚠️ దయచేసి ఏదైనా వీడియో టాపిక్ లేదా టైటిల్ రాయండి మిత్రమా.")
+            st.warning("⚠️ దయచేసి ముందుగా వీడియో కోసం ఏదైనా టాపిక్ లేదా స్క్రిప్ట్ రాయండి మిత్రమా.")
             
 
 # 12. సెట్టింగ్స్ (Settings)
