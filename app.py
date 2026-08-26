@@ -455,11 +455,29 @@ elif choice.startswith("8."):
                         )
                         bot_response = response.text
                         
-                        st.success("✨ విజయవంతంగా సమాధానం ఇవ్వబడింది!")
-                        st.write(bot_response)
+                                                bot_response = response.text
                         
-                        # కాపీ చేసుకోవడానికి కోడ్/టెక్స్ట్ బ్లాక్
-                        st.code(bot_response, language="text")
+                        st.success("✨ విజయవంతంగా సమాధానం ఇవ్వబడింది!")
+                        
+                        # 1. రిజల్ట్ ని అందంగా చూపించడం
+                        st.markdown(bot_response)
+                        
+                        # 2. సులభంగా కాపీ చేసుకోవడానికి టెక్స్ట్ ఏరియా
+                        st.text_area("ఇక్కడ నుండి కాపీ చేసుకోండి:", bot_response, height=150, key="copy_text_area")
+
+                        # 3. ఆడియో రూపంలో వినడానికి స్పీకర్/ప్లేయర్
+                        try:
+                            from gtts import gTTS
+                            import io
+                            
+                            tts = gTTS(text=bot_response, lang='te')
+                            audio_bytes = io.BytesIO()
+                            tts.write_to_fp(audio_bytes)
+                            audio_bytes.seek(0)
+                            
+                            st.audio(audio_bytes, format='audio/mp3')
+                        except Exception as audio_err:
+                            pass
                         
                     except Exception as e:
                         st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
