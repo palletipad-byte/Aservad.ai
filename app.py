@@ -725,3 +725,76 @@ elif choice == "15. సోషల్ మీడియా & వాట్సాప�
         else:
             st.warning("⚠️ దయచేసి వివరాలను పూర్తిగా నింపండి.")
     
+# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Text/Image-to-Video Studio)
+elif choice.startswith("16."):
+    st.subheader("🎬 AI వీడియో & యానిమేషన్ స్టూడియో (Aservad.ai)")
+    st.info("మిత్రమా, ఇక్కడ మీరు టెక్స్ట్ ప్రాంప్ట్ లేదా ఇమేజ్ ఇచ్చి ప్రొఫెషనల్ AI వీడియో స్క్రిప్ట్ మరియు కంటెంట్ కంట్రోల్ చేసుకోవచ్చు.")
+
+    vid_tab1, vid_tab2 = st.tabs(["📝 టెక్స్ట్-టు-వీడియో ప్రాంప్ట్", "🖼️ ఇమేజ్-to-వీడియో యానిమేషన్"])
+    
+    with vid_tab1:
+        v_prompt = st.text_area(
+            "వీడియో కోసం మీ సృజనాత్మక ప్రాంప్ట్ ఇక్కడ రాయండి:",
+            placeholder="ఉదాహరణకు: A cinematic drone shot over a futuristic neon city...",
+            key="v_text_prompt"
+        )
+        
+    with vid_tab2:
+        v_image_file = st.file_uploader("బేస్ ఇమేజ్ (ఫొటో) అప్‌లోడ్ చేయండి:", type=["jpg", "jpeg", "png"], key="v_img_upload")
+        v_img_prompt = st.text_area(
+            "ఈ ఫొటోకు ఏ రకమైన యానిమేషన్ కావాలి?",
+            placeholder="ఉదాహరణకు: Animate water waves and slow camera zoom...",
+            key="v_img_text_prompt"
+        )
+        if v_image_file:
+            st.image(v_image_file, caption="మీ అప్‌లోడ్ చేసిన ఇమేజ్", use_container_width=True)
+
+    # ఆప్షన్స్
+    v_style = st.selectbox("వీడియో స్టైల్ / థీమ్:", ["సినేమాటిక్ (Cinematic)", "3D యానిమేషన్ (3D Render)", "యానిమే Anime", "డాక్యుమెంటరీ (Documentary)"], key="v_style_box")
+    v_duration = st.slider("వీడియో వ్యవధి (సెకన్లలో):", min_value=3, max_value=15, value=5, key="v_duration_slider")
+
+    if st.button("🚀 AI వీడియో ప్రాసెస్ ప్రారంభించండి (Generate Video Studio)", key="gen_video_btn"):
+        active_prompt = v_img_prompt if v_image_file else v_prompt
+        
+        if active_prompt.strip():
+            with st.spinner("✨ అశీర్వాదం AI వీడియో స్టూడియో ద్వారా టైమ్‌లైన్ ప్రాసెస్ జరుగుతోంది... వేచి ఉండండి మిత్రమా!"):
+                try:
+                    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+                    
+                    # టైమ్‌లైన్ & స్క్రిప్ట్ జనరేషన్ ప్రాంప్ట్
+                    full_prompt = f"""
+                    You are an expert AI video director and prompt engineer for 'Aservad.ai'.
+                    Create a detailed, professional {v_duration}-second timeline-based video generation script and storyboard for the following prompt, maintaining a '{v_style}' style:
+                    
+                    Prompt: {active_prompt}
+                    
+                    Break it down into timestamps (e.g., 00:00 - 00:02, etc.) with precise visual cues, camera movements, and prompt optimizations for advanced video models like Google Veo or Imagen.
+                    """
+                    
+                    response = client.models.generate_content(
+                        model='gemini-3.6-flash',
+                        contents=full_prompt
+                    )
+                    
+                    video_script_result = response.text.strip()
+                    
+                    st.success("✨ వీడియో స్టోరీబోర్డ్ & టైమ్‌లైన్ విజయవంతంగా తయారైంది మిత్రమా!")
+                    st.markdown("---")
+                    
+                    # టైమ్‌లైన్ లేఅవుట్
+                    st.markdown("### ⏱️ వీడియో ఉత్పత్తి టైమ్‌లైన్ (Execution Timeline)")
+                    st.write(video_script_result)
+                    
+                    # డౌన్‌లోడ్ బటన్
+                    st.download_button(
+                        label="💾 వీడియో మానిఫెస్ట్ / స్క్రిప్ట్ డౌన్‌లోడ్ చేసుకోండి",
+                        data=video_script_result,
+                        file_name="aservad_video_storyboard.txt",
+                        mime="text/plain"
+                    )
+                    
+                except Exception as e:
+                    st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
+        else:
+            st.warning("⚠️ మిత్రమా, దయచేసి టెక్స్ట్ ప్రాంప్ట్ ఇవ్వండి లేదా ఇమేజ్ అప్‌లోడ్ చేయండి!")
+                       
