@@ -253,49 +253,31 @@ elif choice.startswith("3."):
                     st.error(f"కనెక్షన్ ఎర్రర్ వచ్చింది: {e}")
     
 # 4. AI ఇమేజ్ జనరేటర్ (100% Free & Clean AI Image Generator)
-user_prompt = st.text_input("🎨 మిత్రమా, మీకు ఎలాంటి మంచి చిత్రం కావాలో ఇక్కడ టైప్ చేయండి:")
+elif choice.startswith("4."):
+    st.subheader("🎨 జోష్న టైలర్స్ & ఆశీర్వాదం AI - ఇమేజ్ జనరేటర్")
+    st.info("మిత్రమా, మీకు కావలసిన చిత్రాన్ని ఇక్కడ టైప్ చేయండి. AI దానిని అద్భుతంగా రూపొందిస్తుంది!")
+    
+    user_prompt = st.text_input("🎨 మీకు ఎలాంటి చిత్రం కావాలో ఇక్కడ టైప్ చేయండి (ఉదాహరణకు: Nature, Temple, Flowers, etc.):", key="img_prompt_input")
 
-if st.button("🖼️ ఇమేజ్ జనరేట్ చేయండి (Generate Image)", key="image_gen_btn"):
-    if user_prompt.strip():
-        with st.spinner("✨ జోష్న టైలర్స్ & ఆశీర్వాదం AI ద్వారా మీ చిత్రం తయారవుతోంది... వేచి ఉండండి మిత్రమా!"):
-            try:
-                # పూర్తిగా ఫ్రీగా, ఎలాంటి క్రెడిట్ సమస్యలు లేకుండా పనిచేసే పబ్లిక్ ఫ్రీ AI ఇమేజ్ ఏపీఐ లింక్
-                import requests
-                from PIL import Image
-                import io
-
-                # ఫ్రీ పోల్లెన్/హగ్గింగ్ ఫేస్ లేదా పబ్లిక్ స్టేబుల్ డిఫ్యూషన్ ఫ్రీ ఎండ్ పాయింట్
-                api_url = "https://api-inference.huggingface.co/models/stabilityai/stable-diffusion-2-1"
-                
-                # ఇది పూర్తిగా ఉచితంగా పనిచేస్తుంది
-                headers = {"Authorization": "Bearer hf_demo_key"} # పబ్లిక్ ఫ్రీ టోకెన్
-                payload = {"inputs": user_prompt}
-
-                response = requests.post(api_url, headers=headers, json=payload)
-                
-                if response.status_code == 200:
-                    image = Image.open(io.BytesIO(response.content))
-                    st.success("✨ చిత్రం విజయవంతంగా తయారైంది మిత్రమా!")
-                    st.image(image, caption=f"Generated for: {user_prompt}", use_container_width=True)
-                else:
-                    # ఒకవేళ సర్వర్ బిజీగా ఉంటే ప్రత్యామ్నాయ ఫ్రీ లింక్ ద్వారా డైరెక్ట్ ఇస్తాం
-                    encoded_prompt = requests.utils.quote(user_prompt)
-                    free_image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}"
-                    
-                    st.success("✨ జోష్న టైలర్స్ & ఆశీర్వాదం AI ద్వారా చిత్రం తయారైంది!")
-                    st.image(free_image_url, caption=f"Generated for: {user_prompt}", use_container_width=True)
-
-            except Exception as e:
-                # ఒకవేళ నెట్వర్క్ చిన్న సమస్య ఉన్నా డైరెక్ట్ ఫ్రీ యుఆర్ఎల్ ఇమేజ్ ఇచ్చేలా బ్యాకప్
+    if st.button("🖼️ ఇమేజ్ జనరేట్ చేయండి (Generate Image)", key="image_gen_btn"):
+        if user_prompt.strip():
+            with st.spinner("✨ జోష్న టైలర్స్ & ఆశీర్వాదం AI ద్వారా మీ చిత్రం తయారవుతోంది... వేచి ఉండండి మిత్రమా!"):
                 try:
+                    import requests
+                    
+                    # గూగుల్ జెమినీ లాగే కలర్‌ఫుల్ మరియు బ్రైట్ ఇమేజ్ ఇచ్చే పబ్లిక్ ఫ్రీ HD ఎండ్-పాయింట్
                     encoded_prompt = requests.utils.quote(user_prompt)
-                    free_image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}"
+                    # హై క్వాలిటీ కోసం ప్రత్యేకంగా డిజైన్ చేసిన ఫ్రీ API లింక్
+                    free_image_url = f"https://image.pollinations.ai/prompt/{encoded_prompt}?width=1024&height=1024&nologo=true"
+                    
+                    st.success("✨ జోష్న టైలర్స్ & ఆశీర్వాదం AI ద్వారా చిత్రం విజయవంతంగా తయారైంది మిత్రమా!")
                     st.image(free_image_url, caption=f"Generated for: {user_prompt}", use_container_width=True)
-                except Exception as inner_e:
-                    st.error(f"⚠️ లోపం ఏర్పడింది: {inner_e}")
-    else:
-        st.warning("⚠️ మిత్రమా, దయచేసి ఇమేజ్ గురించిన వివరాలు ఇక్కడ టైప్ చేయండి!")
-        
+
+                except Exception as e:
+                    st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
+        else:
+            st.warning("⚠️ మిత్రమా, దయచేసి ఇమేజ్ గురించిన వివరాలు పైన టైప్ చేయండి!")
+            
 # 5. టెక్స్ట్ సమ్మరైజర్ (Text Summarizer)
 elif choice.startswith("5."):
     st.subheader("📝 AI టెక్స్ట్ సమ్మరైజర్ (Joshna Tailors & Aservad.ai)")
