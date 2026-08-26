@@ -310,7 +310,7 @@ elif choice.startswith("5."):
                     
                     # సరైన మరియు వర్కింగ్ మోడల్ పేరు
                     response = client.models.generate_content(
-                        model='gemini-2.5-flash',
+                        model='gemini-3.6-flash',
                         contents=prompt
                     )
                     
