@@ -455,7 +455,7 @@ elif choice.startswith("8."):
                         )
                         bot_response = response.text
                         
-                                                bot_response = response.text
+                                                
                         
                         st.success("✨ విజయవంతంగా సమాధానం ఇవ్వబడింది!")
                         
