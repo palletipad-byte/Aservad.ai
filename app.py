@@ -277,8 +277,7 @@ elif choice.startswith("4."):
                     st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
         else:
             st.warning("⚠️ మిత్రమా, దయచేసి ఇమేజ్ గురించిన వివరాలు పైన టైప్ చేయండి!")
-            
-# 5. AI టెక్స్ట్ సమరైజర్ (Joshna Tailors & Aservad.ai - Optimized)
+# 5. AI టెక్స్ట్ సమరైజర్ (Fixed & Final)
 elif choice.startswith("5."):
     st.subheader("📝 AI టెక్స్ట్ సమరైజర్")
     st.info("మిత్రమా, పెద్ద పెద్ద వ్యాసాలు లేదా టెక్స్ట్‌ని ఇక్కడ పేస్ట్ చేయండి, ఏఐ దాన్ని క్లుప్తంగా ముఖ్యమైన పాయింట్లుగా సమ్మరీ చేస్తుంది.")
@@ -295,7 +294,11 @@ elif choice.startswith("5."):
         if summarizer_text.strip():
             with st.spinner("✨ జోష్న టైలర్స్ & ఆశీర్వాదం AI ద్వారా టెక్స్ట్ విశ్లేషించబడుతోంది... వేచి ఉండండి మిత్రమా!"):
                 try:
-                    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
+                    import google.generativeai as genai_old
+                    genai_old.configure(api_key=st.secrets["GEMINI_API_KEY"])
+                    
+                    # స్టేబుల్ మరియు పర్ఫెక్ట్ వర్కింగ్ మోడల్
+                    model = genai_old.GenerativeModel('gemini-1.5-flash')
                     
                     prompt = f"""
                     You are an expert content summarizer. Please analyze the following text provided by 'Aservad.ai' and provide a concise, clear, and useful summary based on the requested style.
@@ -304,23 +307,15 @@ elif choice.startswith("5."):
                     
                     Text to Summarize:
                     {summarizer_text}
-                    
-                    Summary:
                     """
                     
-                    # లేటెస్ట్ మరియు ఫాస్టెస్ట్ మోడల్ వాడదాం
-                    response = client.models.generate_content(
-                        model='gemini-1.5-flash',
-                        contents=prompt
-                    )
-                    
+                    response = model.generate_content(prompt)
                     summary_result = response.text
+                    
                     st.success("✨ సమ్మరీ విజయవంతంగా తయారైంది మిత్రమా!")
                     st.markdown("---")
-                    # కేవలం మార్క్‌డౌన్ ద్వారా రిజల్ట్ చూపిద్దాం, కోడ్ బ్లాక్ వద్దు
                     st.write(summary_result)
                     
-                    # భవిష్యత్తులో యూజర్ డౌన్‌లోడ్ చేసుకోవడానికి బటన్ కూడా ఇక్కడ యాడ్ చేద్దాం
                     st.download_button(
                         label="💾 సమ్మరీని డౌన్‌లోడ్ చేసుకోండి (Download Summary)",
                         data=summary_result,
