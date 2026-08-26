@@ -118,9 +118,9 @@ selected_lang = st.selectbox("🌐 భాషను ఎంచుకోండి /
     "ಕನ್ನಡ (Kannada)", "മലയാളം (Malayalam)", "Español", "Français"
 ])
 
-# సైడ్‌బార్ మెనూ - 15 ఫీచర్లు (సరియైన వరుసక్రమం)
-st.title("🧭 ఆశీర్వాదం AI / Navigation")
-choice = st.selectbox("ఫీచర్‌ని ఎంచుకోండి / Select Feature", [
+# సైడ్‌బార్ మెనూ - 16 ఫీచర్లు (సరియైన వరుసక్రమం)
+st.title("🧭 అశీర్వాదం AI / Navigation")
+choice = st.selectbox("ఫీచర్‌ని ఎన్నుకోండి / Select Feature", [
     "1. హోమ్ / Dashboard",
     "2. ఫేస్ స్వాప్ (Face Swap)",
     "3. AI వాయిస్ క్లోనింగ్ & మైక్ (Voice Cloning & Mic)",
@@ -129,14 +129,16 @@ choice = st.selectbox("ఫీచర్‌ని ఎంచుకోండి / Se
     "6. భాషా అనువాదం (Multi-Language Translation)",
     "7. కోడింగ్ అసిస్టెంట్ (Coding Assistant)",
     "8. చాట్‌బాట్ సపోర్ట్ (AI Chatbot)",
-    "9. డాక్యుమెంట్ ఎనాలిసిస్ (Document Analysis)",
+    "9. డాక్యుమెంట్ అనాలిసిస్ (Document Analysis)",
     "10. ఆడియో ట్రాన్స్‌క్రిప్షన్ (Audio Transcription)",
     "11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్",
     "12. సెట్టింగ్‌లు (Settings)",
     "13. సహాయం & ఫీడ్‌బ్యాక్ (Help & Feedback)",
-    "14. AI వీడియో & టాకింగ్ అవతార్ టూల్స్",
-    "15. సోషల్ మీడియా & వాట్సాప్ మార్కెటింగ్ జనరేటర్"
+    "14. AI వీడియో & టాల్కింగ్ అవతార్ టూల్స్",
+    "15. సోషల్ మీడియా & వాట్సాప్ మార్కెటింగ్ జనరేటర్",
+    "16. AI వీడియో & యానిమేషన్ స్టూడియో (Text/Image-to-Video)"
 ])
+
 
 # 1. హోమ్ / డాష్‌బోర్డ్
 if choice.startswith("1."):
