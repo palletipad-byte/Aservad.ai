@@ -639,7 +639,7 @@ elif choice.startswith("11."):
                             "X-Runway-Version": "2024-11-06"
                         }
 
-                        # రన్‌వే ఏపీఐ Gen-3 Turbo మోడల్ కోసం పేలోడ్
+                        # రన్‌వే ఏపీఐ Gen-3 Alpha Turbo మోడల్ కోసం పేలోడ్
                         payload = {
                             "model": "gen3a_turbo",
                             "promptText": f"{character_prompt}. Scene action: {video_topic}",
@@ -653,17 +653,16 @@ elif choice.startswith("11."):
                             "https://api.runwayml.com/v1/tasks",
                             json=payload,
                             headers=headers
-    )
-    
+                        )
+
                         if response.status_code == 200 or response.status_code == 201:
                             res_data = response.json()
                             task_id = res_data.get("id")
                             st.success(f"✅ వీడియో జనరేషన్ టాస్క్ విజయవంతంగా ప్రారంభమైంది! (Task ID: {task_id})")
                             
-                            # 2. వీడియో రెడీ అయ్యే వరకు స్టేటస్ చెక్ చేయడం (Polling)
-                            task_status_url = f"https://api.dev.runwayml.com/v1/tasks/{task_id}"
+                            # 2. వీడియో రెడీ అయ్యే వరకు స్టేటస్ చెక్ చేయడం (Polling URL)
+                            task_status_url = f"https://api.runwayml.com/v1/tasks/{task_id}"
                             video_url = None
-
                             with st.spinner("⏳ వీడియో రెండర్ అవుతోంది... (ఇది కొన్ని నిమిషాలు పట్టవచ్చు)"):
                                 for _ in range(45):
                                     time.sleep(10)
