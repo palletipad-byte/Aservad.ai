@@ -1,13 +1,14 @@
-import streamlit as st
-import os
-from gtts import gTTS
-from PIL import Image
-import PyPDF2
 import io
+import os
+import time  # సమయం కోసం ఇది పైన ఉండాలి
 from io import BytesIO
 from google import genai
-from google.genai import types 
-import requests
+from google.genai import types
+from PIL import Image
+import PyPDF2
+import requests  # రన్‌వే ఏపీఐ కోసం ఇది చాలా ముఖ్యం
+import streamlit as st
+
 
 # --- 🔐 సెక్యూర్ జీమెయిల్ లాగిన్ & క్రెడిట్స్ సిస్టమ్ (Aservad.ai) ---
 import time
@@ -566,64 +567,110 @@ elif choice.startswith("10."):
                     st.error(f"⚠️ Error: {e}")
                     
 
-# 11. AI ఇమేజ్-టు-వీడియో & అవతార్ క్యారెక్టర్ జెనరేటర్ (Aservad.ai)
-elif choice.startswith("11."):
-    st.subheader("🎥 AI Avatar & Photo-to-Video Generator (Aservad.ai)")
-    st.info("మీ ఫోటో లేదా అవతార్‌ను అప్‌లోడ్ చేసి, రీల్స్/వీడియోల కోసం సీన్ స్క్రిప్ట్‌లను సృష్టించండి!")
-    
-    # 1. క్యారెక్టర్ ఇమేజ్ అప్‌లోడ్ (Character Image Upload)
-    uploaded_character = st.file_uploader("🖼️ మీ క్యారెక్టర్ లేదా అవతార్ ఫోటోను అప్‌లోడ్ చేయండి (JPG/PNG):", type=["jpg", "jpeg", "png"])
-    
-    if uploaded_character is not None:
-        st.image(uploaded_character, caption="అప్‌లోడ్ చేసిన క్యారెక్టర్ ఫోటో", width=200)
-    
-    # 2. క్యారెక్టర్ ప్రవర్తన / వివరాలు (Character Info)
-    char_description = st.text_area(
-        "✍️ క్యారెక్టర్ గురించి రాయండి (ಉದಾ: Young adult teacher, professional look, smiling face):",
-        value="Young adult South Asian woman with a warm medium-brown complexion, oval face, dark expressive eyes, and gentle friendly smile.",
-        key="char_desc"
+# 11. AI వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్ (Runway AI ఇంటిగ్రేషన్‌తో)
+if "11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్" in selected_feature:
+    st.subheader("🎬 AI Avatar & Photo-to-Video Generator (Runway Integrated)")
+
+    # ఇన్పుట్స్ తీసుకోవడం
+    uploaded_image = st.file_uploader(
+        "మీ క్యారెక్టర్ లేదా అవతార్ ఫోటోను అప్‌లోడ్ చేయండి (JPG/PNG):",
+        type=["jpg", "jpeg", "png"],
+        key="runway_img_upload"
     )
-    
-    # 3. వాయిస్ సెలెక్షన్ (Select Voice)
-    voice_option = st.selectbox(
-        "🎙️ వాయిస్ ఎంచుకోండి (Select Voice):",
-        ["Alnilam (Male, Firm)", "Aoede (Female, Breezy)", "Autonoe (Female, Bright)", "Charon (Male, Informative)", "Despina (Female, Smooth)"]
+    character_prompt = st.text_input(
+        "క్యారెక్టర్ గురించి రాయండి (ఉదా: Young adult teacher...):",
+        key="runway_char_prompt"
     )
-    
-    # 4. ఆస్పెక్ట్ రేషియో (Aspect Ratio)
+    selected_voice = st.selectbox(
+        "వాయిస్ ఎంచుకోండి (Select Voice):",
+        ["Despina (Female, Smooth)", "Male Pro", "Cinematic Voice"],
+        key="runway_voice"
+    )
     aspect_ratio = st.selectbox(
-        "📐 వీడియో సైజ్ / ఆస్పెక్ట్ రేషియో:",
-        ["9:16 (YouTube Shorts / Instagram Reels)", "16:9 (YouTube Long Video)", "1:1 (Square Post)"]
+        "వీడియో సైజ్ / ఆస్పెక్ట్ రేషియో:",
+        ["9:16 (YouTube Shorts / Instagram Reels)", "16:9 (YouTube Long)"],
+        key="runway_ratio"
     )
-    
-    # 5. వీడియో టాపిక్ / సీన్ ప్రాంప్ట్
-    scene_topic = st.text_area("🎬 వీడియో టాపిక్ లేదా స్క్రిప్ట్ వివరాలు ఇవ్వండి:", placeholder="ఉదా: విద్యార్థులకు ఆసక్తికరమైన పాఠం చెప్పే సీన్...")
-    
-    if st.button("🚀 సీన్ ప్రాంప్ట్ & వీడియో స్క్రిప్ట్ జనరేట్ చేయి", key="gen_avatar_video_btn"):
-        if scene_topic:
-            with st.spinner("✨ ఏఐ మీ కోసం ప్రొఫెషనల్ సీన్ ప్రాంప్ట్స్ తయారు చేస్తోంది..."):
+    video_topic = st.text_area(
+        "వీడియో టాపిక్ లేదా స్క్రిప్ట్ వివరాలు ఇవ్వండి:",
+        key="runway_topic"
+    )
+
+    if st.button("🚀 స్క్రిప్ట్ & వీడియో జనరేట్ చేయి", key="runway_gen_btn"):
+        if uploaded_image is not None and video_topic:
+            with st.spinner("మొదట స్క్రిప్ట్ జనరేట్ అవుతోంది, ఆపై రన్‌వే ఏఐ ద్వారా వీడియో రెండరింగ్ ప్రారంభమైంది..."):
                 try:
-                    # ఏపీఐ కీ చెక్ చేయడం
-                    api_key = st.secrets.get("VIDEO_API_KEY", "")
-                    
-                    # ఔట్‌పుట్ ఫలితాలు చూపించడం
-                    st.success("🎉 మీ క్యారెక్టర్ స్క్రిప్ట్ మరియు ప్రాంప్ట్స్ సిద్ధంగా ఉన్నాయి!")
-                    
-                    st.markdown("### 📋 జనరేటెడ్ సీన్ ప్రాంప్ట్స్ (Scene 1):")
-                    st.markdown(f"- **Aspect Ratio:** {aspect_ratio}")
-                    st.markdown(f"- **Selected Voice:** {voice_option}")
-                    st.markdown(f"- **Visual Prompt:** A semi-realistic 3D cinematic scene based on: *{scene_topic}*. Using character consistency matching the uploaded image.")
-                    st.markdown(f"- **Voiceover (Telugu):** \"మిత్రమా, మనం అనుకున్నట్టుగా ఈ వీడియో ద్వారా అద్భుతాలు సృష్టిద్దాం!\"")
-                    st.markdown("- **Background Music:** Soft emotional piano / Upbeat corporate rhythm.")
-                    
-                    if not api_key:
-                        st.warning("⚠️ గమనిక: వీడియో ఏపీఐ కీ (API Key) కాన్ఫిగర్ చేయబడలేదు. పూర్తి స్థాయి వీడియో రెండరింగ్ కోసం secrets లో కీని సెట్ చేయండి.")
-                        
+                    # స్ట్రీమ్‌లిట్ సీక్రెట్స్ నుండి రన్‌వే ఏపీఐ కీని పొందడం
+                    runway_api_key = (
+                        st.secrets.get("RUNWAY_API_KEY")
+                        or st.secrets.get("RUNWAYML_API_KEY")
+                        or ""
+                    )
+
+                    if not runway_api_key:
+                        st.warning("⚠️ గమనిక: రన్‌వే ఏపీఐ కీ (RUNWAY_API_KEY) స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో కాన్ఫిగర్ చేయబడలేదు.")
+                    else:
+                        headers = {
+                            "Authorization": f"Bearer {runway_api_key}",
+                            "Content-Type": "application/json",
+                            "X-Runway-Version": "2024-11-06",
+                        }
+
+                        import base64
+                        image_bytes = uploaded_image.getvalue()
+                        encoded_image = base64.b64encode(image_bytes).decode("utf-8")
+                        image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
+
+                        payload = {
+                            "model": "gen4_turbo",
+                            "promptText": f"{character_prompt}. Scene details: {video_topic}",
+                            "promptImage": image_data_uri,
+                            "duration": 5,
+                            "ratio": "720x1280" if "9:16" in aspect_ratio else "1280x720",
+                        }
+
+                        response = requests.post(
+                            "https://api.dev.runwayml.com/v1/tasks",
+                            json=payload,
+                            headers=headers,
+                        )
+
+                        if response.status_code in [200, 201]:
+                            res_data = response.json()
+                            task_id = res_data.get("id")
+                            st.success(f"🎉 వీడియో జనరేషన్ టాస్క్ ప్రారంభమైంది! (Task ID: {task_id})")
+
+                            task_status_url = f"https://api.dev.runwayml.com/v1/tasks/{task_id}"
+                            video_url = None
+
+                            for _ in range(30):
+                                time.sleep(10)
+                                status_res = requests.get(task_status_url, headers=headers).json()
+                                status = status_res.get("status")
+
+                                if status in ["SUCCEEDED", "completed"]:
+                                    output_list = status_res.get("output", [])
+                                    if output_list:
+                                        video_url = output_list[0]
+                                    break
+                                elif status in ["FAILED", "failed"]:
+                                    st.error("❌ వీడియో రెండరింగ్ విఫలమైంది.")
+                                    break
+
+                            if video_url:
+                                st.markdown("### 🎥 మీ ఏఐ వీడియో విజయవంతంగా తయారైంది!")
+                                st.video(video_url)
+                                st.markdown(f"🔗 [డౌన్లోడ్ వీడియో లింక్]({video_url})")
+                        else:
+                            st.error(f"⚠️ రన్‌వే ఏపీఐ కనెక్షన్ ఎర్రర్: {response.text}")
+
                 except Exception as e:
-                    st.error(f"⚠️ లోపం ఏర్పడింది: {e}")
+                    st.error(f"టెక్నికల్ ఎర్రర్ సంభవించింది: {e}")
+                    st.markdown("### 📜 రూపొందించిన సీన్ స్క్రిప్ట్ & ప్రాంప్ట్స్:")
+                    st.info(f"**టాపిక్:** {video_topic}\n\n**క్యారెక్టర్ స్టైల్:** {character_prompt}")
         else:
-            st.warning("⚠️ దయచేసి వీడియో టాపిక్ లేదా వివరాలను నమోదు చేయండి మిత్రమా.")
-            
+            st.warning("దయచేసి ఫోటోను అప్‌లోడ్ చేసి, వీడియో టాపిక్ వివరాలను నింపండి మిత్రమా!")
+                            
 # 12. సెట్టింగ్స్ (Settings)
 elif choice.startswith("12."):
     st.subheader("⚙️ యాప్ సెట్టింగ్స్ (Joshna Tailors & Aservad.ai)")
