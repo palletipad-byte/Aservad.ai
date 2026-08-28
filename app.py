@@ -639,22 +639,22 @@ elif choice.startswith("11."):
                             "X-Runway-Version": "2024-11-06"
                         }
 
-                        # రన్‌వే ఏపీఐ Gen-4 Turbo మోడల్ కోసం పేలోడ్ (టెక్స్ట్ స్క్రిప్ట్ తో కలిపి)
+                                                # రన్‌వే ఏపీఐ Gen-3 Turbo మోడల్ కోసం పేలోడ్
                         payload = {
-                            "model": "gen4_turbo",
-                            "promptText": f"{character_prompt}. Scene action based on script: {video_topic}",
+                            "model": "gen3a_turbo",
+                            "promptText": f"{character_prompt}. Scene action: {video_topic}",
                             "promptImage": image_data_uri,
                             "duration": 5,
                             "ratio": "720x1280" if "9:16" in aspect_ratio else "1280x720"
                         }
 
-                        # 1. టాస్క్ క్రియేట్ చేయడానికి రిక్వెస్ట్ పంపడం
+                        # 1. టాస్క్ క్రియేట్ చేయడానికి ప్రొడక్షన్ రిక్వెస్ట్ పంపడం
                         response = requests.post(
-                            "https://api.dev.runwayml.com/v1/tasks",
+                            "https://api.runwayml.com/v1/tasks",
                             json=payload,
                             headers=headers
-                        )
-
+    )
+    
                         if response.status_code == 200 or response.status_code == 201:
                             res_data = response.json()
                             task_id = res_data.get("id")
