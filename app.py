@@ -634,10 +634,11 @@ elif choice.startswith("11."):
                         image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
 
                         headers = {
-                            "Authorization": f"Bearer {runway_api_key}",
-                            "Content-Type": "application/json",
-                            "X-Runway-Version": "2024-11-06"
+                        "Authorization": f"Bearer {runway_api_key}",
+                        "Content-Type": "application/json",
+                        "X-Runway-Version": "2024-09-13"
                         }
+                        
 
                         # రన్‌వే ఏపీఐ Gen-3 Alpha Turbo మోడల్ కోసం పేలోడ్
                         payload = {
