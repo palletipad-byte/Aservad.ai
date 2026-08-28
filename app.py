@@ -565,10 +565,9 @@ elif choice.startswith("10."):
                     
                 except Exception as e:
                     st.error(f"⚠️ Error: {e}")
-                    
-# 11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్
+# 11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్ (Runway AI + Text/Script Integrated)
 elif choice.startswith("11."):
-    st.subheader("🎬 AI Avatar & Photo-to-Video Generator (Runway Integrated)")
+    st.subheader("🎬 AI Avatar, Script & Video Generator (Runway Integrated)")
 
     # 1. క్యారెక్టర్ ఇమేజ్ అప్‌లోడ్
     uploaded_image = st.file_uploader(
@@ -598,18 +597,22 @@ elif choice.startswith("11."):
         key="runway_ratio"
     )
 
-    # 5. వీడియో టాపిక్ / స్క్రిప్ట్
+    # 5. వీడియో టాపిక్ / స్క్రిప్ట్ టెక్స్ట్ ఇన్‌పుట్ (మీరు కోరిన టెక్స్ట్ ఫార్మాట్)
     video_topic = st.text_area(
-        "వీడియో టాపిక్ లేదా సీన్ వివరాలు ఇవ్వండి:",
-        placeholder="ఉదా: ఒక ఇన్స్పిరేషనల్ స్టోరీ గురించి క్లుప్తంగా చెప్పండి...",
+        "వీడియో కోసం మీ స్క్రిప్ట్ లేదా టాపిక్ టెక్స్ట్ ఇక్కడ ఇవ్వండి:",
+        placeholder="ఉదా: నమస్కారం మిత్రమా, ఈరోజు మనం ఏఐ టెక్నాలజీ గురించి తెలుసుకుందాం...",
         key="runway_topic"
     )
 
     # జనరేషన్ బటన్
     if st.button("🚀 స్క్రిప్ట్ & వీడియో జనరేట్ చేయి", key="runway_gen_btn"):
         if uploaded_image is not None and video_topic:
-            with st.spinner("✨ మీ వీడియో మరియు స్క్రిప్ట్ తయారవుతున్నాయి... దయచేసి వేచి ఉండండి!"):
+            with st.spinner("✨ స్క్రిప్ట్ ప్రాసెస్ అవుతోంది మరియు రన్‌వే ఏఐ ద్వారా వీడియో రెండరింగ్ ప్రారంభమైంది..."):
                 try:
+                    # ముందుగా ఇచ్చిన టెక్స్ట్ స్క్రిప్ట్‌ని స్క్రీన్‌పై చూపించడం
+                    st.markdown("### 📜 జనరేట్ అయిన స్క్రిప్ట్ & డీటెయిల్స్:")
+                    st.info(f"**మీ ఇన్‌పుట్ స్క్రిప్ట్:** {video_topic}\n\n**క్యారెక్టర్ స్టైల్:** {character_prompt}")
+
                     # స్ట్రీమ్‌లిట్ సీక్రెట్స్ నుండి రన్‌వే ఏపీఐ కీని పొందడం
                     runway_api_key = (
                         st.secrets.get("RUNWAY_API_KEY")
@@ -635,10 +638,10 @@ elif choice.startswith("11."):
                             "X-Runway-Version": "2024-11-06"
                         }
 
-                        # రన్‌వే ఏపీఐ Gen-4 Turbo మోడల్ కోసం పేలోడ్
+                        # రన్‌వే ఏపీఐ Gen-4 Turbo మోడల్ కోసం పేలోడ్ (టెక్స్ట్ స్క్రిప్ట్ తో కలిపి)
                         payload = {
                             "model": "gen4_turbo",
-                            "promptText": f"{character_prompt}. సీన్ వివరాలు: {video_topic}",
+                            "promptText": f"{character_prompt}. Scene action based on script: {video_topic}",
                             "promptImage": image_data_uri,
                             "duration": 5,
                             "ratio": "720x1280" if "9:16" in aspect_ratio else "1280x720"
@@ -689,8 +692,8 @@ elif choice.startswith("11."):
             if not uploaded_image:
                 st.warning("⚠️ దయచేసి ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా.")
             elif not video_topic:
-                st.warning("⚠️ దయచేసి వీడియో టాపిక్ లేదా సీన్ వివరాలను నమోదు చేయండి మిత్రమా.")
-            
+                st.warning("⚠️ దయచేసి వీడియో టాపిక్ లేదా స్క్రిప్ట్ టెక్స్ట్ వివరాలను నమోదు చేయండి మిత్రమా.")
+                            
 # 12. సెట్టింగ్స్ (Settings)
 elif choice.startswith("12."):
     st.subheader("⚙️ యాప్ సెట్టింగ్స్ (Joshna Tailors & Aservad.ai)")
