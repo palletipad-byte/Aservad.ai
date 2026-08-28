@@ -613,6 +613,7 @@ elif choice.startswith("11."):
                     st.markdown("### 📜 జనరేట్ అయిన స్క్రిప్ట్ & డీటెయిల్స్:")
                     st.info(f"**మీ ఇన్‌పుట్ స్క్రిప్ట్:** {video_topic}\n\n**క్యారెక్టర్ స్టైల్:** {character_prompt}")
 
+
                     # స్ట్రీమ్‌లిట్ సీక్రెట్స్ నుండి రన్‌వే ఏపీఐ కీని పొందడం
                     runway_api_key = (
                         st.secrets.get("RUNWAY_API_KEY")
