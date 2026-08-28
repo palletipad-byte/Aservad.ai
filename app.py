@@ -651,7 +651,7 @@ elif choice.startswith("11."):
 
                         # 1. టాస్క్ క్రియేట్ చేయడానికి ప్రొడక్షన్ రిక్వెస్ట్ పంపడం
                         response = requests.post(
-                            "https://api.runwayml.com/v1/tasks",
+                            "https://api.dev.runwayml.com/v1/tasks",
                             json=payload,
                             headers=headers
                         )
@@ -662,7 +662,7 @@ elif choice.startswith("11."):
                             st.success(f"✅ వీడియో జనరేషన్ టాస్క్ విజయవంతంగా ప్రారంభమైంది! (Task ID: {task_id})")
                             
                             # 2. వీడియో రెడీ అయ్యే వరకు స్టేటస్ చెక్ చేయడం (Polling URL)
-                            task_status_url = f"https://api.runwayml.com/v1/tasks/{task_id}"
+                            task_status_url = f"https://api.dev.runwayml.com/v1/tasks/{task_id}"
                             video_url = None
                             with st.spinner("⏳ వీడియో రెండర్ అవుతోంది... (ఇది కొన్ని నిమిషాలు పట్టవచ్చు)"):
                                 for _ in range(45):
