@@ -631,7 +631,7 @@ elif choice.startswith("11."):
                         encoded_image = base64.b64encode(image_bytes).decode("utf-8")
                         image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
 
-                        # రన్‌వే లేటెస్ట్ పబ్లిక్ ఏపీఐ హెడర్స్
+                                                # రన్‌వే లేటెస్ట్ పబ్లిక్ ఏపీఐ హెడర్స్
                         headers = {
                             "Authorization": f"Bearer {runway_api_key}",
                             "Content-Type": "application/json",
@@ -639,16 +639,15 @@ elif choice.startswith("11."):
                         }
 
                         # వీడియో (Payload) సెట్టింగ్
-payload = {
-    "model": "gen3a_turbo",
-    "promptText": f"{character_prompt}. Scene action: {video_topic}",
-    "promptImage": image_data_uri,
-    "duration": 5,
-    "ratio": "9:16" if "9:16" in aspect_ratio else "16:9"
-    }
-    
+                        payload = {
+                            "model": "gen3a_turbo",
+                            "promptText": f"{character_prompt}. Scene action: {video_topic}",
+                            "promptImage": image_data_uri,
+                            "duration": 5,
+                            "ratio": "9:16" if "9:16" in aspect_ratio else "16:9"
+                        }
 
-                                                # బేస్ యూఆర్‌ఎల్ సెట్టింగ్ (డెవలపర్ వెర్షన్ కోసం)
+                        # బేస్ యూఆర్‌ఎల్ సెట్టింగ్ (డెవలపర్ వెర్షన్ కోసం)
                         base_url = "https://api.dev.runwayml.com/v1"
 
                         # టాస్క్ క్రియేట్ చేయడానికి రిక్వెస్ట్ పంపడం
