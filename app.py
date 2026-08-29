@@ -638,14 +638,15 @@ elif choice.startswith("11."):
                             "X-Runway-Version": "2024-11-06"
                         }
 
-                        # వీడియో (Payload) సెట్టింగ్
+                                                # వీడియో (Payload) సెట్టింగ్
                         payload = {
-                            "model": "gen3a_turbo",
+                            "model": "gen4_turbo",
                             "promptText": f"{character_prompt}. Scene action: {video_topic}",
                             "promptImage": image_data_uri,
                             "duration": 5,
                             "ratio": "9:16" if "9:16" in aspect_ratio else "16:9"
                         }
+                        
 
                         # బేస్ యూఆర్‌ఎల్ సెట్టింగ్ (డెవలపర్ వెర్షన్ కోసం)
                         base_url = "https://api.dev.runwayml.com/v1"
