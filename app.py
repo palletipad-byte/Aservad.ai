@@ -604,106 +604,103 @@ elif choice.startswith("11."):
         key="runway_topic"
     )
 
-    # జనరేషన్ బటన్
-    if st.button("🚀 స్క్రిప్ట్ & వీడియో జనరేట్ చేయి", key="runway_gen_btn"):
-        if uploaded_image is not None and video_topic:
-            with st.spinner("✨ స్క్రిప్ట్ ప్రాసెస్ అవుతోంది మరియు రన్‌వే ఏఐ ద్వారా వీడియో రెండరింగ్ ప్రారంభమైంది..."):
-                try:
-                    # ముందుగా ఇచ్చిన టెక్స్ట్ స్క్రిప్ట్‌ని స్క్రీన్‌పై చూపించడం
-                    st.markdown("### 📜 జనరేట్ అయిన స్క్రిప్ట్ & డీటెయిల్స్:")
-                    st.info(f"**మీ ఇన్‌పుట్ స్క్రిప్ట్:** {video_topic}\n\n**క్యారెక్టర్ స్టైల్:** {character_prompt}")
+# జనరేషన్ బటన్
+if st.button("🚀 స్క్రిప్ట్ & వీడియో జనరేట్ చేయి", key="runway_gen_btn"):
+    if uploaded_image is not None and video_topic:
+        with st.spinner("✨ స్క్రిప్ట్ ప్రాసెస్ అవుతోంది మరియు రన్‌వే ఏఐ ద్వారా వీడియో రెడీ అవుతోంది..."):
+            try:
+                # ముందుగా ఇచ్చిన టెక్స్ట్, స్క్రిప్ట్‌ని స్క్రీన్‌పై చూపించడం
+                st.markdown("### 📜 జనరేట్ అయిన స్క్రిప్ట్ & డీటేయిల్స్:")
+                st.info(f"**మీ ఇన్‌పుట్ స్క్రిప్ట్:**\n\n{video_topic}")
 
+                # స్ట్రీమ్‌లిట్ సీక్రెట్స్ నుండి రన్‌వే ఏపీఐ కీని పొందడం
+                runway_api_key = (
+                    st.secrets.get("RUNWAY_API_KEY") 
+                    or st.secrets.get("RUNWAYML_API_KEY") 
+                    or ""
+                )
 
-                        # స్ట్రీమ్‌లిట్ సీక్రెట్స్ నుండి రన్‌వే ఏపీఐ కీని పొందడం
-    runway_api_key = (
-        st.secrets.get("RUNWAY_API_KEY") 
-        or st.secrets.get("RUNWAYML_API_KEY") 
-        or ""
-    )
-
-    if not runway_api_key:
-        st.warning("⚠️ గమనిక: దయచేసి స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో 'RUNWAY_API_KEY' ని సెట్ చేయండి మిత్రమా.")
-    else:
-        import requests
-        import base64
-        import time
-
-        # అప్లోడ్ చేసిన ఇమేజ్‌ని base64 గా మార్చడం
-        image_bytes = uploaded_image.getvalue()
-        encoded_image = base64.b64encode(image_bytes).decode("utf-8")
-        image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
-
-        # రన్‌వే లేటెస్ట్ పబ్లిక్ ఏపీఐ హెడర్స్
-        headers = {
-            "Authorization": f"Bearer {runway_api_key}",
-            "Content-Type": "application/json",
-            "X-Runway-Version": "2024-11-06"
-        }
-
-        # పేలోడ్ (Payload) సెట్టింగ్
-        payload = {
-            "model": "gen3a_turbo",
-            "promptText": f"{character_prompt}. Scene action: {video_topic}",
-            "promptImage": image_data_uri,
-            "duration": 5,
-            "ratio": "720x1280" if "9:16" in aspect_ratio else "1280x720"
-        }
-
-        # ఆటోమేటిక్ ఎండ్‌పాయింట్ సెలెక్షన్ (డెవలప్మెంట్ లేదా ప్రొడక్షన్ కీ చెక్)
-        if runway_api_key.startswith("key_dev") or "dev" in runway_api_key.lower():
-            base_url = "https://api.dev.runwayml.com/v1"
-        else:
-            base_url = "https://api.runwayml.com/v1"
-
-        try:
-            # టాస్క్ క్రియేట్ చేయడానికి రిక్వెస్ట్ పంపడం
-            response = requests.post(f"{base_url}/tasks", json=payload, headers=headers)
-
-            if response.status_code == 200 or response.status_code == 201:
-                res_data = response.json()
-                task_id = res_data.get("id")
-                st.success("✅ వీడియో జనరేషన్ టాస్క్ విజయవంతంగా ప్రారంభమైంది!")
-
-                # స్టేటస్ చెక్ చేయడం (Polling URL)
-                task_status_url = f"{base_url}/tasks/{task_id}"
-                video_url = None
-                
-                with st.spinner("⏳ వీడియో రెండర్ అవుతోంది... (ఇది కొన్ని నిమిషాలు పట్టవచ్చు)"):
-                    for _ in range(45):
-                        time.sleep(10)
-                        status_res = requests.get(task_status_url, headers=headers)
-                        if status_res.status_code == 200:
-                            status_data = status_res.json()
-                            status = status_data.get("status")
-
-                            if status == "SUCCEEDED" or status == "completed":
-                                output_list = status_data.get("output", [])
-                                if output_list:
-                                    video_url = output_list[0]
-                                break
-                            elif status == "FAILED" or status == "failed":
-                                st.error("❌ వీడియో రెండరింగ్ విఫలమైంది.")
-                                break
-
-                # వీడియో చూపించడం
-                if video_url:
-                    st.markdown("### 🎬 మీ వీడియో విజయవంతంగా తయారైంది!")
-                    st.video(video_url)
-                    st.markdown(f"🔗 [వీడియో డౌన్‌లోడ్ లింక్]({video_url})")
+                if not runway_api_key:
+                    st.warning("⚠️ గమనిక: దయచేసి స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో 'RUNWAY_API_KEY' ని సెట్ చేయండి మిత్రమా.")
                 else:
-                    st.error("⚠️ వీడియో రెండరింగ్ సమయం ముగిసింది లేదా లింక్ అందలేదు.")
-            else:
-                st.error(f"⚠️ రన్‌వే ఏపీఐ కనెక్షన్ ఎర్రర్: {response.text}")
+                    import requests
+                    import base64
+                    import time
 
-        except Exception as e:
-            st.error(f"⚠️ టెక్నికల్ ఎర్రర్ సంభవించింది: {e}")
+                    # అప్లోడ్ చేసిన ఇమేజ్‌ని base64 గా మార్చడం
+                    image_bytes = uploaded_image.getvalue()
+                    encoded_image = base64.b64encode(image_bytes).decode("utf-8")
+                    image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
 
-else:
-    if not uploaded_image:
-        st.warning("⚠️ దయచేసి ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా.")
-    elif not video_topic:
-        st.warning("⚠️ దయచేసి వీడియో టాపిక్ లేదా స్క్రిప్ట్ టెక్స్ట్ వివరాలను నమోదు చేయండి మిత్రమా.")
-                    
+                    # రన్‌వే లేటెస్ట్ పబ్లిక్ ఏపీఐ హెడర్స్
+                    headers = {
+                        "Authorization": f"Bearer {runway_api_key}",
+                        "Content-Type": "application/json",
+                        "X-Runway-Version": "2024-11-06"
+                    }
+
+                    # పేలోడ్ (Payload) సెట్టింగ్
+                    payload = {
+                        "model": "gen3a_turbo",
+                        "promptText": f"{character_prompt}. Scene action: {video_topic}",
+                        "promptImage": image_data_uri,
+                        "duration": 5,
+                        "ratio": "720x1280" if "9:16" in aspect_ratio else "1280x720"
+                    }
+
+                    # ఆటోమేటిక్ ఎండ్‌పాయింట్ సెలెక్షన్
+                    if runway_api_key.startswith("key_dev") or "dev" in runway_api_key.lower():
+                        base_url = "https://api.dev.runwayml.com/v1"
+                    else:
+                        base_url = "https://api.runwayml.com/v1"
+
+                    # టాస్క్ క్రియేట్ చేయడానికి రిక్వెస్ట్ పంపడం
+                    response = requests.post(f"{base_url}/tasks", json=payload, headers=headers)
+
+                    if response.status_code == 200 or response.status_code == 201:
+                        res_data = response.json()
+                        task_id = res_data.get("id")
+                        st.success("✅ వీడియో జనరేషన్ టాస్క్ విజయవంతంగా ప్రారంభమైంది!")
+
+                        # స్టేటస్ చెక్ చేయడం (Polling URL)
+                        task_status_url = f"{base_url}/tasks/{task_id}"
+                        video_url = None
+                        
+                        with st.spinner("⏳ వీడియో రెండర్ అవుతోంది... (ఇది కొన్ని నిమిషాలు పట్టవచ్చు)"):
+                            for _ in range(45):
+                                time.sleep(10)
+                                status_res = requests.get(task_status_url, headers=headers)
+                                if status_res.status_code == 200:
+                                    status_data = status_res.json()
+                                    status = status_data.get("status")
+
+                                    if status == "SUCCEEDED" or status == "completed":
+                                        output_list = status_data.get("output", [])
+                                        if output_list:
+                                            video_url = output_list[0]
+                                        break
+                                    elif status == "FAILED" or status == "failed":
+                                        st.error("❌ వీడియో రెండరింగ్ విఫలమైంది.")
+                                        break
+
+                        # వీడియో చూపించడం
+                        if video_url:
+                            st.markdown("### 🎬 మీ వీడియో విజయవంతంగా తయారైంది!")
+                            st.video(video_url)
+                            st.markdown(f"🔗 [వీడియో డౌన్‌లోడ్ లింక్]({video_url})")
+                        else:
+                            st.error("⚠️ వీడియో రెండరింగ్ సమయం ముగిసింది లేదా లింక్ అందలేదు.")
+                    else:
+                        st.error(f"⚠️ రన్‌వే ఏపీఐ కనెక్షన్ ఎర్రర్: {response.text}")
+
+            except Exception as e:
+                st.error(f"⚠️ టెక్నికల్ ఎర్రర్ సంభవించింది: {e}")
+    else:
+        if not uploaded_image:
+            st.warning("⚠️ దయచేసి ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా.")
+        elif not video_topic:
+            st.warning("⚠️ దయచేసి వీడియో టాపిక్ లేదా స్క్రిప్ట్ టెక్స్ట్ వివరాలను నమోదు చేయండి మిత్రమా.")
+                
 # 12. సెట్టింగ్స్ (Settings)
 elif choice.startswith("12."):
     st.subheader("⚙️ యాప్ సెట్టింగ్స్ (Joshna Tailors & Aservad.ai)")
