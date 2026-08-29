@@ -603,7 +603,6 @@ elif choice.startswith("11."):
         placeholder="ఉదా: నమస్కారం మిత్రమా, ఈరోజు మనం ఏఐ టెక్నాలజీ గురించి తెలుసుకుందాం...",
         key="runway_topic"
     )
-
     # జనరేషన్ బటన్
     if st.button("🚀 స్క్రిప్ట్ & వీడియో జనరేట్ చేయి", key="runway_gen_btn"):
         if uploaded_image is not None and video_topic:
@@ -649,11 +648,10 @@ elif choice.startswith("11."):
                         }
 
                         # బేస్ యూఆర్‌ఎల్ సెట్టింగ్ (డెవలపర్ వెర్షన్ కోసం)
-base_url = "https://api.dev.runwayml.com/v1"
+                        base_url = "https://api.dev.runwayml.com/v1"
 
-# టాస్క్ క్రియేట్ చేయడానికి రిక్వెస్ట్ పంపడం (ఎండ్‌పాయింట్ సరిగ్గా ఉండేలా చూసుకోవడం)
-response = requests.post(f"{base_url}/image_to_video", json=payload, headers=headers)
-                        
+                        # టాస్క్ క్రియేట్ చేయడానికి రిక్వెస్ట్ పంపడం
+                        response = requests.post(f"{base_url}/image_to_video", json=payload, headers=headers)
 
                         if response.status_code == 200 or response.status_code == 201:
                             res_data = response.json()
@@ -698,7 +696,7 @@ response = requests.post(f"{base_url}/image_to_video", json=payload, headers=hea
                 st.warning("⚠️ దయచేసి ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా.")
             elif not video_topic:
                 st.warning("⚠️ దయచేసి వీడియో టాపిక్ లేదా స్క్రిప్ట్ టెక్స్ట్ వివరాలను నమోదు చేయండి మిత్రమా.")
-            
+                
 # 12. సెట్టింగ్స్ (Settings)
 elif choice.startswith("12."):
     st.subheader("⚙️ యాప్ సెట్టింగ్స్ (Joshna Tailors & Aservad.ai)")
