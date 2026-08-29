@@ -647,12 +647,12 @@ elif choice.startswith("11."):
                             "ratio": "720x1280" if "9:16" in aspect_ratio else "1280x720"
                         }
 
-                        # బేస్ యూఆర్‌ఎల్ సెట్టింగ్ (డెవలపర్ వెర్షన్ కోసం)
+                                                # బేస్ యూఆర్‌ఎల్ సెట్టింగ్ (డెవలపర్ వెర్షన్ కోసం)
                         base_url = "https://api.dev.runwayml.com/v1"
 
                         # టాస్క్ క్రియేట్ చేయడానికి రిక్వెస్ట్ పంపడం
                         response = requests.post(f"{base_url}/image_to_video", json=payload, headers=headers)
-
+                        
                         if response.status_code == 200 or response.status_code == 201:
                             res_data = response.json()
                             task_id = res_data.get("id")
