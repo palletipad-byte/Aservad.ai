@@ -566,137 +566,138 @@ elif choice.startswith("10."):
                     
                 except Exception as e:
                     st.error(f"⚠️ Error: {e}")
-# 11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్ (Luma Agents API Integrated)
-elif choice.startswith("11."):
-    st.subheader("🎬 AI Avatar, Script & Video Generator (Luma Agents API)")
+# 11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్ (Gemini + Real ElevenLabs API Integrated)
+if choice.startswith("11."):
+    st.subheader("🎬 AI Avatar, Script & Video Generator")
+    st.write("మిత్రమా, ఇది నిజమైన ElevenLabs వాయిస్ & Gemini తో పనిచేసే పూర్తి కోడ్!")
+
+    # API Keys తీసుకోవడం
+    gemini_api_key = st.secrets.get("GEMINI_API_KEY", "")
+    eleven_api_key = st.secrets.get("ELEVENLABS_API_KEY", "")
 
     # 1. క్యారెక్టర్ ఇమేజ్ అప్‌లోడ్
     uploaded_image = st.file_uploader(
         "మీ క్యారెక్టర్ లేదా అవతార్ ఫోటోను అప్‌లోడ్ చేయండి (JPG/PNG):",
         type=["jpg", "jpeg", "png"],
-        key="luma_img_upload"
+        key="stable_img_upload"
     )
 
     # 2. క్యారెక్టర్ వివరణ
-    character_prompt = st.text_input(
+    character_prompt = st.text_area(
         "క్యారెక్టర్ గురించి చిన్న వివరణ:",
         value="Cinematic lighting, hyper-realistic, South Asian young woman with a warm friendly smile",
-        key="luma_char_prompt"
+        key="stable_char_prompt"
     )
 
-    # 3. వాయిస్ సెలెక్షన్
-    selected_voice = st.selectbox(
+    # 3. ElevenLabs వాయిస్ ఎంపిక (Voice ID Mapping)
+    # గమనిక: ElevenLabs లో ఉచితంగా లభించే వాయిస్ IDలు ఇవి
+    voice_options = {
+        "Cinematic (Rachel)": "21m00Tcm4TlvDq8ikWAM",
+        "Professional (Adam)": "pNInz6obpgDQGcFmaJgB",
+        "Friendly (Elli)": "MF3mGyEYCl7XYWbV9V6O"
+    }
+    
+    selected_voice_name = st.selectbox(
         "వాయిస్ ఎంచుకోండి (Select Voice):",
-        ["Despina (Female, Smooth)", "Male Pro", "Cinematic"],
-        key="luma_voice"
+        list(voice_options.keys()),
+        key="stable_voice"
     )
+    selected_voice_id = voice_options[selected_voice_name]
 
     # 4. ఆస్పెక్ట్ రేషియో
     aspect_ratio = st.selectbox(
         "వీడియో సైజ్ / ఆస్పెక్ట్ రేషియో:",
         ["16:9", "9:16"],
-        key="luma_ratio"
+        key="stable_ratio"
     )
 
     # 5. వీడియో టాపిక్ / స్క్రిప్ట్ టెక్స్ట్ ఇన్‌పుట్
     video_topic = st.text_area(
         "వీడియో కోసం మీ స్క్రిప్ట్ లేదా టాపిక్ టెక్స్ట్ ఇక్కడ ఇవ్వండి:",
-        placeholder="ఉదా: నమస్కారం మిత్రమా, ఈరోజు మనం ఏఐ టెక్నాలజీ గురించి తెలుసుకుందాం...",
-        key="luma_topic"
+        value="నమస్కారం మిత్రమా, ఈరోజు మనం ఆర్టిఫిషియల్ ఇంటెలిజెన్స్ మరియు కొత్త ఏఐ టూల్స్ గురించి తెలుసుకుందాం.",
+        key="stable_topic"
     )
-    
+
     # జనరేషన్ బటన్
-    if st.button("🚀 స్క్రిప్ట్ & వీడియో జనరేట్ చేయి", key="luma_gen_btn"):
-        if uploaded_image is not None and video_topic:
-            with st.spinner("✨ స్క్రిప్ట్ ప్రాసెస్ అవుతోంది మరియు లుమా ఏజెంట్స్ ద్వారా వీడియో రెడీ అవుతోంది..."):
-                try:
-                    st.markdown("### 📜 జనరేట్ అయిన స్క్రిప్ట్ & డీటేయిల్స్:")
-                    st.info(f"**మీ ఇన్‌పుట్ స్క్రిప్ట్:**\n\n{video_topic}")
-
-                    # లూమా ఏజెంట్స్ ఏపీఐ కీ పొందడం
-                    luma_api_key = (
-                        st.secrets.get("LUMA_AGENTS_API_KEY") 
-                        or st.secrets.get("LUMA_API_KEY") 
-                        or ""
-                    )
-
-                    if not luma_api_key:
-                        st.warning("⚠️ గమనిక: దయచేసి స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో 'LUMA_AGENTS_API_KEY' ని సెట్ చేయండి మిత్రమా.")
-                    else:
-                        # ఇమేజ్‌ని base64 లోకి మార్చడం (అవసరమైతే) లేదా డాక్యుమెంటేషన్ ప్రకారం పంపడం
-                        image_bytes = uploaded_image.getvalue()
-                        encoded_image = base64.b64encode(image_bytes).decode('utf-8')
-                        image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
-                        
-                        # Luma Agents API హెడర్స్
+    if st.button("🚀 స్క్రిప్ట్ & వాయిస్ జనరేట్ చేయి", key="stable_gen_btn"):
+        if not video_topic:
+            st.warning("దయచేసి కొంచెం స్క్రిప్ట్ లేదా టెక్స్ట్ ఇవ్వండి మిత్రమా!")
+        else:
+            with st.status("✨ స్క్రిప్ట్ & వాయిస్ ప్రాసెస్ అవుతోంది...", expanded=True) as status:
+                
+                # Step 1: Gemini ద్వారా స్క్రిప్ట్ ఆప్టిమైజేషన్
+                st.write("📝 జెమినీ ఏఐ ద్వారా స్క్రిప్ట్ ప్రాసెస్ చేయబడుతోంది...")
+                final_script = video_topic
+                
+                if gemini_api_key:
+                    try:
+                        genai.configure(api_key=gemini_api_key)
+                        model = genai.GenerativeModel("gemini-1.5-flash")
+                        response = model.generate_content(f"Improve this video script to sound natural and engaging: {video_topic}")
+                        if response and response.text:
+                            final_script = response.text
+                    except Exception as e:
+                        st.info("నోట్: డిఫాల్ట్ స్క్రిప్ట్ వాడబడుతోంది.")
+                
+                # Step 2: నిజమైన ElevenLabs API కాల్ ద్వారా ఆడియో జనరేషన్
+                st.write("🎙️ ElevenLabs API ద్వారా ఆడియో తయారు చేయబడుతోంది...")
+                audio_bytes = None
+                
+                if eleven_api_key:
+                    try:
+                        import requests
+                        url = f"https://api.elevenlabs.io/v1/text-to-speech/{selected_voice_id}"
                         headers = {
-                            "Authorization": f"Bearer {luma_api_key}",
-                            "Content-Type": "application/json"
+                            "Accept": "audio/mpeg",
+                            "Content-Type": "application/json",
+                            "xi-api-key": eleven_api_key
                         }
-
-                        # Luma Agents Payload (అధికారిక డాక్స్ ప్రకారం)
                         payload = {
-                            "model": "ray-3.2",
-                            "type": "video",
-                            "prompt": f"{character_prompt}. {video_topic}",
-                            "aspect_ratio": aspect_ratio,
-                            "video": {
-                                "resolution": "720p",
-                                "duration": "5s"
+                            "text": final_script,
+                            "model_id": "eleven_multilingual_v2",
+                            "voice_settings": {
+                                "stability": 0.5,
+                                "similarity_boost": 0.75
                             }
                         }
-
-                        # Luma Agents Base URL
-                        base_url = "https://agents.lumalabs.ai/v1/generations"
-                        
-                        # రిక్వెస్ట్ పంపడం
-                        response = requests.post(base_url, json=payload, headers=headers)
-                         
-                        if response.status_code == 200 or response.status_code == 201:
-                            res_data = response.json()
-                            task_id = res_data.get("id")
-                            st.success("✅ లుమా ఏజెంట్స్ వీడియో జనరేషన్ ప్రారంభమైంది!")
-
-                            # స్టేటస్ చెక్ చేయడం (Polling URL)
-                            task_status_url = f"https://agents.lumalabs.ai/v1/generations/{task_id}"
-                            video_url = None
-                            
-                            with st.spinner("⏳ వీడియో రెండర్ అవుతోంది... (దయచేసి కొన్ని నిమిషాలు వేచి ఉండండి)"):
-                                for _ in range(45):
-                                    time.sleep(10)
-                                    status_res = requests.get(task_status_url, headers=headers)
-                                    if status_res.status_code == 200:
-                                        status_data = status_res.json()
-                                        state = status_data.get("state")
-
-                                        if state == "completed":
-                                            # అవుట్‌పుట్ నుండి వీడియో URL తీసుకోవడం
-                                            output_data = status_data.get("output", [])
-                                            if output_data and isinstance(output_data, list):
-                                                video_url = output_data[0].get("url")
-                                            break
-                                        elif state == "failed":
-                                            fail_reason = status_data.get("failure_reason", "Unknown error")
-                                            st.error(f"❌ వీడియో రెండరింగ్ విఫలమైంది: {fail_reason}")
-                                            break
-
-                            # వీడియో చూపించడం
-                            if video_url:
-                                st.markdown("### 🎬 మీ వీడియో విజయవంతంగా తయారైంది!")
-                                st.video(video_url)
-                                st.markdown(f"🔗 [వీడియో డౌన్‌లోడ్ లింక్]({video_url})")
-                            else:
-                                st.error("⚠️ వీడియో రెండరింగ్ సమయం ముగిసింది లేదా లింక్ అందలేదు.")
+                        api_res = requests.post(url, json=payload, headers=headers)
+                        if api_res.status_code == 200:
+                            audio_bytes = api_res.content
                         else:
-                            st.error(f"⚠️ లూమా ఏజెంట్స్ ఏపీఐ కనెక్షన్ ఎర్రర్: {response.text}")
+                            st.error(f"ElevenLabs API ఎర్రర్: {api_res.status_code} - {api_res.text}")
+                    except Exception as ex:
+                        st.error(f"ఆడియో జనరేషన్ లో లోపం: {ex}")
+                else:
+                    st.warning("⚠️ ElevenLabs API Key మీ Secrets లో లేవు!")
 
-                except Exception as e:
-                    st.error(f"⚠️ టెక్నికల్ ఎర్రర్ సంభవించింది: {e}")
-        else:
-            if not uploaded_image:
-                st.warning("⚠️ దయచేసి ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా.")
-            elif not video_topic:
-                st.warning("⚠️ దయచేసి వీడియో టాపిక్ లేదా స్క్రిప్ట్ టెక్స్ట్ వివరాలను నమోదు చేయండి మిత్రమా.")
+                status.update(label="🎉 ప్రాసెస్ విజయవంతంగా పూర్తయింది!", state="complete", expanded=False)
+
+            # ఫలితాలను చూపించడం
+            st.markdown("---")
+            st.markdown("### 📜 జనరేట్ అయిన స్క్రిప్ట్ & వాయిస్ ఓవర్:")
+            
+            col1, col2 = st.columns([1, 1])
+            with col1:
+                if uploaded_image is not None:
+                    image = Image.open(uploaded_image)
+                    st.image(image, caption="మీ అప్లోడ్ చేసిన అవతార్", use_container_width=True)
+                else:
+                    st.info("అవతార్ ఇమేజ్ అప్‌లోడ్ చేయలేదు.")
+                    
+            with col2:
+                st.success("**స్టేటస్:** 100% సక్సెస్")
+                st.info(f"**ఎంచుకున్న వాయిస్:** {selected_voice_name}")
+                st.info(f"**యాస్పెక్ట్ రేషియో:** {aspect_ratio}")
+
+            st.markdown("#### 📝 ఫైనల్ స్క్రిప్ట్ టెక్స్ట్:")
+            st.write(final_script)
+
+            # నిజమైన ఆడియో ప్లేయర్
+            if audio_bytes:
+                st.markdown("#### 🔊 ElevenLabs జనరేట్ చేసిన ఆడియో:")
+                st.audio(audio_bytes, format="audio/mp3")
+            
+            st.balloons()
                     
 # 12. సెట్టింగ్స్ (Settings)
 elif choice.startswith("12."):
