@@ -627,17 +627,18 @@ elif choice.startswith("11."):
                         import base64
                         import time
 
-                        # అప్లోడ్ చేసిన ఇమేజ్‌ని base64 గా మార్చడం
-                        image_bytes = uploaded_image.getvalue()
-                        encoded_image = base64.b64encode(image_bytes).decode("utf-8")
-                        image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
-
-                        # Luma API హెడర్స్
-                            headers = {
+                            # అప్లోడ్ చేసిన ఇమేజ్‌ని base64 లోకి మార్చడం
+    image_bytes = uploaded_image.getvalue()
+    encoded_image = base64.b64encode(image_bytes).decode('utf-8')
+    image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
+    
+    # Luma API హెడర్స్
+    headers = {
         "Authorization": f"Bearer {luma_api_key}",
         "X-Api-Key": luma_api_key,
-        "Content-Type": "application/json",
+        "Content-Type": "application/json"
     }
+    
     
 
                         # Luma Dream Machine Payload
