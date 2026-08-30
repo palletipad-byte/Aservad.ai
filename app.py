@@ -640,7 +640,7 @@ elif choice.startswith("11."):
             "prompt": f"{character_prompt}. {video_topic}",
             "keyframes": {
                 "frame0": {
-                    "type": "image",  # <--- 'inage' బదులుగా 'image' అని ఉండాలి
+                    "type": "image",  # <--- 'image' బదులుగా 'image' అని ఉండాలి
                     "url": image_data_uri
                 }
             },
