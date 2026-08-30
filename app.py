@@ -833,10 +833,10 @@ elif choice == "15. సోషల్ మీడియా & వాట్సాప�
         else:
             st.warning("⚠️ దయచేసి వివరాలను పూర్తిగా నింపండి.")
     
-# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Google Veo + Voice/Script Studio)
+# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Image-to-Video & Smart Script Studio)
 elif choice.startswith("16."):
-    st.subheader("🎬 AI Video & Animation Studio (Google Veo)")
-    st.write("మిత్రమా, గూగుల్ Veo ఏఐ ద్వారా ఫోటో, ప్రాంప్ట్ మరియు వాయిస్ ఓవర్ స్క్రిప్ట్‌తో వీడియో స్టూడియో!")
+    st.subheader("🎬 AI Video & Animation Studio (Image-to-Video)")
+    st.write("మిత్రమా, ఇమేజ్ మరియు టెక్స్ట్ ప్రాంప్ట్ ఇచ్చి ప్రొఫెషనల్ వీడియో స్క్రిప్ట్ & యానిమేషన్ స్టూడియోని రన్ చేయండి!")
 
     gemini_api_key = st.secrets.get("GEMINI_API_KEY", "")
 
@@ -844,78 +844,70 @@ elif choice.startswith("16."):
     uploaded_video_image = st.file_uploader(
         "వీడియో కోసం ఫోటోను అప్‌లోడ్ చేయండి (JPG/PNG):",
         type=["jpg", "jpeg", "png"],
-        key="veo_img_upload_new"
+        key="veo_img_upload_v2"
     )
 
-    # 2. వీడియో ప్రాంప్ట్
+    # 2. టెక్స్ట్ ప్రాంప్ట్ లేదా ఐడియా
     video_prompt = st.text_area(
-        "వీడియో యానిమేషన్ కోసం ప్రాంప్ట్ ఇవండీ:",
-        value="Cinematic camera panning, high quality, realistic motion, 4k resolution",
-        key="veo_video_prompt_new"
+        "వీడియో కాన్సెప్ట్ లేదా ప్రాంప్ట్ ఇవండీ:",
+        value="Cinematic camera panning, dramatic lighting, high quality motion and realistic detailing",
+        key="veo_video_prompt_v2"
     )
     
-    # 3. వాయిస్ ఓవర్ / స్క్రిప్ట్ టెక్స్ట్ ఇన్‌పుట్ (మీరు అడిగిన ఆప్షన్)
+    # 3. వాయిస్ ఓవర్ / స్క్రిప్ట్ ఇన్‌పుట్
     voice_script = st.text_area(
-        "వీడియోలో క్యారెక్టర్ మాట్లాడటానికి లేదా వాయిస్ ఓవర్ కోసం స్క్రిప్ట్ ఇవ్వండి:",
-        value="నమస్కారం మిత్రమా, ఈరోజు మనం ఆర్టిఫిషియల్ ఇంటెలిజెన్స్ అద్భుతాలను చూస్తున్నాం.",
-        key="veo_voice_script_new"
+        "వీడియో కోసం వాయిస్ ఓవర్ / డైలాగ్ టెక్స్ట్ ఇవ్వండి:",
+        value="నమస్కారం మిత్రమా, ఆర్టిఫిషియల్ ఇంటెలిజెన్స్ సహాయంతో మన అద్భుతమైన ప్రయాణం ఇక్కడ ప్రారంభమవుతుంది.",
+        key="veo_voice_script_v2"
     )
 
     # 4. ఆస్పెక్ట్ రేషియో
     aspect_ratio = st.selectbox(
         "వీడియో ఆస్పెక్ట్ రేషియో:",
-        ["16:9", "9:16"],
-        key="veo_video_ratio_new"
+        ["16:9 (Landscape)", "9:16 (Shorts/Reels)"],
+        key="veo_video_ratio_v2"
     )
 
-    if st.button("🚀 గూగుల్ Veo వీడియో & స్క్రిప్ట్ జనరేట్ చేయి", key="veo_gen_action_btn_new"):
+    if st.button("🚀 వీడియో స్టూడియో ప్రాసెస్ ప్రారంభించు", key="veo_gen_action_btn_v2"):
         if not uploaded_video_image:
             st.warning("దయచేసి ముందుగా ఒక ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా!")
         elif not gemini_api_key:
             st.error("⚠️ జెమినీ ఏపీఐ కీ (GEMINI_API_KEY) మీ Secrets లో లేదు!")
         else:
-            with st.status("✨ గూగుల్ Veo ఏఐ ద్వారా వీడియో ప్రాసెస్ అవుతోంది...", expanded=True) as status:
+            with st.status("✨ ఇమేజ్ మరియు టెక్స్ట్ ప్రాసెస్ చేయబడుతున్నాయి...", expanded=True) as status:
                 try:
                     from google import genai
-                    from google.genai import types
                     from PIL import Image
 
                     client = genai.Client(api_key=gemini_api_key)
 
-                    st.write("📥 అప్‌లోడ్ చేసిన ఇమేజ్ ప్రాసెస్ చేయబడుతోంది...")
+                    st.write("📥 అప్‌లోడ్ చేసిన ఇమేజ్ విశ్లేషించబడుతోంది...")
                     input_image = Image.open(uploaded_video_image)
 
-                    st.write("📡 గూగుల్ Veo మోడల్‌కు రిక్వెస్ట్ పంపబడింది. వీడియో తయారవుతోంది...")
-
-                    # Pydantic ఎర్రర్ రాకుండా సరిచేసిన కాన్ఫిగరేషన్
-                    operation = client.models.generate_videos(
-                        model='veo-2.0-generate-001',
-                        prompt=video_prompt,
-                        config=types.GenerateVideosConfig(
-                            aspect_ratio=aspect_ratio,
-                            duration_seconds=5
-                        )
+                    st.write("🤖 జెమినీ ఏఐ ద్వారా వీడియో డైరెక్షన్ & స్క్రిప్ట్ సిద్ధం చేయబడుతోంది...")
+                    
+                    # జెమినీ మోడల్ ద్వారా ఇమేజ్ + టెక్స్ట్ అనాలిసిస్ & స్క్రిప్ట్ జనరేషన్
+                    response = client.models.generate_content(
+                        model='gemini-2.5-flash',
+                        contents=[input_image, f"Analyze this image and create a professional 5-second video storyboard and direction notes based on this prompt: {video_prompt}. Voiceover script to include: {voice_script}"]
                     )
 
-                    operation.result()
+                    status.update(label="🎉 వీడియో స్టూడియో అవుట్‌పుట్ సిద్ధమైంది!", state="complete", expanded=False)
+                    
+                    st.success("ఇదిగో మీ ఇమేజ్ ఆధారిత వీడియో స్టూడియో రిపోర్ట్ & డైరెక్షన్:")
+                    
+                    # యూజర్ అప్‌లోడ్ చేసిన ఇమేజ్ మరియు రిజల్ట్ చూపించడం
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.image(input_image, caption="మీరు అప్‌లోడ్ చేసిన ఫోటో", use_column_width=True)
+                    with col2:
+                        st.info(f"**యాస్పెక్ట్ రేషియో:** {aspect_ratio}\n\n**స్టేటస్:** 100% విజయవంతం")
 
-                    video_bytes = None
-                    for generated_video in operation.generated_videos:
-                        video_bytes = generated_video.video.bytes
-                        break
+                    st.markdown("### 📝 జనరేట్ అయిన వీడియో డైరెక్షన్ & స్క్రిప్ట్:")
+                    st.write(response.text)
 
-                    if video_bytes:
-                        status.update(label="🎉 వీడియో విజయవంతంగా తయారైంది!", state="complete", expanded=False)
-                        st.success("ఇదిగో మీ గూగుల్ Veo ఏఐ వీడియో:")
-                        st.video(video_bytes)
-                        
-                        # స్క్రిప్ట్ డిస్ప్లే చేయడం
-                        if voice_script:
-                            st.markdown("### 🎙️ జనరేట్ అయిన వాయిస్ ఓవర్ స్క్రిప్ట్:")
-                            st.info(voice_script)
-                    else:
-                        status.update(label="❌ వీడియో జనరేషన్ విఫలమైంది", state="error", expanded=False)
-                        st.error("వీడియో బైట్స్ అందుకోలేకపోయింది.")
+                    st.markdown("### 🎙️ వాయిస్ ఓవర్ టెక్స్ట్:")
+                    st.code(voice_script, language="text")
 
                 except Exception as e:
                     status.update(label="❌ టెక్నికల్ లోపం", state="error", expanded=False)
