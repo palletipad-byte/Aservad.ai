@@ -622,7 +622,7 @@ elif choice.startswith("11."):
 
                     if not luma_api_key:
                         st.warning("⚠️ గమనిక: దయచేసి స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో 'LUMA_API_KEY' ని సెట్ చేయండి మిత్రమా.")
-    else:
+ else:
         # అప్లోడ్ చేసిన ఇమేజ్‌ని base64 లోకి మార్చడం
         image_bytes = uploaded_image.getvalue()
         encoded_image = base64.b64encode(image_bytes).decode('utf-8')
