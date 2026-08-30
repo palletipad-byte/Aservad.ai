@@ -1,12 +1,13 @@
 import io
 import os
-import time  # సమయం కోసం ఇది పైన ఉండాలి
+import time
+import base64
 from io import BytesIO
 from google import genai
 from google.genai import types
 from PIL import Image
 import PyPDF2
-import requests  # రన్‌వే ఏపీఐ కోసం ఇది చాలా ముఖ్యం
+import requests
 import streamlit as st
 
 
