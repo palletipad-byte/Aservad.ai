@@ -833,94 +833,85 @@ elif choice == "15. సోషల్ మీడియా & వాట్సాప�
         else:
             st.warning("⚠️ దయచేసి వివరాలను పూర్తిగా నింపండి.")
     
-# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Image & Text-to-Video with Luma API)
+# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Google Veo Model Integrated)
 elif choice.startswith("16."):
-    st.subheader("🎬 AI Video & Animation Studio (Text/Image-to-Video)")
-    st.write("మిత్రమా, ఫోటో మరియు ప్రాంప్ట్ ఇచ్చి లూమా ఏఐ ద్వారా వీడియో జనరేట్ చేసే టూల్ ఇది!")
+    st.subheader("🎬 AI Video & Animation Studio (Google Veo)")
+    st.write("మిత్రమా, గూగుల్ Veo ఏఐ ద్వారా ఫోటో మరియు ప్రాంప్ట్ ఇచ్చి వీడియో జనరేట్ చేసే స్టూడియో ఇది!")
 
-    luma_api_key = st.secrets.get("LUMA_AGENTS_API_KEY", "") or st.secrets.get("LUMA_API_KEY", "")
+    # API Key చెకింగ్
+    gemini_api_key = st.secrets.get("GEMINI_API_KEY", "")
 
-    # ఇమేజ్ అప్‌లోడ్ ఆప్షన్ (ఇమేజ్-టు-వీడియో కోసం)
+    # 1. ఇమేజ్ అప్‌లోడ్ ఆప్షన్ (ఇమేజ్-టు-వీడియో కోసం)
     uploaded_video_image = st.file_uploader(
-        "వీడియో కోసం ఫోటోను అప్‌లోడ్ చేయండి (ఆప్షనల్ - JPG/PNG):",
+        "వీడియో కోసం ఫోటోను అప్‌లోడ్ చేయండి (JPG/PNG):",
         type=["jpg", "jpeg", "png"],
-        key="luma_img_to_video"
+        key="veo_img_upload"
     )
 
+    # 2. వీడియో ప్రాంప్ట్
     video_prompt = st.text_area(
-        "వీడియో కోసం ప్రాంప్ట్ ఇవండీ (Prompt):",
-        value="A cinematic animation based on this image, hyper-realistic",
-        key="luma_video_prompt"
+        "వీడియో కోసం ప్రాంప్ట్ ఇవండీ:",
+        value="Cinematic camera panning, high quality, realistic motion, 4k resolution",
+        key="veo_video_prompt"
     )
     
+    # 3. ఆస్పెక్ట్ రేషియో
     aspect_ratio = st.selectbox(
         "వీడియో ఆస్పెక్ట్ రేషియో:",
-        ["16:9", "9:16", "1:1"],
-        key="luma_video_ratio"
+        ["16:9", "9:16"],
+        key="veo_video_ratio"
     )
 
-    if st.button("🚀 లూమా వీడియో జనరేట్ చేయి", key="luma_gen_action_btn"):
-        if not video_prompt:
-            st.warning("దయచేసి ప్రాంప్ట్ టెక్స్ట్ ఇవ్వండి మిత్రమా!")
-        elif not luma_api_key:
-            st.error("⚠️ లూమా ఏపీఐ కీ (LUMA_AGENTS_API_KEY) మీ Secrets లో లేదు!")
+    if st.button("🚀 గూగుల్ Veo వీడియో జనరేట్ చేయి", key="veo_gen_action_btn"):
+        if not uploaded_video_image:
+            st.warning("దయచేసి ముందుగా ఒక ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా!")
+        elif not gemini_api_key:
+            st.error("⚠️ జెమినీ ఏపీఐ కీ (GEMINI_API_KEY) మీ Secrets లో లేదు!")
         else:
-            with st.status("✨ లూమా ఏఐ ద్వారా వీడియో ప్రాసెస్ అవుతోంది...", expanded=True) as status:
-                import requests
-                import time
-
-                headers = {
-                    "Authorization": f"Bearer {luma_api_key}",
-                    "Content-Type": "application/json"
-                }
-                
-                payload = {
-                    "prompt": video_prompt,
-                    "aspect_ratio": aspect_ratio
-                }
-
-                # ఒకవేళ ఇమేజ్ ఇస్తే దాన్ని లూమాకి పంపే లాజిక్ ఇక్కడ వస్తుంది
-                st.write("📡 లూమా ఏపీఐకి రిక్వెస్ట్ పంపబడింది...")
-                
+            with st.status("✨ గూగుల్ Veo ఏఐ ద్వారా వీడియో ప్రాసెస్ అవుతోంది...", expanded=True) as status:
                 try:
-                    create_res = requests.post("https://agents.lumalabs.ai/v1/generations", json=payload, headers=headers)
-                    
-                    if create_res.status_code == 200 or create_res.status_code == 201:
-                        gen_data = create_res.json()
-                        gen_id = gen_data.get("id") or gen_data.get("generation_id")
-                        
-                        st.write(f"🔄 జనరేషన్ ప్రారంభమైంది (ID: {gen_id}). వీడియో తయారవుతోంది...")
-                        
-                        deadline = time.time() + 120
-                        video_url = None
-                        time.sleep(15)
-                        
-                        while time.time() < deadline:
-                            poll_res = requests.get(f"https://agents.lumalabs.ai/v1/generations/{gen_id}", headers=headers)
-                            if poll_res.status_code == 200:
-                                poll_data = poll_res.json()
-                                state = poll_data.get("state")
-                                
-                                if state == "completed":
-                                    video_url = poll_data.get("assets", {}).get("video") or poll_data.get("video_url")
-                                    break
-                                elif state == "failed":
-                                    st.error("❌ వీడియో జనరేషన్ విఫలమైంది.")
-                                    break
-                            time.sleep(5)
-                        
-                        if video_url:
-                            status.update(label="🎉 వీడియో విజయవంతంగా తయారైంది!", state="complete", expanded=False)
-                            st.success("ఇదిగో మీ లూమా ఏఐ వీడియో:")
-                            st.video(video_url)
-                        else:
-                            status.update(label="⏰ టైమ్‌అవుట్ అయింది", state="error", expanded=False)
-                            st.warning("వీడియో జనరేట్ కావడానికి ఎక్కువ సమయం పడుతోంది.")
-                    elif create_res.status_code == 402:
-                        status.update(label="❌ క్రెడిట్స్ అయిపోయాయి", state="error", expanded=False)
-                        st.error("⚠️ ఎర్రర్ 402: మీ లూమా అకౌంట్‌లో క్రెడిట్స్ (Credits) అయిపోయాయి మిత్రమా! దయచేసి లూమా అకౌంట్‌లో బ్యాలెన్స్ చెక్ చేయండి.")
+                    from google import genai
+                    from google.genai import types
+                    from PIL import Image
+                    import time
+
+                    # క్లయింట్‌ను ప్రారంభించండి
+                    client = genai.Client(api_key=gemini_api_key)
+
+                    st.write("📥 అప్‌లోడ్ చేసిన ఇమేజ్ ప్రాసెస్ చేయబడుతోంది...")
+                    input_image = Image.open(uploaded_video_image)
+
+                    st.write("📡 గూగుల్ Veo మోడల్‌కు రిక్వెస్ట్ పంపబడింది. వీడియో తయారవుతోంది (కొంచెం సమయం పట్టవచ్చు)...")
+
+                    # Veo మోడల్ ద్వారా వీడియో జనరేషన్
+                    operation = client.models.generate_videos(
+                        model='veo-2.0-generate-001',
+                        prompt=video_prompt,
+                        config=types.GenerateVideosConfig(
+                            person_generation="ALLOW_ADULT", 
+                            aspect_ratio=aspect_ratio,
+                            duration_seconds=5,
+                            input_images=[input_image]
+                        )
+                    )
+
+                    # జనరేషన్ పూర్తయ్యే వరకు వేచి ఉండటం
+                    operation.result()
+
+                    video_bytes = None
+                    for generated_video in operation.generated_videos:
+                        video_bytes = generated_video.video.bytes
+                        break
+
+                    if video_bytes:
+                        status.update(label="🎉 వీడియో విజయవంతంగా తయారైంది!", state="complete", expanded=False)
+                        st.success("ఇదిగో మీ గూగుల్ Veo ఏఐ వీడియో:")
+                        st.video(video_bytes)
                     else:
-                        st.error(f"API ఎర్రర్ ({create_res.status_code}): {create_res.text}")
+                        status.update(label="❌ వీడియో జనరేషన్ విఫలమైంది", state="error", expanded=False)
+                        st.error("వీడియో బైట్స్ అందుకోలేకపోయింది.")
+
                 except Exception as e:
-                    st.error(f"టెక్నికల్ లోపం ఏర్పడింది: {e}")
-                                          
+                    status.update(label="❌ టెక్నికల్ లోపం", state="error", expanded=False)
+                    st.error(f"ఏర్పడిన లోపం: {e}")
+                    
