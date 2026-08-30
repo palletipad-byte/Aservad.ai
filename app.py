@@ -833,87 +833,89 @@ elif choice == "15. సోషల్ మీడియా & వాట్సాప�
         else:
             st.warning("⚠️ దయచేసి వివరాలను పూర్తిగా నింపండి.")
     
-# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Text/Image-to-Video with Audio & Copy)
+# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Luma Agents API Integrated)
 elif choice.startswith("16."):
-    st.subheader("🎬 AI వీడియో & యానిమేషన్ స్టూడియో (Aservad.ai)")
-    st.info("మిత్రమా, ఇక్కడ మీరు టెక్స్ట్ లేదా ఇమేజ్ ఇచ్చి స్క్రిప్ట్ తయారు చేసుకోవచ్చు, వినవచ్చు మరియు కాపీ చేసుకోవచ్చు.")
+    st.subheader("🎬 AI Video & Animation Studio (Luma API)")
+    st.write("మిత్రమా, టెక్స్ట్ లేదా ఇమేజ్ ద్వారా లూమా ఏఐ ని ఉపయోగించి వీడియోను క్రియేట్ చేసే స్టూడియో ఇది!")
 
-    vid_tab1, vid_tab2 = st.tabs(["📝 టెక్స్ట్-టు-వీడియో ప్రాంప్ట్", "🖼️ ఇమేజ్-to-వీడియో యానిమేషన్"])
+    # API Key చెకింగ్
+    luma_api_key = st.secrets.get("LUMA_AGENTS_API_KEY", "") or st.secrets.get("LUMA_API_KEY", "")
+
+    # యూజర్ ఇన్‌పుట్స్
+    video_prompt = st.text_area(
+        "వీడియో కోసం ప్రాంప్ట్ ఇవండీ (Prompt):",
+        value="A cinematic sunset over the ocean with hyper-realistic waves",
+        key="luma_video_prompt"
+    )
     
-    with vid_tab1:
-        v_prompt = st.text_area(
-            "వీడియో కోసం మీ సృజనాత్మక ప్రాంప్ట్ ఇక్కడ రాయండి:",
-            placeholder="ఉదాహరణకు: A cinematic drone shot over a futuristic neon city...",
-            key="v_text_prompt"
-        )
-        
-    with vid_tab2:
-        v_image_file = st.file_uploader("బేస్ ఇమేజ్ (ఫొటో) అప్‌లోడ్ చేయండి:", type=["jpg", "jpeg", "png"], key="v_img_upload")
-        v_img_prompt = st.text_area(
-            "ఈ ఫొటోకు ఏ రకమైన యానిమేషన్ కావాలి?",
-            placeholder="ఉదాహరణకు: Animate water waves and slow camera zoom...",
-            key="v_img_text_prompt"
-        )
-        if v_image_file:
-            st.image(v_image_file, caption="మీ అప్‌లోడ్ చేసిన ఇమేజ్", use_container_width=True)
+    aspect_ratio = st.selectbox(
+        "వీడియో ఆస్పెక్ట్ రేషియో:",
+        ["16:9", "9:16", "1:1"],
+        key="luma_video_ratio"
+    )
 
-    v_style = st.selectbox("వీడియో స్టైల్ / థీమ్:", ["సినేమాటిక్ (Cinematic)", "3D యానిమేషన్ (3D Render)", "యానిమే Anime", "డాక్యుమెంటరీ (Documentary)"], key="v_style_box")
-    v_duration = st.slider("వీడియో వ్యవధి (సెకన్లలో):", min_value=3, max_value=15, value=5, key="v_duration_slider")
-
-    if st.button("🚀 AI వీడియో ప్రాసెస్ ప్రారంభించండి (Generate Video Studio)", key="gen_video_btn"):
-        active_prompt = v_img_prompt if v_image_file else v_prompt
-        
-        if active_prompt.strip():
-            with st.spinner("✨ అశీర్వాదం AI వీడియో స్టూడియో ద్వారా టైమ్‌లైన్ ప్రాసెస్ జరుగుతోంది... వేచి ఉండండి మిత్రమా!"):
-                try:
-                    client = genai.Client(api_key=st.secrets["GEMINI_API_KEY"])
-                    
-                    full_prompt = f"""
-                    You are an expert AI video director and prompt engineer for 'Aservad.ai'.
-                    Create a detailed, professional {v_duration}-second timeline-based video generation script and storyboard for the following prompt, maintaining a '{v_style}' style:
-                    
-                    Prompt: {active_prompt}
-                    
-                    Break it down into timestamps with precise visual cues and camera movements for advanced video models like Google Flow, Runway, or Sora.
-                    """
-                    
-                    response = client.models.generate_content(
-                        model='gemini-3.6-flash',
-                        contents=full_prompt
-                    )
-                    
-                    video_script_result = response.text.strip()
-                    
-                    st.success("✨ వీడియో స్టోరీబోర్డ్ & టైమ్‌లైన్ విజయవంతంగా తయారైంది మిత్రమా!")
-                    st.markdown("---")
-                    
-                    # టైమ్‌లైన్ లేఅవుట్ & స్క్రిప్ట్ ప్రదర్శన
-                    st.markdown("### ⏱️ వీడియో ఉత్పత్తి టైమ్‌లైన్ & స్క్రిప్ట్")
-                    st.write(video_script_result)
-                    
-                    # 🔊 ఆడియో రూపంలో వినడానికి (Text-to-Speech Audio Playback)
-                    try:
-                        from gtts import gTTS
-                        import io
-                        tts = gTTS(text=video_script_result[:500], lang='en') # మొదటి 500 అక్షరాలను ఆడియోగా మార్చవచ్చు
-                        audio_bytes = io.BytesIO()
-                        tts.write_to_fp(audio_bytes)
-                        audio_bytes.seek(0)
-                        st.markdown("### 🔊 ఆడియో రూపంలో వినండి (Audio Narration)")
-                        st.audio(audio_bytes, format='audio/mp3')
-                    except Exception as audio_err:
-                        st.info(f"ఆడియో జనరేషన్ గమనిక: {audio_err}")
-
-                    # డౌన్‌లోడ్ మరియు కాపీ ఆప్షన్స్
-                    st.download_button(
-                        label="💾 వీడియో మానిఫెస్ట్ / స్క్రిప్ట్ డౌన్‌లోడ్ చేసుకోండి",
-                        data=video_script_result,
-                        file_name="aservad_video_storyboard.txt",
-                        mime="text/plain"
-                    )
-                    
-                except Exception as e:
-                    st.error(f"⚠️ లోపం ఏర్పడింది మిత్రమా: {e}")
+    if st.button("🚀 లూమా వీడియో జనరేట్ చేయి", key="luma_gen_action_btn"):
+        if not video_prompt:
+            st.warning("దయచేసి ప్రాంప్ట్ టెక్స్ట్ ఇవ్వండి మిత్రమా!")
+        elif not luma_api_key:
+            st.error("⚠️ లూమా ఏపీఐ కీ (LUMA_AGENTS_API_KEY) మీ Secrets లో లేదు!")
         else:
-            st.warning("⚠️ మిత్రమా, దయచేసి టెక్స్ట్ ప్రాంప్ట్ ఇవ్వండి లేదా ఇమేజ్ అప్‌లోడ్ చేయండి!")
+            with st.status("✨ లూమా ఏఐ ద్వారా వీడియో ప్రాసెస్ అవుతోంది...", expanded=True) as status:
+                import requests
+                import time
+
+                headers = {
+                    "Authorization": f"Bearer {luma_api_key}",
+                    "Content-Type": "application/json"
+                }
+                
+                payload = {
+                    "prompt": video_prompt,
+                    "aspect_ratio": aspect_ratio
+                }
+
+                st.write("📡 లూమా ఏపీఐకి రిక్వెస్ట్ పంపబడింది...")
+                
+                try:
+                    # 1. జనరేషన్ రిక్వెస్ట్ క్రియేట్ చేయడం
+                    create_res = requests.post("https://agents.lumalabs.ai/v1/generations", json=payload, headers=headers)
+                    
+                    if create_res.status_code == 200 or create_res.status_code == 201:
+                        gen_data = create_res.json()
+                        gen_id = gen_data.get("id") or gen_data.get("generation_id")
                         
+                        st.write(f"🔄 జనరేషన్ ప్రారంభమైంది (ID: {gen_id}). వీడియో తయారవుతోంది, దయచేసి వేచి ఉండండి...")
+                        
+                        # 2. పోలింగ్ లూప్ (స్టేటస్ చెక్ చేయడం)
+                        deadline = time.time() + 120  # 2 నిమిషాల టైమ్‌అవుట్
+                        video_url = None
+                        
+                        time.sleep(15) # ప్రారంభంలో కొంచెం వెయిట్ చేయడం మంచిది
+                        
+                        while time.time() < deadline:
+                            poll_res = requests.get(f"https://agents.lumalabs.ai/v1/generations/{gen_id}", headers=headers)
+                            if poll_res.status_code == 200:
+                                poll_data = poll_res.json()
+                                state = poll_data.get("state")
+                                
+                                if state == "completed":
+                                    video_url = poll_data.get("assets", {}).get("video") or poll_data.get("video_url")
+                                    break
+                                elif state == "failed":
+                                    st.error("❌ వీడియో జనరేషన్ విఫలమైంది.")
+                                    break
+                            
+                            time.sleep(5)
+                        
+                        if video_url:
+                            status.update(label="🎉 వీడియో విజయవంతంగా తయారైంది!", state="complete", expanded=False)
+                            st.success("ఇదిగో మీ లూమా ఏఐ వీడియో:")
+                            st.video(video_url)
+                        else:
+                            status.update(label="⏰ సమయం ముగిసింది (Timeout)", state="error", expanded=False)
+                            st.warning("వీడియో జనరేట్ కావడానికి ఎక్కువ సమయం పడుతోంది లేదా టైమ్‌అవుట్ అయింది.")
+                    else:
+                        st.error(f"API ఎర్రర్: {create_res.status_code} - {create_res.text}")
+                except Exception as e:
+                    st.error(f"టెక్నికల్ లోపం ఏర్పడింది: {e}")
+                                          
