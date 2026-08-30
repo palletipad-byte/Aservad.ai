@@ -566,9 +566,9 @@ elif choice.startswith("10."):
                     
                 except Exception as e:
                     st.error(f"⚠️ Error: {e}")
-# 11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్ (Luma AI Integrated)
+# 11. వీడియో క్రియేటర్ & స్క్రిప్ట్ టూల్ (Luma Agents API Integrated)
 elif choice.startswith("11."):
-    st.subheader("🎬 AI Avatar, Script & Video Generator (Luma Dream Machine Integrated)")
+    st.subheader("🎬 AI Avatar, Script & Video Generator (Luma Agents API)")
 
     # 1. క్యారెక్టర్ ఇమేజ్ అప్‌లోడ్
     uploaded_image = st.file_uploader(
@@ -579,8 +579,8 @@ elif choice.startswith("11."):
 
     # 2. క్యారెక్టర్ వివరణ
     character_prompt = st.text_input(
-        "క్యారెక్టర్ గురించి చిన్న వివరణ (ఉదా: Young adult teacher, professional look...):",
-        value="South Asian young woman, friendly smile",
+        "క్యారెక్టర్ గురించి చిన్న వివరణ:",
+        value="Cinematic lighting, hyper-realistic, South Asian young woman with a warm friendly smile",
         key="luma_char_prompt"
     )
 
@@ -594,7 +594,7 @@ elif choice.startswith("11."):
     # 4. ఆస్పెక్ట్ రేషియో
     aspect_ratio = st.selectbox(
         "వీడియో సైజ్ / ఆస్పెక్ట్ రేషియో:",
-        ["9:16 (YouTube Shorts / Instagram Reels)", "16:9 (YouTube Long)"],
+        ["16:9", "9:16"],
         key="luma_ratio"
     )
 
@@ -608,48 +608,46 @@ elif choice.startswith("11."):
     # జనరేషన్ బటన్
     if st.button("🚀 స్క్రిప్ట్ & వీడియో జనరేట్ చేయి", key="luma_gen_btn"):
         if uploaded_image is not None and video_topic:
-            with st.spinner("✨ స్క్రిప్ట్ ప్రాసెస్ అవుతోంది మరియు లుమా ఏఐ ద్వారా వీడియో రెడీ అవుతోంది..."):
+            with st.spinner("✨ స్క్రిప్ట్ ప్రాసెస్ అవుతోంది మరియు లుమా ఏజెంట్స్ ద్వారా వీడియో రెడీ అవుతోంది..."):
                 try:
-                    # ముందుగా ఇచ్చిన టెక్స్ట్, స్క్రిప్ట్‌ని స్క్రీన్‌పై చూపించడం
                     st.markdown("### 📜 జనరేట్ అయిన స్క్రిప్ట్ & డీటేయిల్స్:")
                     st.info(f"**మీ ఇన్‌పుట్ స్క్రిప్ట్:**\n\n{video_topic}")
 
-                    # స్ట్రీమ్‌లిట్ సీక్రెట్స్ నుండి లుమా ఏపీఐ కీని పొందడం
+                    # లూమా ఏజెంట్స్ ఏపీఐ కీ పొందడం
                     luma_api_key = (
-                        st.secrets.get("LUMA_API_KEY") 
-                        or st.secrets.get("LUMALABS_API_KEY") 
+                        st.secrets.get("LUMA_AGENTS_API_KEY") 
+                        or st.secrets.get("LUMA_API_KEY") 
                         or ""
                     )
 
                     if not luma_api_key:
-                        st.warning("⚠️ గమనిక: దయచేసి స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో 'LUMA_API_KEY' ని సెట్ చేయండి మిత్రమా.")
+                        st.warning("⚠️ గమనిక: దయచేసి స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో 'LUMA_AGENTS_API_KEY' ని సెట్ చేయండి మిత్రమా.")
                     else:
-                        # అప్లోడ్ చేసిన ఇమేజ్‌ని base64 లోకి మార్చడం
+                        # ఇమేజ్‌ని base64 లోకి మార్చడం (అవసరమైతే) లేదా డాక్యుమెంటేషన్ ప్రకారం పంపడం
                         image_bytes = uploaded_image.getvalue()
                         encoded_image = base64.b64encode(image_bytes).decode('utf-8')
                         image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
                         
-                        # Luma API హెడర్స్
+                        # Luma Agents API హెడర్స్
                         headers = {
                             "Authorization": f"Bearer {luma_api_key}",
-                            "X-Api-Key": luma_api_key,
                             "Content-Type": "application/json"
                         }
 
-                        # Luma Dream Machine Payload
+                        # Luma Agents Payload (అధికారిక డాక్స్ ప్రకారం)
                         payload = {
+                            "model": "ray-3.2",
+                            "type": "video",
                             "prompt": f"{character_prompt}. {video_topic}",
-                            "keyframes": {
-                                "frame0": {
-                                    "type": "image",
-                                    "url": image_data_uri
-                                }
-                            },
-                            "aspect_ratio": "9:16" if "9:16" in aspect_ratio else "16:9"
+                            "aspect_ratio": aspect_ratio,
+                            "video": {
+                                "resolution": "720p",
+                                "duration": "5s"
+                            }
                         }
 
-                        # Luma API Base URL
-                        base_url = "https://api.lumalabs.ai/dream-machine/v1/generations"
+                        # Luma Agents Base URL
+                        base_url = "https://agents.lumalabs.ai/v1/generations"
                         
                         # రిక్వెస్ట్ పంపడం
                         response = requests.post(base_url, json=payload, headers=headers)
@@ -657,10 +655,10 @@ elif choice.startswith("11."):
                         if response.status_code == 200 or response.status_code == 201:
                             res_data = response.json()
                             task_id = res_data.get("id")
-                            st.success("✅ లుమా ఏఐ వీడియో జనరేషన్ ప్రారంభమైంది!")
+                            st.success("✅ లుమా ఏజెంట్స్ వీడియో జనరేషన్ ప్రారంభమైంది!")
 
                             # స్టేటస్ చెక్ చేయడం (Polling URL)
-                            task_status_url = f"{base_url}/{task_id}"
+                            task_status_url = f"https://agents.lumalabs.ai/v1/generations/{task_id}"
                             video_url = None
                             
                             with st.spinner("⏳ వీడియో రెండర్ అవుతోంది... (దయచేసి కొన్ని నిమిషాలు వేచి ఉండండి)"):
@@ -672,10 +670,14 @@ elif choice.startswith("11."):
                                         state = status_data.get("state")
 
                                         if state == "completed":
-                                            video_url = status_data.get("assets", {}).get("video")
+                                            # అవుట్‌పుట్ నుండి వీడియో URL తీసుకోవడం
+                                            output_data = status_data.get("output", [])
+                                            if output_data and isinstance(output_data, list):
+                                                video_url = output_data[0].get("url")
                                             break
                                         elif state == "failed":
-                                            st.error("❌ వీడియో రెండరింగ్ విఫలమైంది.")
+                                            fail_reason = status_data.get("failure_reason", "Unknown error")
+                                            st.error(f"❌ వీడియో రెండరింగ్ విఫలమైంది: {fail_reason}")
                                             break
 
                             # వీడియో చూపించడం
@@ -686,7 +688,7 @@ elif choice.startswith("11."):
                             else:
                                 st.error("⚠️ వీడియో రెండరింగ్ సమయం ముగిసింది లేదా లింక్ అందలేదు.")
                         else:
-                            st.error(f"⚠️ లుమా ఏపీఐ కనెక్షన్ ఎర్రర్: {response.text}")
+                            st.error(f"⚠️ లూమా ఏజెంట్స్ ఏపీఐ కనెక్షన్ ఎర్రర్: {response.text}")
 
                 except Exception as e:
                     st.error(f"⚠️ టెక్నికల్ ఎర్రర్ సంభవించింది: {e}")
@@ -695,7 +697,7 @@ elif choice.startswith("11."):
                 st.warning("⚠️ దయచేసి ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా.")
             elif not video_topic:
                 st.warning("⚠️ దయచేసి వీడియో టాపిక్ లేదా స్క్రిప్ట్ టెక్స్ట్ వివరాలను నమోదు చేయండి మిత్రమా.")
-                 
+                    
 # 12. సెట్టింగ్స్ (Settings)
 elif choice.startswith("12."):
     st.subheader("⚙️ యాప్ సెట్టింగ్స్ (Joshna Tailors & Aservad.ai)")
