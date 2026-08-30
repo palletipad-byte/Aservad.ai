@@ -1,4 +1,4 @@
-import io
+mlimport io
 import os
 import time  # సమయం కోసం ఇది పైన ఉండాలి
 from io import BytesIO
@@ -622,37 +622,37 @@ elif choice.startswith("11."):
 
                     if not luma_api_key:
                         st.warning("⚠️ గమనిక: దయచేసి స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో 'LUMA_API_KEY' ని సెట్ చేయండి మిత్రమా.")
-    else:
-        # అప్లోడ్ చేసిన ఇమేజ్‌ని base64 లోకి మార్చడం
-        image_bytes = uploaded_image.getvalue()
-        encoded_image = base64.b64encode(image_bytes).decode('utf-8')
-        image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
-        
-        # Luma API హెడర్స్
-        headers = {
-            "Authorization": f"Bearer {luma_api_key}",
-            "X-Api-Key": luma_api_key,
-            "Content-Type": "application/json"
-        }
+                    else:
+                        # అప్లోడ్ చేసిన ఇమేజ్‌ని base64 లోకి మార్చడం
+                        image_bytes = uploaded_image.getvalue()
+                        encoded_image = base64.b64encode(image_bytes).decode('utf-8')
+                        image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
+                        
+                        # Luma API హెడర్స్
+                        headers = {
+                            "Authorization": f"Bearer {luma_api_key}",
+                            "X-Api-Key": luma_api_key,
+                            "Content-Type": "application/json"
+                        }
 
-        # Luma Dream Machine Payload
-        payload = {
-            "prompt": f"{character_prompt}. {video_topic}",
-            "keyframes": {
-                "frame0": {
-                    "type": "image",  # <--- 'image' బదులుగా 'image' అని ఉండాలి
-                    "url": image_data_uri
-                }
-            },
-            "aspect_ratio": "9:16" if "9:16" in aspect_ratio else "16:9"
-        }
+                        # Luma Dream Machine Payload
+                        payload = {
+                            "prompt": f"{character_prompt}. {video_topic}",
+                            "keyframes": {
+                                "frame0": {
+                                    "type": "image",
+                                    "url": image_data_uri
+                                }
+                            },
+                            "aspect_ratio": "9:16" if "9:16" in aspect_ratio else "16:9"
+                        }
 
-        # Luma API Base URL
-        base_url = "https://api.lumalabs.ai/dream-machine/v1/generations"
-        
-        # రిక్వెస్ట్ పంపడం
-        response = requests.post(base_url, json=payload, headers=headers)
-         
+                        # Luma API Base URL
+                        base_url = "https://api.lumalabs.ai/dream-machine/v1/generations"
+                        
+                        # రిక్వెస్ట్ పంపడం
+                        response = requests.post(base_url, json=payload, headers=headers)
+                         
                         if response.status_code == 200 or response.status_code == 201:
                             res_data = response.json()
                             task_id = res_data.get("id")
@@ -694,8 +694,7 @@ elif choice.startswith("11."):
                 st.warning("⚠️ దయచేసి ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా.")
             elif not video_topic:
                 st.warning("⚠️ దయచేసి వీడియో టాపిక్ లేదా స్క్రిప్ట్ టెక్స్ట్ వివరాలను నమోదు చేయండి మిత్రమా.")
-                            
-
+                 
 # 12. సెట్టింగ్స్ (Settings)
 elif choice.startswith("12."):
     st.subheader("⚙️ యాప్ సెట్టింగ్స్ (Joshna Tailors & Aservad.ai)")
