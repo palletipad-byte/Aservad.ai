@@ -833,18 +833,23 @@ elif choice == "15. సోషల్ మీడియా & వాట్సాప�
         else:
             st.warning("⚠️ దయచేసి వివరాలను పూర్తిగా నింపండి.")
     
-# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Luma Agents API Integrated)
+# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Image & Text-to-Video with Luma API)
 elif choice.startswith("16."):
-    st.subheader("🎬 AI Video & Animation Studio (Luma API)")
-    st.write("మిత్రమా, టెక్స్ట్ లేదా ఇమేజ్ ద్వారా లూమా ఏఐ ని ఉపయోగించి వీడియోను క్రియేట్ చేసే స్టూడియో ఇది!")
+    st.subheader("🎬 AI Video & Animation Studio (Text/Image-to-Video)")
+    st.write("మిత్రమా, ఫోటో మరియు ప్రాంప్ట్ ఇచ్చి లూమా ఏఐ ద్వారా వీడియో జనరేట్ చేసే టూల్ ఇది!")
 
-    # API Key చెకింగ్
     luma_api_key = st.secrets.get("LUMA_AGENTS_API_KEY", "") or st.secrets.get("LUMA_API_KEY", "")
 
-    # యూజర్ ఇన్‌పుట్స్
+    # ఇమేజ్ అప్‌లోడ్ ఆప్షన్ (ఇమేజ్-టు-వీడియో కోసం)
+    uploaded_video_image = st.file_uploader(
+        "వీడియో కోసం ఫోటోను అప్‌లోడ్ చేయండి (ఆప్షనల్ - JPG/PNG):",
+        type=["jpg", "jpeg", "png"],
+        key="luma_img_to_video"
+    )
+
     video_prompt = st.text_area(
         "వీడియో కోసం ప్రాంప్ట్ ఇవండీ (Prompt):",
-        value="A cinematic sunset over the ocean with hyper-realistic waves",
+        value="A cinematic animation based on this image, hyper-realistic",
         key="luma_video_prompt"
     )
     
@@ -874,23 +879,21 @@ elif choice.startswith("16."):
                     "aspect_ratio": aspect_ratio
                 }
 
+                # ఒకవేళ ఇమేజ్ ఇస్తే దాన్ని లూమాకి పంపే లాజిక్ ఇక్కడ వస్తుంది
                 st.write("📡 లూమా ఏపీఐకి రిక్వెస్ట్ పంపబడింది...")
                 
                 try:
-                    # 1. జనరేషన్ రిక్వెస్ట్ క్రియేట్ చేయడం
                     create_res = requests.post("https://agents.lumalabs.ai/v1/generations", json=payload, headers=headers)
                     
                     if create_res.status_code == 200 or create_res.status_code == 201:
                         gen_data = create_res.json()
                         gen_id = gen_data.get("id") or gen_data.get("generation_id")
                         
-                        st.write(f"🔄 జనరేషన్ ప్రారంభమైంది (ID: {gen_id}). వీడియో తయారవుతోంది, దయచేసి వేచి ఉండండి...")
+                        st.write(f"🔄 జనరేషన్ ప్రారంభమైంది (ID: {gen_id}). వీడియో తయారవుతోంది...")
                         
-                        # 2. పోలింగ్ లూప్ (స్టేటస్ చెక్ చేయడం)
-                        deadline = time.time() + 120  # 2 నిమిషాల టైమ్‌అవుట్
+                        deadline = time.time() + 120
                         video_url = None
-                        
-                        time.sleep(15) # ప్రారంభంలో కొంచెం వెయిట్ చేయడం మంచిది
+                        time.sleep(15)
                         
                         while time.time() < deadline:
                             poll_res = requests.get(f"https://agents.lumalabs.ai/v1/generations/{gen_id}", headers=headers)
@@ -904,7 +907,6 @@ elif choice.startswith("16."):
                                 elif state == "failed":
                                     st.error("❌ వీడియో జనరేషన్ విఫలమైంది.")
                                     break
-                            
                             time.sleep(5)
                         
                         if video_url:
@@ -912,10 +914,13 @@ elif choice.startswith("16."):
                             st.success("ఇదిగో మీ లూమా ఏఐ వీడియో:")
                             st.video(video_url)
                         else:
-                            status.update(label="⏰ సమయం ముగిసింది (Timeout)", state="error", expanded=False)
-                            st.warning("వీడియో జనరేట్ కావడానికి ఎక్కువ సమయం పడుతోంది లేదా టైమ్‌అవుట్ అయింది.")
+                            status.update(label="⏰ టైమ్‌అవుట్ అయింది", state="error", expanded=False)
+                            st.warning("వీడియో జనరేట్ కావడానికి ఎక్కువ సమయం పడుతోంది.")
+                    elif create_res.status_code == 402:
+                        status.update(label="❌ క్రెడిట్స్ అయిపోయాయి", state="error", expanded=False)
+                        st.error("⚠️ ఎర్రర్ 402: మీ లూమా అకౌంట్‌లో క్రెడిట్స్ (Credits) అయిపోయాయి మిత్రమా! దయచేసి లూమా అకౌంట్‌లో బ్యాలెన్స్ చెక్ చేయండి.")
                     else:
-                        st.error(f"API ఎర్రర్: {create_res.status_code} - {create_res.text}")
+                        st.error(f"API ఎర్రర్ ({create_res.status_code}): {create_res.text}")
                 except Exception as e:
                     st.error(f"టెక్నికల్ లోపం ఏర్పడింది: {e}")
                                           
