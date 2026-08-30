@@ -633,11 +633,12 @@ elif choice.startswith("11."):
                         image_data_uri = f"data:{uploaded_image.type};base64,{encoded_image}"
 
                         # Luma API హెడర్స్
-                        headers = {
-                            "Authorization": f"Bearer {luma_api_key}",
-                            "Content-Type": "application/json",
-                            "Accept": "json"
-                        }
+                            headers = {
+        "Authorization": f"Bearer {luma_api_key}",
+        "X-Api-Key": luma_api_key,
+        "Content-Type": "application/json",
+    }
+    
 
                         # Luma Dream Machine Payload
                         payload = {
