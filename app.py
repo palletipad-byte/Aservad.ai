@@ -888,7 +888,7 @@ elif choice.startswith("16."):
                     
                     # జెమినీ మోడల్ ద్వారా ఇమేజ్ + టెక్స్ట్ అనాలిసిస్ & స్క్రిప్ట్ జనరేషన్
                     response = client.models.generate_content(
-                        model='gemini-1.5-flash',
+                        model='gemini-2.0-flash',
                         contents=[input_image, f"Analyze this image and create a professional 5-second video storyboard and direction notes based on this prompt: {video_prompt}. Voiceover script to include: {voice_script}"]
                     )
 
