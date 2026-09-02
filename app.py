@@ -840,7 +840,7 @@ elif choice.startswith("16."):
 
     gemini_api_key = st.secrets.get("GEMINI_API_KEY", "")
 
-    # 1. ఫోటో అప్‌లోడ్ ఆప్షన్
+    # 1. ఫోటో అప్‌లోడ్ ఇన్‌పుట్
     uploaded_video_image = st.file_uploader(
         "వీడియో కోసం ఫోటోను అప్‌లోడ్ చేయండి (JPG/PNG):",
         type=["jpg", "jpeg", "png"],
@@ -849,11 +849,11 @@ elif choice.startswith("16."):
 
     # 2. టెక్స్ట్ ప్రాంప్ట్ లేదా ఐడియా
     video_prompt = st.text_area(
-        "వీడియో కాన్సెప్ట్ లేదా ప్రాంప్ట్ ఇవండీ:",
+        "వీడియో కాన్సెప్ట్ లేదా ప్రాంప్ట్ ఇవ్వండి:",
         value="Cinematic camera panning, dramatic lighting, high quality motion and realistic detailing",
         key="veo_video_prompt_v2"
     )
-    
+
     # 3. వాయిస్ ఓవర్ / స్క్రిప్ట్ ఇన్‌పుట్
     voice_script = st.text_area(
         "వీడియో కోసం వాయిస్ ఓవర్ / డైలాగ్ టెక్స్ట్ ఇవ్వండి:",
@@ -861,54 +861,93 @@ elif choice.startswith("16."):
         key="veo_voice_script_v2"
     )
 
-    # 4. ఆస్పెక్ట్ రేషియో
+    # 4. యాస్పెక్ట్ రేషియో
     aspect_ratio = st.selectbox(
-        "వీడియో ఆస్పెక్ట్ రేషియో:",
+        "వీడియో యాస్పెక్ట్ రేషియో:",
         ["16:9 (Landscape)", "9:16 (Shorts/Reels)"],
         key="veo_video_ratio_v2"
     )
 
-    if st.button("🚀 వీడియో స్టూడియో ప్రాసెస్ ప్రారంభించు", key="veo_gen_action_btn_v2"):
+    if st.button("🚀 వీడియో స్టూడియో ప్రాసెస్ ప్రారంభించు", key="veo_gen_action_btn"):
         if not uploaded_video_image:
             st.warning("దయచేసి ముందుగా ఒక ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా!")
         elif not gemini_api_key:
-            st.error("⚠️ జెమినీ ఏపీఐ కీ (GEMINI_API_KEY) మీ Secrets లో లేదు!")
+            st.error("⚠️ జిమిని ఏపీఐ కీ (GEMINI_API_KEY) మీ Secrets లో లేదు!")
         else:
             with st.status("✨ ఇమేజ్ మరియు టెక్స్ట్ ప్రాసెస్ చేయబడుతున్నాయి...", expanded=True) as status:
                 try:
                     from google import genai
-                    from PIL import Image
+                    from PIL import Image, ImageDraw, ImageFont
+                    import numpy as np
+                    import imageio
+                    import io
 
                     client = genai.Client(api_key=gemini_api_key)
 
                     st.write("📥 అప్‌లోడ్ చేసిన ఇమేజ్ విశ్లేషించబడుతోంది...")
                     input_image = Image.open(uploaded_video_image)
 
-                    st.write("🤖 జెమినీ ఏఐ ద్వారా వీడియో డైరెక్షన్ & స్క్రిప్ట్ సిద్ధం చేయబడుతోంది...")
+                    st.write("🤖 జిమిని ఏఐ ద్వారా వీడియో డైరెక్షన్ & స్క్రిప్ట్ సిద్ధం చేయబడుతోంది...")
                     
-                    # జెమినీ మోడల్ ద్వారా ఇమేజ్ + టెక్స్ట్ అనాలిసిస్ & స్క్రిప్ట్ జనరేషన్
+                    # జెమినీ 3.6 ఫ్లాష్ మోడల్ ద్వారా విశ్లేషణ
                     response = client.models.generate_content(
                         model='gemini-3.6-flash',
                         contents=[input_image, f"Analyze this image and create a professional 5-second video storyboard and direction notes based on this prompt: {video_prompt}. Voiceover script to include: {voice_script}"]
                     )
 
-                    status.update(label="🎉 వీడియో స్టూడియో అవుట్‌పుట్ సిద్ధమైంది!", state="complete", expanded=False)
+                    st.write("🎬 యానిమేటెడ్ వీడియో రెండర్ చేయబడుతోంది (ఫ్రీ పైథాన్ ఎనిజన్)...")
+
+                    # యానిమేషన్/వీడియో ఫ్రేమ్స్ తయారీ
+                    img_resized = input_image.resize((640, 360))
+                    frames = []
                     
-                    st.success("ఇదిగో మీ ఇమేజ్ ఆధారిత వీడియో స్టూడియో రిపోర్ట్ & డైరెక్షన్:")
-                    
-                                        # యూజర్ అప్‌లోడ్ చేసిన ఇమేజ్ మరియు రిజల్ట్ చూపించడం
+                    # 5 సెకన్ల మోషన్ యానిమేషన్ (Zoom in/Pan effect)
+                    for i in range(25):  # 25 ఫ్రేమ్‌లు
+                        zoom_factor = 1.0 + (i * 0.008)
+                        w, h = img_resized.size
+                        crop_w, crop_h = int(w / zoom_factor), int(h / zoom_factor)
+                        crop_x, crop_y = int((w - crop_w) / 2), int((h - crop_h) / 2)
+                        
+                        cropped_img = img_resized.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_h))
+                        frame_img = cropped_img.resize((640, 360))
+                        
+                        # టెక్స్ట్ ఓవర్‌లే
+                        draw = ImageDraw.Draw(frame_img)
+                        draw.rectangle([(0, 310), (640, 360)], fill=(0, 0, 0, 180))
+                        draw.text((20, 325), "🎬 AI Generated Video Preview", fill=(255, 255, 255))
+                        
+                        frames.append(np.array(frame_img))
+
+                    # MP4/GIF రూపంలో వీడియో సేవ్ చేయడం
+                    video_buffer = io.BytesIO()
+                    imageio.mimsave(video_buffer, frames, format='GIF', fps=5)
+                    video_bytes = video_buffer.getvalue()
+
+                    status.update(label="🎉 వీడియో స్టూడియో అవుట్‌పుట్ సిద్ధమైంది!", state="complete")
+
+                    st.success("ఇదిగో మీ ఇమేజ్ ఆధారిత వీడియో మరియు ప్రొఫెషనల్ డైరెక్షన్ నివేదిక:")
+
                     col1, col2 = st.columns(2)
                     with col1:
-                        st.image(input_image, caption="మీరు అప్‌లోడ్ చేసిన ఫోటో", use_container_width=True)
+                        st.image(input_image, caption="మీరు అప్‌లోడ్ చేసిన ఫోటో")
+                        st.markdown("### 🎥 జనరేట్ అయిన వీడియో ప్రివ్యూ:")
+                        st.image(video_bytes, caption="AI మోషన్ యానిమేషన్ ప్రివ్యూ (GIF/Video)", use_container_width=True)
+                        st.download_button(
+                            label="📥 వీడియో డౌన్‌లోడ్ చేయండి",
+                            data=video_bytes,
+                            file_name="ai_generated_video.gif",
+                            mime="image/gif"
+                        )
+                    
                     with col2:
                         st.info(f"**యాస్పెక్ట్ రేషియో:** {aspect_ratio}\n\n**స్టేటస్:** 100% విజయవంతం")
                         st.markdown("### 📝 జనరేట్ అయిన వీడియో డైరెక్షన్ & స్క్రిప్ట్:")
-                    st.write(response.text)
+                        st.write(response.text)
 
-                    st.markdown("### 🎙️ వాయిస్ ఓవర్ టెక్స్ట్:")
-                    st.code(voice_script, language="text")
+                        st.markdown("### 🎙️ వాయిస్ ఓవర్ టెక్స్ట్:")
+                        st.code(voice_script, language="text")
 
                 except Exception as e:
-                    status.update(label="❌ టెక్నికల్ లోపం", state="error", expanded=False)
+                    status.update(label="❌ సాంకేతిక లోపం", state="error")
                     st.error(f"ఏర్పడిన లోపం: {e}")
-                    
+    
