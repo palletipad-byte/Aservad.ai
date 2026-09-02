@@ -833,71 +833,87 @@ elif choice == "15. సోషల్ మీడియా & వాట్సాప�
         else:
             st.warning("⚠️ దయచేసి వివరాలను పూర్తిగా నింపండి.")
     
-# 16. AI వీడియో & యానిమేషన్ స్టూడియో (Image-to-Video & Smart Script Studio)
 elif choice.startswith("16."):
-    st.subheader("🎬 AI Video & Animation Studio (Image-to-Video)")
-    st.write("మిత్రమా, ఇమేజ్ మరియు టెక్స్ట్ ప్రాంప్ట్ ఇచ్చి ప్రొఫెషనల్ వీడియో స్క్రిప్ట్ & యానిమేషన్ స్టూడియోని రన్ చేయండి!")
+    st.subheader("🎬 AI వీడియో & యానిమేషన్ స్టూడియో (Image-to-Video)")
+    st.write("మిత్రమా, ఇమేజ్ మరియు ప్రాంప్ట్ ఇచ్చి ప్రొఫెషనల్ వీడియో స్క్రిప్ట్ & యానిమేషన్ స్టూడియోని రన్ చేయండి!")
 
-    gemini_api_key = st.secrets.get("GEMINI_API_KEY", "")
-
-    # 1. ఫోటో అప్‌లోడ్ ఇన్‌పుట్
+    # 1. ఫోటో అప్‌లోడ్ ఆప్షన్
     uploaded_video_image = st.file_uploader(
         "వీడియో కోసం ఫోటోను అప్‌లోడ్ చేయండి (JPG/PNG):",
         type=["jpg", "jpeg", "png"],
-        key="veo_img_upload_v2"
+        key="ves_img_upload_v2"
     )
 
-    # 2. టెక్స్ట్ ప్రాంప్ట్ లేదా ఐడియా
+    # 2. ప్రాంప్ట్ లేదా ఐడియా
     video_prompt = st.text_area(
-        "వీడియో కాన్సెప్ట్ లేదా ప్రాంప్ట్ ఇవ్వండి:",
+        "వీడియో కోసం కాన్సెప్ట్ లేదా ప్రాంప్ట్ ఇవ్వండి:",
         value="Cinematic camera panning, dramatic lighting, high quality motion and realistic detailing",
-        key="veo_video_prompt_v2"
+        key="ves_video_prompt_v2"
     )
 
-    # 3. వాయిస్ ఓవర్ / స్క్రిప్ట్ ఇన్‌పుట్
+    # 3. వాయిస్ ఓవర్ / స్క్రిప్ట్ ఇన్పుట్
     voice_script = st.text_area(
-        "వీడియో కోసం వాయిస్ ఓవర్ / డైలాగ్ టెక్స్ట్ ఇవ్వండి:",
+        "వీడియో కోసం వాయిస్ ఓవర్ / బ్లాగ్ టెక్స్ట్ ఇవ్వండి:",
         value="నమస్కారం మిత్రమా, ఆర్టిఫిషియల్ ఇంటెలిజెన్స్ సహాయంతో మన అద్భుతమైన ప్రయాణం ఇక్కడ ప్రారంభమవుతుంది.",
-        key="veo_voice_script_v2"
+        key="ves_voice_script_v2"
     )
 
     # 4. యాస్పెక్ట్ రేషియో
     aspect_ratio = st.selectbox(
         "వీడియో యాస్పెక్ట్ రేషియో:",
         ["16:9 (Landscape)", "9:16 (Shorts/Reels)"],
-        key="veo_video_ratio_v2"
+        key="ves_video_ratio_v2"
     )
 
-    if st.button("🚀 వీడియో స్టూడియో ప్రాసెస్ ప్రారంభించు", key="veo_gen_action_btn"):
+    if st.button("🚀 వీడియో స్టూడియో ప్రాసెస్ ప్రారంభించు", key="ves_gen_action_btn"):
         if not uploaded_video_image:
             st.warning("దయచేసి ముందుగా ఒక ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా!")
         elif not gemini_api_key:
-            st.error("⚠️ జిమిని ఏపీఐ కీ (GEMINI_API_KEY) మీ Secrets లో లేదు!")
+            st.error("⚠️ అమని వీఐ కీ (GEMINI_API_KEY) మీ Secrets లో లేదు!")
         else:
-            with st.status("✨ ఇమేజ్ మరియు టెక్స్ట్ ప్రాసెస్ చేయబడుతున్నాయి...", expanded=True) as status:
+            with st.status("⏳ ఇమేజ్ మరియు టెక్స్ట్ ప్రాసెస్ చేయబడుతున్నాయి...", expanded=True) as status:
                 try:
                     from google import genai
                     from PIL import Image, ImageDraw, ImageFont
                     import numpy as np
-                    
                     import io
 
                     client = genai.Client(api_key=gemini_api_key)
 
-                    st.write("📥 అప్‌లోడ్ చేసిన ఇమేజ్ విశ్లేషించబడుతోంది...")
+                    st.write("📸 అప్‌లోడ్ చేసిన ఇమేజ్ విశ్లేషించబడుతుంది...")
                     input_image = Image.open(uploaded_video_image)
 
-                    st.write("🤖 జిమిని ఏఐ ద్వారా వీడియో డైరెక్షన్ & స్క్రిప్ట్ సిద్ధం చేయబడుతోంది...")
+                    st.write("🎬 జెమిని ఏఐ ద్వారా వీడియో డైరెక్షన్ & స్క్రిప్ట్ సిద్ధం అవుతుంది...")
                     
-                    # జెమినీ 3.6 ఫ్లాష్ మోడల్ ద్వారా విశ్లేషణ
+                    full_prompt = f"""
+                    Analyze the provided image in the context of the user's request.
+                    User's detailed prompt: '{video_prompt}'
+                    
+                    Based on both the image and prompt, provide a professional and creative 5-second video storyboard and direction notes.
+                    Your response should be in Telugu ONLY, using the following structure:
+
+                    ## 5-Second Video Storyboard (5 సెకన్ల వీడియో స్టోరీబోర్డ్):
+                    - 0:00 - 0:02: [Visual Scene and Camera Action] - [Audio and Voiceover (VO)]
+                    - 0:02 - 0:05: [Visual Scene and Camera Action] - [Audio and Voiceover (VO)]
+
+                    ## Direction & Production Notes (డైరెక్షన్ & ప్రొడక్షన్ నోట్స్):
+                    - Camera & Motion: [Specifics like Tracking, Zoom, Pan]
+                    - Lighting: [Atmosphere, Mood]
+                    - Details & Rendering: [Frame rate, Texture]
+                    - Audio Sync: [VO and Sound Effect Placement]
+
+                    ## వాయిస్ ఓవర్ స్క్రిప్ట్ (Voiceover Script):
+                    [Please provide the Telugu script text for the voiceover here, based on the storyboard above.]
+                    """
+
                     response = client.models.generate_content(
-                        model='gemini-3.6-flash',
-                        contents=[input_image, f"Analyze this image and create a professional 5-second video storyboard and direction notes based on this prompt: {video_prompt}. Voiceover script to include: {voice_script}"]
+                        model="gemini-1.5-flash",
+                        contents=[input_image, full_prompt]
                     )
-
-                    st.write("🎬 యానిమేటెడ్ వీడియో రెండర్ చేయబడుతోంది (ఫ్రీ పైథాన్ ఎనిజన్)...")
-
-                                        # 5 సెకన్ల మోషన్ యానిమేషన్ (PIL ఇమేజ్ ఫ్రేమ్స్)
+                    
+                    status.update(label="🎥 యానిమేటెడ్ వీడియో రెండర్ చేయబడుతుంది (త్రీ థ్రాన్ ఎనిజన్)...", state="running")
+                    
+                    # యానిమేషన్ ఫ్రేమ్స్ తయారీ (PIL ఇమేజ్ ఫ్రేమ్స్)
                     img_resized = input_image.resize((640, 360))
                     frames = []
                     
@@ -928,25 +944,25 @@ elif choice.startswith("16."):
                         loop=0
                     )
                     video_bytes = video_buffer.getvalue()
-                    
+
                     status.update(label="🎉 వీడియో స్టూడియో అవుట్‌పుట్ సిద్ధమైంది!", state="complete")
 
-                    st.success("ఇదిగో మీ ఇమేజ్ ఆధారిత వీడియో మరియు ప్రొఫెషనల్ డైరెక్షన్ నివేదిక:")
+                    st.success("✅ మీ చిత్రం ఆధారిత వీడియో మరియు ప్రొఫెషనల్ డైరెక్షన్ నివేదిక:")
 
                     col1, col2 = st.columns(2)
                     with col1:
                         st.image(input_image, caption="మీరు అప్‌లోడ్ చేసిన ఫోటో")
-                        st.markdown("### 🎥 జనరేట్ అయిన వీడియో ప్రివ్యూ:")
+                        st.markdown("### 🎬 జనరేట్ అయిన వీడియో ప్రివ్యూ:")
                         st.image(video_bytes, caption="AI మోషన్ యానిమేషన్ ప్రివ్యూ (GIF/Video)", use_container_width=True)
                         st.download_button(
-                            label="📥 వీడియో డౌన్‌లోడ్ చేయండి",
+                            label="📥 వీడియో డౌన్‌లోడ్ చేసుకోండి",
                             data=video_bytes,
                             file_name="ai_generated_video.gif",
                             mime="image/gif"
                         )
-                    
+
                     with col2:
-                        st.info(f"**యాస్పెక్ట్ రేషియో:** {aspect_ratio}\n\n**స్టేటస్:** 100% విజయవంతం")
+                        st.info(f"**వీడియో ప్రాంప్ట్:** {video_prompt}\n\n**స్టేటస్:** 100% విజయవంతం")
                         st.markdown("### 📝 జనరేట్ అయిన వీడియో డైరెక్షన్ & స్క్రిప్ట్:")
                         st.write(response.text)
 
@@ -956,4 +972,4 @@ elif choice.startswith("16."):
                 except Exception as e:
                     status.update(label="❌ సాంకేతిక లోపం", state="error")
                     st.error(f"ఏర్పడిన లోపం: {e}")
-    
+                    
