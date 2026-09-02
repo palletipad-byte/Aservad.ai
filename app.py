@@ -879,7 +879,7 @@ elif choice.startswith("16."):
                     from google import genai
                     from PIL import Image, ImageDraw, ImageFont
                     import numpy as np
-                    import imageio
+                    
                     import io
 
                     client = genai.Client(api_key=gemini_api_key)
@@ -897,11 +897,10 @@ elif choice.startswith("16."):
 
                     st.write("🎬 యానిమేటెడ్ వీడియో రెండర్ చేయబడుతోంది (ఫ్రీ పైథాన్ ఎనిజన్)...")
 
-                    # యానిమేషన్/వీడియో ఫ్రేమ్స్ తయారీ
+                                        # 5 సెకన్ల మోషన్ యానిమేషన్ (PIL ఇమేజ్ ఫ్రేమ్స్)
                     img_resized = input_image.resize((640, 360))
                     frames = []
                     
-                    # 5 సెకన్ల మోషన్ యానిమేషన్ (Zoom in/Pan effect)
                     for i in range(25):  # 25 ఫ్రేమ్‌లు
                         zoom_factor = 1.0 + (i * 0.008)
                         w, h = img_resized.size
@@ -916,9 +915,9 @@ elif choice.startswith("16."):
                         draw.rectangle([(0, 310), (640, 360)], fill=(0, 0, 0, 180))
                         draw.text((20, 325), "🎬 AI Generated Video Preview", fill=(255, 255, 255))
                         
-                        frames.append(np.array(frame_img))
+                        frames.append(frame_img)
 
-                                        # MP4/GIF రూపంలో వీడియో సేవ్ చేయడం (PIL ద్వారా ఎర్రర్స్ లేకుండా)
+                    # GIF రూపంలో వీడియో సేవ్ చేయడం (PIL ద్వారా)
                     video_buffer = io.BytesIO()
                     frames[0].save(
                         video_buffer,
