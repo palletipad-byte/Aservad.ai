@@ -918,11 +918,18 @@ elif choice.startswith("16."):
                         
                         frames.append(np.array(frame_img))
 
-                    # MP4/GIF రూపంలో వీడియో సేవ్ చేయడం
+                                        # MP4/GIF రూపంలో వీడియో సేవ్ చేయడం (PIL ద్వారా ఎర్రర్స్ లేకుండా)
                     video_buffer = io.BytesIO()
-                    imageio.mimsave(video_buffer, frames, format='GIF', fps=5)
+                    frames[0].save(
+                        video_buffer,
+                        format='GIF',
+                        save_all=True,
+                        append_images=frames[1:],
+                        duration=200,
+                        loop=0
+                    )
                     video_bytes = video_buffer.getvalue()
-
+                    
                     status.update(label="🎉 వీడియో స్టూడియో అవుట్‌పుట్ సిద్ధమైంది!", state="complete")
 
                     st.success("ఇదిగో మీ ఇమేజ్ ఆధారిత వీడియో మరియు ప్రొఫెషనల్ డైరెక్షన్ నివేదిక:")
