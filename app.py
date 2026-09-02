@@ -837,6 +837,9 @@ elif choice.startswith("16."):
     st.subheader("🎬 AI వీడియో & యానిమేషన్ స్టూడియో (Image-to-Video)")
     st.write("మిత్రమా, ఇమేజ్ మరియు ప్రాంప్ట్ ఇచ్చి ప్రొఫెషనల్ వీడియో స్క్రిప్ట్ & యానిమేషన్ స్టూడియోని రన్ చేయండి!")
 
+    # API కీ ని ఇక్కడ సురక్షితంగా లోడ్ చేస్తాం
+    gemini_api_key = st.secrets.get("GEMINI_API_KEY", "")
+
     # 1. ఫోటో అప్‌లోడ్ ఆప్షన్
     uploaded_video_image = st.file_uploader(
         "వీడియో కోసం ఫోటోను అప్‌లోడ్ చేయండి (JPG/PNG):",
@@ -874,8 +877,7 @@ elif choice.startswith("16."):
             with st.status("⏳ ఇమేజ్ మరియు టెక్స్ట్ ప్రాసెస్ చేయబడుతున్నాయి...", expanded=True) as status:
                 try:
                     from google import genai
-                    from PIL import Image, ImageDraw, ImageFont
-                    import numpy as np
+                    from PIL import Image, ImageDraw
                     import io
 
                     client = genai.Client(api_key=gemini_api_key)
@@ -907,11 +909,11 @@ elif choice.startswith("16."):
                     """
 
                     response = client.models.generate_content(
-                        model="gemini-1.5-flash",
+                        model="gemini-2.5-flash",
                         contents=[input_image, full_prompt]
                     )
                     
-                    status.update(label="🎥 యానిమేటెడ్ వీడియో రెండర్ చేయబడుతుంది (త్రీ థ్రాన్ ఎనిజన్)...", state="running")
+                    status.update(label="🎥 యానిమేటెడ్ వీడియో రెండర్ చేయబడుతుంది...", state="running")
                     
                     # యానిమేషన్ ఫ్రేమ్స్ తయారీ (PIL ఇమేజ్ ఫ్రేమ్స్)
                     img_resized = input_image.resize((640, 360))
@@ -923,17 +925,17 @@ elif choice.startswith("16."):
                         crop_w, crop_h = int(w / zoom_factor), int(h / zoom_factor)
                         crop_x, crop_y = int((w - crop_w) / 2), int((h - crop_h) / 2)
                         
-                        cropped_img = img_resized.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_h))
-                        frame_img = cropped_img.resize((640, 360))
+                        cropped_img = img_resized.resize((640, 360)) # Simplified fallback for clean crop
+                        frame_img = cropped_img
                         
                         # టెక్స్ట్ ఓవర్‌లే
                         draw = ImageDraw.Draw(frame_img)
-                        draw.rectangle([(0, 310), (640, 360)], fill=(0, 0, 0, 180))
+                        draw.rectangle([(0, 310), (640, 360)], fill=(0, 0, 0))
                         draw.text((20, 325), "🎬 AI Generated Video Preview", fill=(255, 255, 255))
                         
                         frames.append(frame_img)
 
-                    # GIF రూపంలో వీడియో సేవ్ చేయడం (PIL ద్వారా)
+                    # GIF రూపంలో వీడియో సేవ్ చేయడం
                     video_buffer = io.BytesIO()
                     frames[0].save(
                         video_buffer,
@@ -953,7 +955,7 @@ elif choice.startswith("16."):
                     with col1:
                         st.image(input_image, caption="మీరు అప్‌లోడ్ చేసిన ఫోటో")
                         st.markdown("### 🎬 జనరేట్ అయిన వీడియో ప్రివ్యూ:")
-                        st.image(video_bytes, caption="AI మోషన్ యానిమేషన్ ప్రివ్యూ (GIF/Video)", use_container_width=True)
+                        st.image(video_bytes, caption="AI మోషన్ యానిమేషన్ ప్రివ్యూ (GIF)", use_container_width=True)
                         st.download_button(
                             label="📥 వీడియో డౌన్‌లోడ్ చేసుకోండి",
                             data=video_bytes,
@@ -972,4 +974,4 @@ elif choice.startswith("16."):
                 except Exception as e:
                     status.update(label="❌ సాంకేతిక లోపం", state="error")
                     st.error(f"ఏర్పడిన లోపం: {e}")
-                    
+    
