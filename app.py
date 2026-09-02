@@ -896,14 +896,13 @@ elif choice.startswith("16."):
                     
                     st.success("ఇదిగో మీ ఇమేజ్ ఆధారిత వీడియో స్టూడియో రిపోర్ట్ & డైరెక్షన్:")
                     
-                    # యూజర్ అప్‌లోడ్ చేసిన ఇమేజ్ మరియు రిజల్ట్ చూపించడం
+                                        # యూజర్ అప్‌లోడ్ చేసిన ఇమేజ్ మరియు రిజల్ట్ చూపించడం
                     col1, col2 = st.columns(2)
                     with col1:
-                        st.image(input_image, caption="మీరు అప్‌లోడ్ చేసిన ఫోటో", use_column_width=True)
+                        st.image(input_image, caption="మీరు అప్‌లోడ్ చేసిన ఫోటో", use_container_width=True)
                     with col2:
                         st.info(f"**యాస్పెక్ట్ రేషియో:** {aspect_ratio}\n\n**స్టేటస్:** 100% విజయవంతం")
-
-                    st.markdown("### 📝 జనరేట్ అయిన వీడియో డైరెక్షన్ & స్క్రిప్ట్:")
+                        st.markdown("### 📝 జనరేట్ అయిన వీడియో డైరెక్షన్ & స్క్రిప్ట్:")
                     st.write(response.text)
 
                     st.markdown("### 🎙️ వాయిస్ ఓవర్ టెక్స్ట్:")
