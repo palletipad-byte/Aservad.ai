@@ -910,7 +910,7 @@ elif choice.startswith("16."):
 
                     # సరైన మరియు అందుబాటులో ఉన్న మోడల్ పేరు వాడటం జరిగింది
                     response = client.models.generate_content(
-                        model="gemini-1.5-flash",
+                        model="gemini-2.0-flash",
                         contents=[input_image, full_prompt]
                     )
                     
