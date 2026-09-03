@@ -837,38 +837,38 @@ elif choice.startswith("16."):
     st.subheader("🎬 AI వీడియో & యానిమేషన్ స్టూడియో (Image-to-Video)")
     st.write("మిత్రమా, ఇమేజ్ మరియు ప్రాంప్ట్ ఇచ్చి ప్రొఫెషనల్ వీడియో స్క్రిప్ట్ & యానిమేషన్ స్టూడియోని రన్ చేయండి!")
 
-    # API కీ ని ఇక్కడ సురక్షితంగా లోడ్ చేస్తాం
+    # API కీ ని సురక్షితంగా లోడ్ చేయడం
     gemini_api_key = st.secrets.get("GEMINI_API_KEY", "")
 
     # 1. ఫోటో అప్‌లోడ్ ఆప్షన్
     uploaded_video_image = st.file_uploader(
         "వీడియో కోసం ఫోటోను అప్‌లోడ్ చేయండి (JPG/PNG):",
         type=["jpg", "jpeg", "png"],
-        key="ves_img_upload_v2"
+        key="ves_img_upload_v3"
     )
 
     # 2. ప్రాంప్ట్ లేదా ఐడియా
     video_prompt = st.text_area(
         "వీడియో కోసం కాన్సెప్ట్ లేదా ప్రాంప్ట్ ఇవ్వండి:",
         value="Cinematic camera panning, dramatic lighting, high quality motion and realistic detailing",
-        key="ves_video_prompt_v2"
+        key="ves_video_prompt_v3"
     )
 
     # 3. వాయిస్ ఓవర్ / స్క్రిప్ట్ ఇన్పుట్
     voice_script = st.text_area(
         "వీడియో కోసం వాయిస్ ఓవర్ / బ్లాగ్ టెక్స్ట్ ఇవ్వండి:",
         value="నమస్కారం మిత్రమా, ఆర్టిఫిషియల్ ఇంటెలిజెన్స్ సహాయంతో మన అద్భుతమైన ప్రయాణం ఇక్కడ ప్రారంభమవుతుంది.",
-        key="ves_voice_script_v2"
+        key="ves_voice_script_v3"
     )
 
     # 4. యాస్పెక్ట్ రేషియో
     aspect_ratio = st.selectbox(
         "వీడియో యాస్పెక్ట్ రేషియో:",
         ["16:9 (Landscape)", "9:16 (Shorts/Reels)"],
-        key="ves_video_ratio_v2"
+        key="ves_video_ratio_v3"
     )
 
-    if st.button("🚀 వీడియో స్టూడియో ప్రాసెస్ ప్రారంభించు", key="ves_gen_action_btn"):
+    if st.button("🚀 వీడియో స్టూడియో ప్రాసెస్ ప్రారంభించు", key="ves_gen_action_btn_v3"):
         if not uploaded_video_image:
             st.warning("దయచేసి ముందుగా ఒక ఫోటోను అప్‌లోడ్ చేయండి మిత్రమా!")
         elif not gemini_api_key:
@@ -877,7 +877,7 @@ elif choice.startswith("16."):
             with st.status("⏳ ఇమేజ్ మరియు టెక్స్ట్ ప్రాసెస్ చేయబడుతున్నాయి...", expanded=True) as status:
                 try:
                     from google import genai
-                    from PIL import Image, ImageDraw
+                    from PIL import Image, ImageDraw, ImageFont
                     import io
 
                     client = genai.Client(api_key=gemini_api_key)
@@ -908,30 +908,36 @@ elif choice.startswith("16."):
                     [Please provide the Telugu script text for the voiceover here, based on the storyboard above.]
                     """
 
+                    # సరైన మరియు అందుబాటులో ఉన్న మోడల్ పేరు వాడటం జరిగింది
                     response = client.models.generate_content(
-                        model="gemini-3.6-flash",
+                        model="gemini-1.5-flash",
                         contents=[input_image, full_prompt]
                     )
                     
-                    status.update(label="🎥 యానిమేటెడ్ వీడియో రెండర్ చేయబడుతుంది...", state="running")
+                    status.update(label="🎥 అడ్వాన్స్‌డ్ మోషన్ వీడియో రెండర్ చేయబడుతుంది...", state="running")
                     
-                    # యానిమేషన్ ఫ్రేమ్స్ తయారీ (PIL ఇమేజ్ ఫ్రేమ్స్)
+                    # మెరుగైన యానిమేషన్ ఫ్రేమ్స్ తయారీ (Smooth Zoom & Pan Effect)
                     img_resized = input_image.resize((640, 360))
                     frames = []
                     
-                    for i in range(25):  # 25 ఫ్రేమ్‌లు
-                        zoom_factor = 1.0 + (i * 0.008)
+                    for i in range(30):  # 30 ఫ్రేమ్‌లతో మరింత స్మూత్ యానిమేషన్
+                        zoom_factor = 1.0 + (i * 0.005)
                         w, h = img_resized.size
                         crop_w, crop_h = int(w / zoom_factor), int(h / zoom_factor)
-                        crop_x, crop_y = int((w - crop_w) / 2), int((h - crop_h) / 2)
+                        crop_x = int((w - crop_w) / 2) + int(np.sin(i / 3) * 5) if 'np' in globals() else int((w - crop_w) / 2)
+                        crop_y = int((h - crop_h) / 2)
                         
-                        cropped_img = img_resized.resize((640, 360)) # Simplified fallback for clean crop
-                        frame_img = cropped_img
+                        # సేఫ్ క్రాపింగ్
+                        crop_x = max(0, min(crop_x, w - crop_w))
+                        crop_y = max(0, min(crop_y, h - crop_h))
                         
-                        # టెక్స్ట్ ఓవర్‌లే
+                        cropped_img = img_resized.crop((crop_x, crop_y, crop_x + crop_w, crop_y + crop_h))
+                        frame_img = cropped_img.resize((640, 360))
+                        
+                        # ప్రొఫెషనల్ టెక్స్ట్ & బ్యాడ్జ్ ఓవర్‌లే
                         draw = ImageDraw.Draw(frame_img)
-                        draw.rectangle([(0, 310), (640, 360)], fill=(0, 0, 0))
-                        draw.text((20, 325), "🎬 AI Generated Video Preview", fill=(255, 255, 255))
+                        draw.rectangle([(0, 315), (640, 360)], fill=(10, 10, 10))
+                        draw.text((15, 328), "🎬 ఆశీర్వాదం AI - Motion Studio", fill=(255, 255, 255))
                         
                         frames.append(frame_img)
 
@@ -942,7 +948,7 @@ elif choice.startswith("16."):
                         format='GIF',
                         save_all=True,
                         append_images=frames[1:],
-                        duration=200,
+                        duration=120, # స్పీడ్ అడ్జస్ట్మెంట్
                         loop=0
                     )
                     video_bytes = video_buffer.getvalue()
@@ -959,12 +965,12 @@ elif choice.startswith("16."):
                         st.download_button(
                             label="📥 వీడియో డౌన్‌లోడ్ చేసుకోండి",
                             data=video_bytes,
-                            file_name="ai_generated_video.gif",
+                            file_name="asirvad_ai_video.gif",
                             mime="image/gif"
                         )
 
                     with col2:
-                        st.info(f"**వీడియో ప్రాంప్ట్:** {video_prompt}\n\n**స్టేటస్:** 100% విజయవంతం")
+                        st.info(f"**యాస్పెక్ట్ రేషియో:** {aspect_ratio}\n\n**స్టేటస్:** 100% విజయవంతం")
                         st.markdown("### 📝 జనరేట్ అయిన వీడియో డైరెక్షన్ & స్క్రిప్ట్:")
                         st.write(response.text)
 
@@ -974,4 +980,4 @@ elif choice.startswith("16."):
                 except Exception as e:
                     status.update(label="❌ సాంకేతిక లోపం", state="error")
                     st.error(f"ఏర్పడిన లోపం: {e}")
-    
+                        
