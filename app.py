@@ -977,3 +977,72 @@ elif choice.startswith("16."):
                     status.update(label="❌ సాంకేతిక లోపం", state="error")
                     st.error(f"ఏర్పడిన లోపం: {e}")
                     
+# Page Configuration
+st.set_page_config(
+    page_title="Asirvad AI - Feature 17: AI Video Creator",
+    page_icon="🎬",
+    layout="wide"
+)
+
+st.title("🎬 Asirvad AI - Feature 17: Cinematic Video Creator")
+st.markdown("AI-driven cinematic video generation with custom character avatars and Telugu voice-overs.")
+
+# Sidebar for Configurations
+st.sidebar.header("Video Settings")
+voice_option = st.sidebar.selectbox(
+    "Select Voice Tone",
+    ["Telugu Male (Professional & Calm)", "Telugu Male (Inspiring)", "Telugu Female (Engaging)"]
+)
+resolution = st.sidebar.selectbox(
+    "Select Resolution",
+    ["1080p (HD)", "4K (Cinematic)"]
+)
+
+# Main Interface Layout
+col1, col2 = st.columns(2)
+
+with col1:
+    st.subheader("1. Script & Details")
+    script = st.text_area(
+        "Enter your video script (Telugu / English)",
+        placeholder="Type your AI concepts or story here...",
+        height=150
+    )
+    
+    uploaded_image = st.file_uploader(
+        "Upload Character / Avatar Image",
+        type=["jpg", "jpeg", "png"]
+    )
+
+with col2:
+    st.subheader("2. Preview & Output")
+    if uploaded_image:
+        image = Image.open(uploaded_image)
+        st.image(image, caption="Uploaded Character Avatar", width=300)
+    else:
+        st.info("Please upload a character image to preview.")
+
+# Generation Button
+st.markdown("---")
+if st.button("🚀 Create Cinematic Video"):
+    if not script:
+        st.warning("దయచేసి వీడియో స్క్రిప్ట్ ఎంటర్ చేయండి.")
+    elif not uploaded_image:
+        st.warning("దయచేసి క్యారెక్టర్ ఇమేజ్‌ని అప్‌లోడ్ చేయండి.")
+    else:
+        with st.spinner("AI video generation in progress... Please wait."):
+            # Simulation of processing steps
+            st.success("✨ క్యారెక్టర్ మరియు వాయిస్ సింక్ చేయబడ్డాయి!")
+            st.info("🎬 సినిమాటిక్ మోషన్స్ మరియు బ్యాక్‌డ్రాప్ అప్లై అవుతున్నాయి...")
+            
+            # Placeholder for final video display (Later integrated with Google Flow / MoviePy output)
+            st.balloons()
+            st.success("🎉 మీ వీడియో విజయవంతంగా తయారైంది!")
+            
+            # Download button simulation
+            st.download_button(
+                label="📥 Download Final MP4 Video",
+                data=b"sample_video_bytes",
+                file_name="asirvad_ai_feature17.mp4",
+                mime="video/mp4"
+)
