@@ -977,72 +977,85 @@ elif choice.startswith("16."):
                     status.update(label="❌ సాంకేతిక లోపం", state="error")
                     st.error(f"ఏర్పడిన లోపం: {e}")
                     
-# Page Configuration
-st.set_page_config(
-    page_title="Asirvad AI - Feature 17: AI Video Creator",
-    page_icon="🎬",
-    layout="wide"
-)
+# 17. AI వీడియో & యానిమేషన్ స్టూడియో (Text/Image-to-Video)
+elif choice.startswith("17."):
+    st.subheader("🎬 Asirvad AI - Feature 17: Cinematic Video Creator")
+    st.markdown("AI-driven cinematic video generation with custom character avatars and Telugu voice-overs.")
 
-st.title("🎬 Asirvad AI - Feature 17: Cinematic Video Creator")
-st.markdown("AI-driven cinematic video generation with custom character avatars and Telugu voice-overs.")
+    col1, col2 = st.columns(2)
 
-# Sidebar for Configurations
-st.sidebar.header("Video Settings")
-voice_option = st.sidebar.selectbox(
-    "Select Voice Tone",
-    ["Telugu Male (Professional & Calm)", "Telugu Male (Inspiring)", "Telugu Female (Engaging)"]
-)
-resolution = st.sidebar.selectbox(
-    "Select Resolution",
-    ["1080p (HD)", "4K (Cinematic)"]
-)
+    with col1:
+        st.subheader("1. Script & Details")
+        script = st.text_area(
+            "Enter your video script (Telugu / English)",
+            placeholder="Type your AI concepts or story here...",
+            height=150,
+            key="feat17_script"
+        )
+        
+        uploaded_image = st.file_uploader(
+            "Upload Character / Avatar Image",
+            type=["jpg", "jpeg", "png"],
+            key="feat17_img"
+        )
+        
+        voice_option = st.selectbox(
+            "Select Voice Tone",
+            ["Telugu Male (Professional & Calm)", "Telugu Male (Inspiring)", "Telugu Female (Engaging)"],
+            key="feat17_voice"
+        )
+        resolution = st.selectbox(
+            "Select Resolution",
+            ["1080p (HD)", "4K (Cinematic)"],
+            key="feat17_res"
+        )
 
-# Main Interface Layout
-col1, col2 = st.columns(2)
+    with col2:
+        st.subheader("2. Preview & Output")
+        if uploaded_image:
+            image = Image.open(uploaded_image)
+            st.image(image, caption="Uploaded Character Avatar", width=300)
+        else:
+            st.info("Please upload a character image to preview.")
 
-with col1:
-    st.subheader("1. Script & Details")
-    script = st.text_area(
-        "Enter your video script (Telugu / English)",
-        placeholder="Type your AI concepts or story here...",
-        height=150
-    )
-    
-    uploaded_image = st.file_uploader(
-        "Upload Character / Avatar Image",
-        type=["jpg", "jpeg", "png"]
-    )
-
-with col2:
-    st.subheader("2. Preview & Output")
-    if uploaded_image:
-        image = Image.open(uploaded_image)
-        st.image(image, caption="Uploaded Character Avatar", width=300)
-    else:
-        st.info("Please upload a character image to preview.")
-
-# Generation Button
-st.markdown("---")
-if st.button("🚀 Create Cinematic Video"):
-    if not script:
-        st.warning("దయచేసి వీడియో స్క్రిప్ట్ ఎంటర్ చేయండి.")
-    elif not uploaded_image:
-        st.warning("దయచేసి క్యారెక్టర్ ఇమేజ్‌ని అప్‌లోడ్ చేయండి.")
-    else:
-        with st.spinner("AI video generation in progress... Please wait."):
-            # Simulation of processing steps
-            st.success("✨ క్యారెక్టర్ మరియు వాయిస్ సింక్ చేయబడ్డాయి!")
-            st.info("🎬 సినిమాటిక్ మోషన్స్ మరియు బ్యాక్‌డ్రాప్ అప్లై అవుతున్నాయి...")
-            
-            # Placeholder for final video display (Later integrated with Google Flow / MoviePy output)
-            st.balloons()
-            st.success("🎉 మీ వీడియో విజయవంతంగా తయారైంది!")
-            
-            # Download button simulation
-            st.download_button(
-                label="📥 Download Final MP4 Video",
-                data=b"sample_video_bytes",
-                file_name="asirvad_ai_feature17.mp4",
-                mime="video/mp4"
-)
+    # Generation Button
+    st.markdown("---")
+    if st.button("🚀 Create Cinematic Video", key="feat17_btn"):
+        if not script:
+            st.warning("దయచేసి వీడియో స్క్రిప్ట్ ఎంటర్ చేయండి.")
+        elif not uploaded_image:
+            st.warning("దయచేసి క్యారెక్టర్ ఇమేజ్‌ని అప్‌లోడ్ చేయండి.")
+        else:
+            with st.spinner("AI video generation in progress... Please wait (Rendering MP4)..."):
+                try:
+                    from moviepy.editor import ImageClip
+                    
+                    tfile = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
+                    tfile.write(uploaded_image.read())
+                    tfile.close()
+                    
+                    output_video_path = "asirvad_ai_feature17.mp4"
+                    
+                    # Create video clip using MoviePy
+                    clip = ImageClip(tfile.name).set_duration(5)
+                    clip.write_videofile(output_video_path, fps=24, codec="libx264", audio=False)
+                    
+                    os.unlink(tfile.name)
+                    
+                    st.success("🎉 మీ సినిమాటిక్ వీడియో విజయవంతంగా తయారైంది!")
+                    
+                    with open(output_video_path, "rb") as file:
+                        video_bytes = file.read()
+                    
+                    st.download_button(
+                        label="📥 Download Final MP4 Video",
+                        data=video_bytes,
+                        file_name="asirvad_ai_feature17.mp4",
+                        mime="video/mp4",
+                        key="feat17_download"
+                    )
+                    
+                except Exception as e:
+                    st.error(f"వీడియో రెండరింగ్ లో లోపం ఏర్పడింది: {e}")
+                    st.info("దయచేసి మీ requirements.txt లో `moviepy` సరిగ్గా ఇన్‌స్టాల్ అయిందో లేదో చెక్ చేయండి.")
+        
