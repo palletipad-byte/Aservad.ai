@@ -2,10 +2,11 @@ google-genai
 streamlit
 numpy
 pillow
+moviepy
 
 huggingface_hub
 opencv-python-headless
 replicate
 gtts
 PyPDF2
-replicate
+
