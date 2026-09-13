@@ -981,110 +981,86 @@ elif choice.startswith("16."):
                     st.error(f"ఏర్పడిన లోపం: {e}")
                     
 
-# 17. AI సినిమాటిక్ అవతార్ & లిప్-సింక్ వీడియో స్టూడియో (AI Avatar & Lip-Sync Creator)
+# 17. AI గూగుల్ వీయో వీడియో స్టూడియో (Google Veo Text-to-Video Creator)
 elif choice.startswith("17."):
-    st.subheader("🎬 Asirvad AI - Feature 17: AI Lip-Sync Avatar Creator")
-    st.markdown("Transform your character image and script into a professional talking-head video with AI lip-syncing.")
+    st.subheader("🎬 Asirvad AI - Feature 17: Google Veo Video Creator")
+    st.markdown("Generate high-quality cinematic videos from text prompts using Google's Veo AI engine.")
 
-    import os
-    import replicate
+    import time
+    import google.genai as genai
+    from google.genai import types
 
-    col1, col2 = st.columns(2)
+    # Input for Video Prompt
+    video_prompt = st.text_area(
+        "Enter your video prompt / concept (English recommended for Veo)",
+        placeholder="e.g., A majestic drone shot of Hyderabad Charminar at night, glowing neon lights...",
+        height=120,
+        key="feat17_veo_prompt"
+    )
+    
+    resolution_choice = st.selectbox(
+        "Select Aspect Ratio",
+        ["16:9 (Landscape)", "9:16 (Portrait / Shorts)"],
+        key="feat17_veo_ratio"
+    )
 
-    with col1:
-        st.subheader("1. Script & Details")
-        script = st.text_area(
-            "Enter your video script (Telugu / English)",
-            placeholder="Type your AI concepts or story here...",
-            height=150,
-            key="feat17_script"
-        )
-        
-        uploaded_image = st.file_uploader(
-            "Upload Character / Avatar Image",
-            type=["jpg", "jpeg", "png"],
-            key="feat17_img"
-        )
-        
-        voice_option = st.selectbox(
-            "Select Voice Tone",
-            ["Telugu Male (Professional & Calm)", "Telugu Male (Inspiring)", "Telugu Female (Engaging)"],
-            key="feat17_voice"
-        )
-
-    with col2:
-        st.subheader("2. Preview & Output")
-        if uploaded_image:
-            image = Image.open(uploaded_image)
-            st.image(image, caption="Uploaded Character Avatar", width=300)
-        else:
-            st.info("Please upload a character image to preview.")
-
-    # Generation Button
     st.markdown("---")
-    if st.button("🚀 Create AI Lip-Sync Video", key="feat17_btn"):
-        if not script:
-            st.warning("దయచేసి వీడియో స్క్రిప్ట్ ఎంటర్ చేయండి.")
-        elif not uploaded_image:
-            st.warning("దయచేసి క్యారెక్టర్ ఇమేజ్‌ని అప్‌లోడ్ చేయండి.")
+    if st.button("🚀 Generate Veo Video", key="feat17_veo_btn"):
+        if not video_prompt:
+            st.warning("దయచేసి వీడియో ప్రాంప్ట్ ఎంటర్ చేయండి.")
         else:
-            with st.spinner("AI Lip-Sync processing in progress via Replicate... Please wait..."):
+            with st.spinner("⏳ Google Veo 3.1 engine is rendering your cinematic video... Please wait..."):
                 try:
-                    # Check Replicate API Token
-                    if "REPLICATE_API_TOKEN" not in os.environ:
-                        st.error("Replicate API token నాట్ ఫౌండ్. దయచేసి స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో సెట్ చేయండి.")
+                    # Initialize GenAI Client using Streamlit Secrets or Environment
+                    api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY", ""))
+                    if not api_key:
+                        st.error("దయచేసి మీ స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో GEMINI_API_KEY ని సెట్ చేయండి.")
                     else:
-                        # Step 1: Generate audio using gTTS
-                        from gTTS import gTTS
-                        import tempfile
-                        import requests
+                        os.environ["GEMINI_API_KEY"] = api_key
+                        client = genai.Client()
                         
-                        tts = gTTS(text=script, lang='te', slow=False)
-                        audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
-                        tts.save(audio_file.name)
-                        audio_file.close()
-
-                        # Save uploaded image temporarily
-                        img_pil = Image.open(uploaded_image).convert("RGB")
-                        img_file = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
-                        img_pil.save(img_file.name)
-                        img_file.close()
-
-                        # Step 2: Call Replicate Model for Talking Head / Lip-Sync
-                        # Using a reliable open-source lip-sync model on Replicate (e.g., SadTalker or similar)
-                        output = replicate.run(
-                            "cjwbw/sadtalker:3aa3dac9353cc4d6bd62a8fef6257ab68953024816699e082f1b4edc2862e3d6",
-                            input={
-                                "source_image": open(img_file.name, "rb"),
-                                "driven_audio": open(audio_file.name, "rb"),
-                                "still": True,
-                                "preprocess": "full"
-                            }
+                        aspect_val = "16:9" if "16:9" in resolution_choice else "9:16"
+                        
+                        # Generate video using Veo 3.1 model
+                        operation = client.models.generate_videos(
+                            model="veo-3.1-generate-001",
+                            prompt=video_prompt,
+                            config=types.GenerateVideosConfig(
+                                aspect_ratio=aspect_val,
+                                duration_seconds=5,
+                                output_mime_type="video/mp4"
+                            )
                         )
-
-                        # Cleanup local temp files
-                        os.unlink(img_file.name)
-                        os.unlink(audio_file.name)
-
-                        if output:
-                            st.success("🎉 మీ AI లిప్-సింక్ వీడియో విజయవంతంగా తయారైంది!")
+                        
+                        # Polling loop while rendering
+                        while not operation.done:
+                            time.sleep(5)
+                            operation = client.operations.get(operation)
                             
-                            # Fetch and provide download button for the generated video URL
-                            video_response = requests.get(output)
-                            video_bytes = video_response.content
+                        generated_videos = operation.result.generated_videos
+                        if generated_videos:
+                            video_data = generated_videos[0]
+                            output_filename = "asirvad_veo_output.mp4"
                             
-                            st.video(output)
+                            with open(output_filename, "wb") as f:
+                                f.write(video_data.bytes)
+                                
+                            st.success("🎉 మీ గూగుల్ వీయో వీడియో విజయవంతంగా తయారైంది!")
+                            st.video(output_filename)
                             
+                            with open(output_filename, "rb") as file:
+                                video_bytes = file.read()
+                                
                             st.download_button(
-                                label="📥 Download Final Lip-Sync MP4 Video",
+                                label="📥 Download Veo MP4 Video",
                                 data=video_bytes,
-                                file_name="asirvad_ai_lipsync_video.mp4",
+                                file_name="asirvad_veo_video.mp4",
                                 mime="video/mp4",
-                                key="feat17_download"
+                                key="feat17_veo_download"
                             )
                         else:
-                            st.warning("⚠️ వీడియో జనరేషన్ లో టెక్నికల్ సమస్య ఎదురైంది, దయచేసి మళ్లీ ప్రయత్నించండి.")
-
+                            st.warning("⚠️ వీడియో జనరేట్ అయింది కానీ డేటా లభించలేదు.")
+                            
                 except Exception as e:
-                    st.error(f"లిప్-సింక్ రెండరింగ్ లో లోపం ఏర్పడింది: {e}")
-                        
+                    st.error(f"వీడియో జనరేషన్‌లో లోపం ఏర్పడింది: {e}")
+                            
