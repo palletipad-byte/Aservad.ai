@@ -1027,7 +1027,7 @@ elif choice.startswith("17."):
                             prompt=video_prompt,
                             config=types.GenerateVideosConfig(
                                 aspect_ratio=aspect_val,
-                                duration_seconds=5
+                                duration_seconds=6
                             )
                         )
                         
