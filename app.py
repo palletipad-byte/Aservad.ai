@@ -981,13 +981,13 @@ elif choice.startswith("16."):
                     st.error(f"ఏర్పడిన లోపం: {e}")
                     
 
-# 17. AI సినిమాటిక్ అవతార్ & వీడియో స్టూడియో (Avatar Video Generator)
+# 17. AI సినిమాటిక్ అవతార్ & లిప్-సింక్ వీడియో స్టూడియో (AI Avatar & Lip-Sync Creator)
 elif choice.startswith("17."):
-    st.subheader("🎬 Asirvad AI - Feature 17: AI Avatar Video Creator")
-    st.markdown("Transform your character image and script into a professional MP4 video with Telugu voice-overs.")
+    st.subheader("🎬 Asirvad AI - Feature 17: AI Lip-Sync Avatar Creator")
+    st.markdown("Transform your character image and script into a professional talking-head video with AI lip-syncing.")
 
-    import tempfile
     import os
+    import replicate
 
     col1, col2 = st.columns(2)
 
@@ -1011,11 +1011,6 @@ elif choice.startswith("17."):
             ["Telugu Male (Professional & Calm)", "Telugu Male (Inspiring)", "Telugu Female (Engaging)"],
             key="feat17_voice"
         )
-        resolution = st.selectbox(
-            "Select Resolution",
-            ["1080p (HD)", "4K (Cinematic)"],
-            key="feat17_res"
-        )
 
     with col2:
         st.subheader("2. Preview & Output")
@@ -1027,67 +1022,69 @@ elif choice.startswith("17."):
 
     # Generation Button
     st.markdown("---")
-    if st.button("🚀 Create Avatar MP4 Video with Voice", key="feat17_btn"):
+    if st.button("🚀 Create AI Lip-Sync Video", key="feat17_btn"):
         if not script:
             st.warning("దయచేసి వీడియో స్క్రిప్ట్ ఎంటర్ చేయండి.")
         elif not uploaded_image:
             st.warning("దయచేసి క్యారెక్టర్ ఇమేజ్‌ని అప్‌లోడ్ చేయండి.")
         else:
-            with st.spinner("AI Google Flow in progress: Converting text to voice & rendering video..."):
+            with st.spinner("AI Lip-Sync processing in progress via Replicate... Please wait..."):
                 try:
-                    from moviepy.editor import ImageClip, AudioFileClip
-                    from gtts import gTTS
-                    
-                    # Step 1: Generate Telugu Audio from Script using gTTS
-                    tts = gTTS(text=script, lang='te', slow=False)
-                    audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
-                    tts.save(audio_file.name)
-                    audio_file.close()
-                    
-                    # Step 2: Prepare Image
-                    img_pil = Image.open(uploaded_image).convert("RGB")
-                    img_file = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
-                    img_pil.save(img_file.name)
-                    img_file.close()
-                    
-                    # Step 3: Load Audio to get exact duration
-                    audio_clip = AudioFileClip(audio_file.name)
-                    video_duration = audio_clip.duration
-                    
-                    # Step 4: Create Image Clip synchronized with Audio duration
-                    image_clip = ImageClip(img_file.name).set_duration(video_duration)
-                    
-                    # Step 5: Set Audio to Video Clip
-                    final_clip = image_clip.set_audio(audio_clip)
-                    
-                    output_video_path = "asirvad_ai_feature17.mp4"
-                    
-                    # Render final MP4 video
-                    final_clip.write_videofile(
-                        output_video_path, 
-                        fps=24, 
-                        codec="libx264", 
-                        audio_codec="aac"
-                    )
-                    
-                    # Cleanup temp files
-                    os.unlink(img_file.name)
-                    os.unlink(audio_file.name)
-                    
-                    st.success("🎉 వాయిస్ ఓవర్‌తో కూడిన మీ సినిమాటిక్ వీడియో విజయవంతంగా తయారైంది!")
-                    
-                    # Read generated video for download
-                    with open(output_video_path, "rb") as file:
-                        video_bytes = file.read()
-                    
-                    st.download_button(
-                        label="📥 Download Final MP4 Video with Audio",
-                        data=video_bytes,
-                        file_name="asirvad_ai_feature17.mp4",
-                        mime="video/mp4",
-                        key="feat17_download"
-                    )
-                    
+                    # Check Replicate API Token
+                    if "REPLICATE_API_TOKEN" not in os.environ:
+                        st.error("Replicate API token నాట్ ఫౌండ్. దయచేసి స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో సెట్ చేయండి.")
+                    else:
+                        # Step 1: Generate audio using gTTS
+                        from gTTS import gTTS
+                        import tempfile
+                        import requests
+                        
+                        tts = gTTS(text=script, lang='te', slow=False)
+                        audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+                        tts.save(audio_file.name)
+                        audio_file.close()
+
+                        # Save uploaded image temporarily
+                        img_pil = Image.open(uploaded_image).convert("RGB")
+                        img_file = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
+                        img_pil.save(img_file.name)
+                        img_file.close()
+
+                        # Step 2: Call Replicate Model for Talking Head / Lip-Sync
+                        # Using a reliable open-source lip-sync model on Replicate (e.g., SadTalker or similar)
+                        output = replicate.run(
+                            "cjwbw/sadtalker:3aa3dac9353cc4d6bd62a8fef6257ab68953024816699e082f1b4edc2862e3d6",
+                            input={
+                                "source_image": open(img_file.name, "rb"),
+                                "driven_audio": open(audio_file.name, "rb"),
+                                "still": True,
+                                "preprocess": "full"
+                            }
+                        )
+
+                        # Cleanup local temp files
+                        os.unlink(img_file.name)
+                        os.unlink(audio_file.name)
+
+                        if output:
+                            st.success("🎉 మీ AI లిప్-సింక్ వీడియో విజయవంతంగా తయారైంది!")
+                            
+                            # Fetch and provide download button for the generated video URL
+                            video_response = requests.get(output)
+                            video_bytes = video_response.content
+                            
+                            st.video(output)
+                            
+                            st.download_button(
+                                label="📥 Download Final Lip-Sync MP4 Video",
+                                data=video_bytes,
+                                file_name="asirvad_ai_lipsync_video.mp4",
+                                mime="video/mp4",
+                                key="feat17_download"
+                            )
+                        else:
+                            st.warning("⚠️ వీడియో జనరేషన్ లో టెక్నికల్ సమస్య ఎదురైంది, దయచేసి మళ్లీ ప్రయత్నించండి.")
+
                 except Exception as e:
-                    st.error(f"వీడియో రెండరింగ్ లో లోపం ఏర్పడింది: {e}")
-                    
+                    st.error(f"లిప్-సింక్ రెండరింగ్ లో లోపం ఏర్పడింది: {e}")
+                        
