@@ -1023,7 +1023,7 @@ elif choice.startswith("17."):
                         
                         # అధికారికంగా సపోర్ట్ చేసే Veo మోడల్ పేరును ఇక్కడ సెట్ చేశాము
                         operation = client.models.generate_videos(
-                            model="veo-2.0-generate-001",
+                            model="veo-3.1-generate-preview",
                             prompt=video_prompt,
                             config=types.GenerateVideosConfig(
                                 aspect_ratio=aspect_val,
