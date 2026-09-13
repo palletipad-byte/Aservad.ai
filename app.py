@@ -1027,10 +1027,10 @@ elif choice.startswith("17."):
                             prompt=video_prompt,
                             config=types.GenerateVideosConfig(
                                 aspect_ratio=aspect_val,
-                                duration_seconds=5,
-                                output_mime_type="video/mp4"
+                                duration_seconds=5
                             )
                         )
+                        
                         
                         # Polling loop while rendering
                         while not operation.done:
