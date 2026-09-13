@@ -1009,7 +1009,7 @@ elif choice.startswith("17."):
         if not video_prompt:
             st.warning("దయచేసి వీడియో ప్రాంప్ట్ ఎంటర్ చేయండి.")
         else:
-            with st.spinner("⏳ Google Veo 3.1 engine is rendering your cinematic video... Please wait..."):
+            with st.spinner("⏳ Google Veo engine is rendering your cinematic video... Please wait..."):
                 try:
                     # Initialize GenAI Client using Streamlit Secrets or Environment
                     api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY", ""))
@@ -1021,16 +1021,15 @@ elif choice.startswith("17."):
                         
                         aspect_val = "16:9" if "16:9" in resolution_choice else "9:16"
                         
-                        # Generate video using Veo 3.1 model
+                        # అధికారికంగా సపోర్ట్ చేసే Veo మోడల్ పేరును ఇక్కడ సెట్ చేశాము
                         operation = client.models.generate_videos(
-                            model="veo-3.1-generate-001",
+                            model="veo-2.0-generate-001",
                             prompt=video_prompt,
                             config=types.GenerateVideosConfig(
                                 aspect_ratio=aspect_val,
                                 duration_seconds=5
                             )
                         )
-                        
                         
                         # Polling loop while rendering
                         while not operation.done:
@@ -1063,4 +1062,4 @@ elif choice.startswith("17."):
                             
                 except Exception as e:
                     st.error(f"వీడియో జనరేషన్‌లో లోపం ఏర్పడింది: {e}")
-                            
+                    
