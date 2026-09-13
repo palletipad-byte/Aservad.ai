@@ -984,7 +984,7 @@ elif choice.startswith("16."):
 # 17. AI సినిమాటిక్ అవతార్ & వీడియో స్టూడియో (Avatar Video Generator)
 elif choice.startswith("17."):
     st.subheader("🎬 Asirvad AI - Feature 17: AI Avatar Video Creator")
-    st.markdown("Transform your character image and script into a professional MP4 video with voice-overs.")
+    st.markdown("Transform your character image and script into a professional MP4 video with Telugu voice-overs.")
 
     import tempfile
     import os
@@ -1027,44 +1027,67 @@ elif choice.startswith("17."):
 
     # Generation Button
     st.markdown("---")
-    if st.button("🚀 Create Avatar MP4 Video", key="feat17_btn"):
+    if st.button("🚀 Create Avatar MP4 Video with Voice", key="feat17_btn"):
         if not script:
             st.warning("దయచేసి వీడియో స్క్రిప్ట్ ఎంటర్ చేయండి.")
         elif not uploaded_image:
             st.warning("దయచేసి క్యారెక్టర్ ఇమేజ్‌ని అప్‌లోడ్ చేయండి.")
         else:
-            with st.spinner("AI video generation in progress... Please wait (Rendering MP4)..."):
+            with st.spinner("AI Google Flow in progress: Converting text to voice & rendering video..."):
                 try:
-                    from moviepy.editor import ImageClip
+                    from moviepy.editor import ImageClip, AudioFileClip
+                    from gtts import gTTS
                     
-                    # Convert image to RGB using PIL to prevent mode errors
+                    # Step 1: Generate Telugu Audio from Script using gTTS
+                    tts = gTTS(text=script, lang='te', slow=False)
+                    audio_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp3")
+                    tts.save(audio_file.name)
+                    audio_file.close()
+                    
+                    # Step 2: Prepare Image
                     img_pil = Image.open(uploaded_image).convert("RGB")
-                    tfile = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
-                    img_pil.save(tfile.name)
-                    tfile.close()
+                    img_file = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
+                    img_pil.save(img_file.name)
+                    img_file.close()
+                    
+                    # Step 3: Load Audio to get exact duration
+                    audio_clip = AudioFileClip(audio_file.name)
+                    video_duration = audio_clip.duration
+                    
+                    # Step 4: Create Image Clip synchronized with Audio duration
+                    image_clip = ImageClip(img_file.name).set_duration(video_duration)
+                    
+                    # Step 5: Set Audio to Video Clip
+                    final_clip = image_clip.set_audio(audio_clip)
                     
                     output_video_path = "asirvad_ai_feature17.mp4"
                     
-                    # Create video clip using MoviePy
-                    clip = ImageClip(tfile.name).set_duration(5)
-                    clip.write_videofile(output_video_path, fps=24, codec="libx264", audio=False)
+                    # Render final MP4 video
+                    final_clip.write_videofile(
+                        output_video_path, 
+                        fps=24, 
+                        codec="libx264", 
+                        audio_codec="aac"
+                    )
                     
-                    os.unlink(tfile.name)
+                    # Cleanup temp files
+                    os.unlink(img_file.name)
+                    os.unlink(audio_file.name)
                     
-                    st.success("🎉 మీ సినిమాటిక్ వీడియో విజయవంతంగా తయారైంది!")
+                    st.success("🎉 వాయిస్ ఓవర్‌తో కూడిన మీ సినిమాటిక్ వీడియో విజయవంతంగా తయారైంది!")
                     
+                    # Read generated video for download
                     with open(output_video_path, "rb") as file:
                         video_bytes = file.read()
                     
                     st.download_button(
-                        label="📥 Download Final MP4 Video",
+                        label="📥 Download Final MP4 Video with Audio",
                         data=video_bytes,
                         file_name="asirvad_ai_feature17.mp4",
                         mime="video/mp4",
                         key="feat17_download"
                     )
-                     
                     
                 except Exception as e:
                     st.error(f"వీడియో రెండరింగ్ లో లోపం ఏర్పడింది: {e}")
-        
+                    
