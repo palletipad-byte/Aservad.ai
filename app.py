@@ -120,7 +120,7 @@ selected_lang = st.selectbox("🌐 భాషను ఎంచుకోండి /
     "ಕನ್ನಡ (Kannada)", "മലയാളം (Malayalam)", "Español", "Français"
 ])
 
-# సైడ్‌బార్ మెనూ - 16 ఫీచర్లు (సరియైన వరుసక్రమం)
+# సైడ్‌బార్ మెనూ - 17 ఫీచర్లు (సరియైన వరుసక్రమం)
 st.title("🧭 అశీర్వాదం AI / Navigation")
 choice = st.selectbox("ఫీచర్‌ని ఎన్నుకోండి / Select Feature", [
     "1. హోమ్ / Dashboard",
