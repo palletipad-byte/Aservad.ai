@@ -978,10 +978,10 @@ elif choice.startswith("16."):
                     status.update(label="❌ సాంకేతిక లోపం", state="error")
                     st.error(f"ఏర్పడిన లోపం: {e}")
                     
-# 17. AI వీడియో & యానిమేషన్ స్టూడియో (Text/Image-to-Video)
+# 17. AI సినిమాటిక్ అవతార్ & వీడియో స్టూడియో (Avatar Video Generator)
 elif choice.startswith("17."):
-    st.subheader("🎬 Asirvad AI - Feature 17: Cinematic Video Creator")
-    st.markdown("AI-driven cinematic video generation with custom character avatars and Telugu voice-overs.")
+    st.subheader("🎬 Asirvad AI - Feature 17: AI Avatar Video Creator")
+    st.markdown("Transform your character image and script into a professional MP4 video with voice-overs.")
 
     col1, col2 = st.columns(2)
 
@@ -1021,7 +1021,7 @@ elif choice.startswith("17."):
 
     # Generation Button
     st.markdown("---")
-    if st.button("🚀 Create Cinematic Video", key="feat17_btn"):
+    if st.button("🚀 Create Avatar MP4 Video", key="feat17_btn"):
         if not script:
             st.warning("దయచేసి వీడియో స్క్రిప్ట్ ఎంటర్ చేయండి.")
         elif not uploaded_image:
@@ -1037,7 +1037,7 @@ elif choice.startswith("17."):
                     
                     output_video_path = "asirvad_ai_feature17.mp4"
                     
-                    # Create video clip using MoviePy
+                    # Create video clip using MoviePy with correct set_duration
                     clip = ImageClip(tfile.name).set_duration(5)
                     clip.write_videofile(output_video_path, fps=24, codec="libx264", audio=False)
                     
@@ -1059,4 +1059,4 @@ elif choice.startswith("17."):
                 except Exception as e:
                     st.error(f"వీడియో రెండరింగ్ లో లోపం ఏర్పడింది: {e}")
                     st.info("దయచేసి మీ requirements.txt లో `moviepy` సరిగ్గా ఇన్‌స్టాల్ అయిందో లేదో చెక్ చేయండి.")
-        
+                    
