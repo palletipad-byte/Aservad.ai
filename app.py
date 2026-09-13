@@ -1037,8 +1037,10 @@ elif choice.startswith("17."):
                 try:
                     from moviepy.editor import ImageClip
                     
-                    tfile = tempfile.NamedTemporaryFile(delete=False, suffix=".png")
-                    tfile.write(uploaded_image.read())
+                    # Convert image to RGB using PIL to prevent mode errors
+                    img_pil = Image.open(uploaded_image).convert("RGB")
+                    tfile = tempfile.NamedTemporaryFile(delete=False, suffix=".jpg")
+                    img_pil.save(tfile.name)
                     tfile.close()
                     
                     output_video_path = "asirvad_ai_feature17.mp4"
@@ -1061,6 +1063,7 @@ elif choice.startswith("17."):
                         mime="video/mp4",
                         key="feat17_download"
                     )
+                     
                     
                 except Exception as e:
                     st.error(f"వీడియో రెండరింగ్ లో లోపం ఏర్పడింది: {e}")
