@@ -3,6 +3,7 @@ streamlit
 numpy
 pillow
 moviepy
+imageio[pyav]
 
 huggingface_hub
 opencv-python-headless
