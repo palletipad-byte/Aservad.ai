@@ -981,23 +981,35 @@ elif choice.startswith("16."):
                     st.error(f"ఏర్పడిన లోపం: {e}")
                     
 
-# 17. AI గూగుల్ వీయో వీడియో స్టూడియో (Google Veo Text-to-Video Creator)
+# 17. AI గూగుల్ వీయో వీడియో స్టూడియో (Google Veo Text/Image-to-Video Creator)
 elif choice.startswith("17."):
     st.subheader("🎬 Asirvad AI - Feature 17: Google Veo Video Creator")
-    st.markdown("Generate high-quality cinematic videos from text prompts using Google's Veo AI engine.")
+    st.markdown("Generate high-quality cinematic videos from text prompts and images using Google's Veo AI engine.")
 
+    import os
     import time
+    from PIL import Image
     import google.genai as genai
     from google.genai import types
 
-    # Input for Video Prompt
+    # 1. ఇమేజ్ అప్‌లోడ్ ఆప్షన్
+    uploaded_image = st.file_uploader(
+        "📷 Upload an Image (Optional - ఫోటో ఆధారంగా వీడియో చేయాలనుకుంటే అప్‌లోడ్ చేయండి):",
+        type=["png", "jpg", "jpeg"],
+        key="feat17_veo_img"
+    )
+    if uploaded_image is not None:
+        st.image(uploaded_image, caption="అప్‌లోడ్ చేసిన ఇమేజ్", width=300)
+
+    # 2. వీడియో ప్రాంప్ట్
     video_prompt = st.text_area(
         "Enter your video prompt / concept (English recommended for Veo)",
-        placeholder="e.g., A majestic drone shot of Hyderabad Charminar at night, glowing neon lights...",
-        height=120,
+        placeholder="e.g., Animate this picture with cinematic lighting, slow zoom-in...",
+        height=100,
         key="feat17_veo_prompt"
     )
-    
+
+    # 3. ఆస్పెక్ట్ రేషియో
     resolution_choice = st.selectbox(
         "Select Aspect Ratio",
         ["16:9 (Landscape)", "9:16 (Portrait / Shorts)"],
@@ -1006,60 +1018,67 @@ elif choice.startswith("17."):
 
     st.markdown("---")
     if st.button("🚀 Generate Veo Video", key="feat17_veo_btn"):
-        if not video_prompt:
-            st.warning("దయచేసి వీడియో ప్రాంప్ట్ ఎంటర్ చేయండి.")
+        if not video_prompt and uploaded_image is None:
+            st.warning("దయచేసి ప్రాంప్ట్ రాయండి లేదా ఇమేజ్ అప్‌లోడ్ చేయండి.")
         else:
             with st.spinner("⏳ Google Veo engine is rendering your cinematic video... Please wait..."):
                 try:
-                    # Initialize GenAI Client using Streamlit Secrets or Environment
                     api_key = st.secrets.get("GEMINI_API_KEY", os.environ.get("GEMINI_API_KEY", ""))
                     if not api_key:
                         st.error("దయచేసి మీ స్ట్రీమ్‌లిట్ సీక్రెట్స్‌లో GEMINI_API_KEY ని సెట్ చేయండి.")
                     else:
                         os.environ["GEMINI_API_KEY"] = api_key
                         client = genai.Client()
-                        
+
                         aspect_val = "16:9" if "16:9" in resolution_choice else "9:16"
-                        
-                        # అధికారికంగా సపోర్ట్ చేసే Veo మోడల్ పేరును ఇక్కడ సెట్ చేశాము
+
+                        # ఇమేజ్ ఉంటే PIL ద్వారా రీడ్ చేయడం
+                        input_image = None
+                        if uploaded_image is not None:
+                            input_image = Image.open(uploaded_image)
+
+                        # Veo API కాల్ (టెక్స్ట్ మరియు ఇమేజ్ రెండింటికీ సపోర్ట్ చేస్తుంది)
                         operation = client.models.generate_videos(
-                            model="veo-3.1-generate-preview",
-                            prompt=video_prompt,
+                            model="veo-2.0-generate-001",
+                            prompt=video_prompt if video_prompt else "Animate this image smoothly",
+                            image=input_image,
                             config=types.GenerateVideosConfig(
                                 aspect_ratio=aspect_val,
-                                duration_seconds=6
+                                duration_seconds=5
                             )
                         )
-                        
-                        # Polling loop while rendering
+
+                        # పోలింగ్ లూప్
                         while not operation.done:
                             time.sleep(5)
                             operation = client.operations.get(operation)
-                            
+
                         generated_videos = operation.result.generated_videos
                         if generated_videos:
-                            video_data = generated_videos[0]
+                            # వీడియో బైట్స్‌ను నేరుగా డౌన్‌లోడ్ చేసుకుని ప్లే చేయడం
+                            video_file = generated_videos[0]
                             output_filename = "asirvad_veo_output.mp4"
-                            
+
+                            # SDK අනුව video_bytes లేదా bytes ఉంటాయి
+                            video_bytes_data = getattr(video_file, "bytes", None) or getattr(video_file.video, "video_bytes", None)
+
                             with open(output_filename, "wb") as f:
-                                f.write(video_data.bytes)
-                                
+                                f.write(video_bytes_data)
+
                             st.success("🎉 మీ గూగుల్ వీయో వీడియో విజయవంతంగా తయారైంది!")
                             st.video(output_filename)
-                            
+
                             with open(output_filename, "rb") as file:
-                                video_bytes = file.read()
-                                
-                            st.download_button(
-                                label="📥 Download Veo MP4 Video",
-                                data=video_bytes,
-                                file_name="asirvad_veo_video.mp4",
-                                mime="video/mp4",
-                                key="feat17_veo_download"
-                            )
+                                st.download_button(
+                                    label="📥 Download Veo MP4 Video",
+                                    data=file.read(),
+                                    file_name="asirvad_veo_video.mp4",
+                                    mime="video/mp4",
+                                    key="feat17_veo_download"
+                                )
                         else:
                             st.warning("⚠️ వీడియో జనరేట్ అయింది కానీ డేటా లభించలేదు.")
-                            
+
                 except Exception as e:
                     st.error(f"వీడియో జనరేషన్‌లో లోపం ఏర్పడింది: {e}")
-                    
+                        
