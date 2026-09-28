@@ -980,7 +980,6 @@ elif choice.startswith("16."):
                     status.update(label="❌ సాంకేతిక లోపం", state="error")
                     st.error(f"ఏర్పడిన లోపం: {e}")
                     
-
 # 17. 🎬 Google Veo వీడియో స్టూడియో (Veo Text/Image-to-Video)
 elif choice.startswith("17."):
     st.subheader("🎬 Asirvad AI - Feature 17: Google Veo Video Creator")
@@ -1042,18 +1041,18 @@ elif choice.startswith("17."):
 
                         final_prompt = video_prompt if video_prompt else "Cinematic dynamic animation"
 
-                        # 5. గూగుల్ Veo మోడల్ కు పంపడం
+                        # 5. గూగుల్ Veo మోడల్ కు పంపడం (duration_seconds 6 గా మార్చబడింది)
                         operation = client.models.generate_videos(
                             model="veo-3.1-generate-preview",
                             prompt=final_prompt,
                             image=veo_image,
                             config=types.GenerateVideosConfig(
                                 aspect_ratio=aspect_val,
-                                duration_seconds=5
+                                duration_seconds=6
                             )
                         )
 
-                        # 6. పోలింగ్ లూప్
+                        # 6. పోలింగ్ లూప్ (వీడియో పూర్తయ్యే వరకు వేచి చూడటం)
                         while not operation.done:
                             time.sleep(10)
                             operation = client.operations.get(operation)
@@ -1063,7 +1062,7 @@ elif choice.startswith("17."):
                             video_obj = operation.response.generated_videos[0].video
                             output_filename = "asirvad_veo_output.mp4"
 
-                            # SDK ద్వారా వీడియో ఫైల్‌ను డౌన్‌లోడ్ చేయడం
+                            # గూగుల్ సర్వర్ నుండి వీడియోను డౌన్‌లోడ్ చేసుకోవడం
                             client.files.download(file=video_obj, destination=output_filename)
 
                             st.success("🎉 మీ గూగుల్ వీయో వీడియో విజయవంతంగా తయారైంది!")
@@ -1082,4 +1081,4 @@ elif choice.startswith("17."):
 
                 except Exception as e:
                     st.error(f"వీడియో జనరేషన్‌లో లోపం ఏర్పడింది: {e}")
-                    
+    
