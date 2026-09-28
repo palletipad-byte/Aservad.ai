@@ -981,14 +981,13 @@ elif choice.startswith("16."):
                     st.error(f"ఏర్పడిన లోపం: {e}")
                     
 
-# 17. AI గూగుల్ వీయో వీడియో స్టూడియో (Google Veo Text/Image-to-Video Creator)
+# 17. 🎬 Google Veo వీడియో స్టూడియో (Veo Text/Image-to-Video)
 elif choice.startswith("17."):
     st.subheader("🎬 Asirvad AI - Feature 17: Google Veo Video Creator")
     st.markdown("Generate high-quality cinematic videos from text prompts and images using Google's Veo AI engine.")
 
     import os
     import time
-    from PIL import Image
     import google.genai as genai
     from google.genai import types
 
@@ -1032,38 +1031,40 @@ elif choice.startswith("17."):
 
                         aspect_val = "16:9" if "16:9" in resolution_choice else "9:16"
 
-                        # ఇమేజ్ ఉంటే PIL ద్వారా రీడ్ చేయడం
-                        input_image = None
+                        # 4. ఇమేజ్ ఉంటే types.Image ఫార్మాట్ లోకి మార్చడం
+                        veo_image = None
                         if uploaded_image is not None:
-                            input_image = Image.open(uploaded_image)
+                            image_bytes = uploaded_image.getvalue()
+                            veo_image = types.Image(
+                                image_bytes=image_bytes,
+                                mime_type=uploaded_image.type
+                            )
 
-                        # Veo API కాల్ (టెక్స్ట్ మరియు ఇమేజ్ రెండింటికీ సపోర్ట్ చేస్తుంది)
+                        final_prompt = video_prompt if video_prompt else "Cinematic dynamic animation"
+
+                        # 5. గూగుల్ Veo మోడల్ కు పంపడం
                         operation = client.models.generate_videos(
-                            model="veo-2.0-generate-001",
-                            prompt=video_prompt if video_prompt else "Animate this image smoothly",
-                            image=input_image,
+                            model="veo-3.1-generate-preview",
+                            prompt=final_prompt,
+                            image=veo_image,
                             config=types.GenerateVideosConfig(
                                 aspect_ratio=aspect_val,
                                 duration_seconds=5
                             )
                         )
 
-                        # పోలింగ్ లూప్
+                        # 6. పోలింగ్ లూప్
                         while not operation.done:
-                            time.sleep(5)
+                            time.sleep(10)
                             operation = client.operations.get(operation)
 
-                        generated_videos = operation.result.generated_videos
-                        if generated_videos:
-                            # వీడియో బైట్స్‌ను నేరుగా డౌన్‌లోడ్ చేసుకుని ప్లే చేయడం
-                            video_file = generated_videos[0]
+                        # 7. వీడియో ఫైల్ సేవ్ & డౌన్‌లోడ్
+                        if operation.response and hasattr(operation.response, 'generated_videos') and operation.response.generated_videos:
+                            video_obj = operation.response.generated_videos[0].video
                             output_filename = "asirvad_veo_output.mp4"
 
-                            # SDK අනුව video_bytes లేదా bytes ఉంటాయి
-                            video_bytes_data = getattr(video_file, "bytes", None) or getattr(video_file.video, "video_bytes", None)
-
-                            with open(output_filename, "wb") as f:
-                                f.write(video_bytes_data)
+                            # SDK ద్వారా వీడియో ఫైల్‌ను డౌన్‌లోడ్ చేయడం
+                            client.files.download(file=video_obj, destination=output_filename)
 
                             st.success("🎉 మీ గూగుల్ వీయో వీడియో విజయవంతంగా తయారైంది!")
                             st.video(output_filename)
@@ -1077,8 +1078,8 @@ elif choice.startswith("17."):
                                     key="feat17_veo_download"
                                 )
                         else:
-                            st.warning("⚠️ వీడియో జనరేట్ అయింది కానీ డేటా లభించలేదు.")
+                            st.warning("⚠️ వీడియో ప్రాసెస్ పూర్తయింది కానీ అవుట్‌పుట్ రాలేదు. ప్రాంప్ట్ లేదా ఇమేజ్ మార్చి చూడండి.")
 
                 except Exception as e:
                     st.error(f"వీడియో జనరేషన్‌లో లోపం ఏర్పడింది: {e}")
-                        
+                    
